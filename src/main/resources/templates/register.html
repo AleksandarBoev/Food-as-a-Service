@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+    <title>Register</title>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+<p>TODOs</p>
+<ul>
+    <li>implement strength of password indicator</li>
+    <li>implement javascript input validation with setTimeout</li>
+    <li>date of birth input</li>
+    <li>gender radiobutton</li>
+</ul>
+<main>
+    <form th:action="@{/user/register}" th:method="post" th:object="${userRegisterBindingModel}">
+        <div class="form-group">
+            <label for="name">
+                Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"/>
+                <th:block th:if="${#fields.hasErrors('name')}">
+                    <th:block th:each="nameErrorMessage: ${#fields.errors('name')}">
+                        <p class="text-danger" th:text="${nameErrorMessage}"></p>
+                    </th:block>
+                </th:block>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="password">
+                Password: <input type="password" name="password" id="password" class="form-control"
+                                 placeholder="Password..." th:field="*{password}"/>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="repassword">
+                Re-enter password: <input type="password" name="repassword" id="repassword" class="form-control"
+                                          placeholder="RePassword..." th:field="*{repassword}"/>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="email">
+                Email: <input type="email" name="email" id="email" class="form-control" placeholder="Email..."
+            th:field="*{email}"/>
+            </label>
+        </div>
+
+        <input type="submit" value="Register"/>
+
+        <p class="text-danger" th:text="${errorMessage}"></p>
+    </form>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

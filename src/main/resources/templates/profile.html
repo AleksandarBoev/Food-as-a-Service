@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+    <title>Profile</title>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<main>
+    <p>Greetings, <span th:text="${#session.getAttribute('username')}"></span></p>
+    <p>Your roles are:</p>
+    <ul th:each="role: ${#session.getAttribute('roles')}">
+        <li th:text="${role}"></li>
+    </ul>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

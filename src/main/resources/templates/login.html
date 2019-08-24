@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+    <title>Login</title>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+<main>
+    <form th:action="@{/user/login}" th:method="post" th:object="${userLoginBindingModel}">
+        <div class="form-group">
+            <label for="name">
+                Name: <input th:field="*{name}" type="text" name="name" id="name" class="form-control" placeholder="Name..."/>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="password">
+                Password: <input type="password" name="password" id="password" class="form-control"
+                                 placeholder="Password..."/>
+            </label>
+        </div>
+
+        <input type="submit" value="Login"/>
+    </form>
+    <p class="text-danger" th:text="${errorMessage}"></p>
+</main>
+<th:block th:replace="../fragments/footer"></th:block>
+
+</body>
+</html>
