@@ -44,8 +44,9 @@ public class UserServiceImpl implements UserService {
         User user = modelMapper.map(userRegisterBindingModel, User.class);
 
         Set<Role> roles = new HashSet<>();
-        if (userRepository.count() == 0) {
+        if (userRepository.count() == 0) { //first registered user becomes root admin
             roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_ROOT_ADMIN));
+            roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_MANAGER));
         }
 
         roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_USER));
@@ -69,5 +70,6 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toSet());
         //TODO try the HashSet equals trick.
         session.setAttribute("roles", userRoles);
+        session.setAttribute("userId", user.getId());
     }
 }

@@ -10,12 +10,6 @@ import tu.faas.web.interceptors.UserPagesInterceptor;
 
 @Configuration
 public class InterceptorsConfiguration implements WebMvcConfigurer {
-    //TODO create the "Profile" page and "Logout" in the navbar. Should be seen only by logged in users
-    //TODO fill "Login" post logic. Session stuff should be in the service? Can it be there?
-    //TODO try to make the controller exception handler to catch the custom exception,
-    //which will be thrown from the service. And try to NOT make the page reload, just add
-    //a regular looking red-text mistake "Name has been taken"
-
     private GuestPagesInterceptor guestPagesInterceptor;
     private UserPagesInterceptor userPagesInterceptor;
     private GlobalInterceptor globalInterceptor;
@@ -34,8 +28,6 @@ public class InterceptorsConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //idea is to check certain privileges for certain pages. For guest-stuff i want only guests
-        //to access it. So I check that page for guest privileges.
         registry.addInterceptor(guestPagesInterceptor).addPathPatterns("/guest-stuff");
         registry.addInterceptor(userPagesInterceptor).addPathPatterns("/important-stuff/**");
         registry.addInterceptor(globalInterceptor);

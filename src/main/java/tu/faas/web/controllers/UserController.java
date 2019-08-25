@@ -3,6 +3,7 @@ package tu.faas.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import tu.faas.domain.exceptions.NoSuchUser;
@@ -37,6 +38,7 @@ public class UserController {
                                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("register.html");
+            modelAndView.addObject("userRegisterBindingModel", userRegisterBindingModel);
             return modelAndView;
         }
 

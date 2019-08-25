@@ -1,5 +1,6 @@
 package tu.faas.domain.models.binding;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -25,6 +26,7 @@ public class UserRegisterBindingModel {
         this.name = name;
     }
 
+    @NotNull(message = "Password can\'t be null!")
     public String getPassword() {
         return password;
     }

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <th:block th:replace="../fragments/bootstrap4"></th:block>
+    <meta charset="UTF-8">
     <title>Register</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
 </head>
 <body>
 <th:block th:replace="../fragments/header"></th:block>
@@ -18,12 +19,10 @@
         <div class="form-group">
             <label for="name">
                 Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"/>
-                <th:block th:if="${#fields.hasErrors('name')}">
-                    <th:block th:each="nameErrorMessage: ${#fields.errors('name')}">
-                        <p class="text-danger" th:text="${nameErrorMessage}"></p>
-                    </th:block>
-                </th:block>
             </label>
+            <th:block th:each="nameErrorMessage: ${#fields.errors('name')}">
+                <p class="text-danger" th:text="${nameErrorMessage}"></p>
+            </th:block>
         </div>
 
         <div class="form-group">
@@ -42,15 +41,26 @@
 
         <div class="form-group">
             <label for="email">
-                Email: <input type="email" name="email" id="email" class="form-control" placeholder="Email..."
-            th:field="*{email}"/>
+                Email: <input type="text" name="email" id="email" class="form-control" placeholder="Email..."
+            th:field="*{email}" th:value="${userRegisterBindingModel.getEmail()}"/>
             </label>
+            <th:block th:each="emailErrorMessage: ${#fields.errors('email')}">
+                <p class="text-danger" th:text="${emailErrorMessage}"></p>
+            </th:block>
+            <p th:text="${userRegisterBindingModel.getEmail()}"></p>
         </div>
 
         <input type="submit" value="Register"/>
 
         <p class="text-danger" th:text="${errorMessage}"></p>
+        <ul>
+            <li th:each="error: ${#fields.errors()}">
+                <span th:text="${error}"></span>
+            </li>
+        </ul>
     </form>
+
+
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>

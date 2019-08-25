@@ -24,7 +24,7 @@ public class SeedRoles {
             rootAdminRole.setName(RoleConstants.ROLE_ROOT_ADMIN);
 
             Role adminRole = new Role();
-            adminRole.setName(RoleConstants.ROLE_ADMIN);
+            adminRole.setName(RoleConstants.ROLE_MANAGER);
 
             Role userRole = new Role();
             userRole.setName(RoleConstants.ROLE_USER);
