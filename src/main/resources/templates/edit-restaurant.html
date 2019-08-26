@@ -9,11 +9,13 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-    <h1>Edit Restaurant!</h1>
-    <form th:action="@{/manager/restaurants/edit}" th:method="post" th:object="${restaurantCreateBindingModel}">
+    <h1 th:text="${restaurantModel.getName()}"></h1>
+
+    <form id="edit-form" style="display: none" th:action="@{/manager/restaurants/edit/(id=${restaurantModel.getId()})}" th:method="put" th:object="${restaurantModel}">
         <div class="form-group">
             <label for="name">
-                Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"/>
+                Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"
+                             th:value="${restaurantModel.getName()}"/>
             </label>
             <th:block th:each="nameErrorMessage: ${#fields.errors('name')}">
                 <p class="text-danger" th:text="${nameErrorMessage}"></p>
@@ -22,7 +24,9 @@
 
         <div class="form-group">
             <label for="imageUrl">
-                Image url: <input type="text" id="imageUrl" class="form-control" placeholder="Image URL..." th:field="*{imageUrl}"/>
+                Image url: <input type="text" id="imageUrl" class="form-control"
+                                  placeholder="Image URL..." th:field="*{imageUrl}"
+            th:value="${restaurantModel.getImageUrl()}"/>
             </label>
             <th:block th:each="imageUrlErrorMessage: ${#fields.errors('imageUrl')}">
                 <p class="text-danger" th:text="${imageUrlErrorMessage}"></p>
@@ -31,17 +35,52 @@
 
         <div class="form-group">
             <label for="description">
-                Description: <textarea id="description" class="form-control" placeholder="description..." th:field="*{description}"></textarea>
+                Description: <textarea id="description" class="form-control"
+                                       th:field="*{description}" th:value="${restaurantModel.getDescription()}"></textarea>
             </label>
             <th:block th:each="descriptionErrorMessage: ${#fields.errors('description')}">
                 <p class="text-danger" th:text="${descriptionErrorMessage}"></p>
             </th:block>
         </div>
 
-        <input type="submit" value="Create Restaurant"/>
+        <input type="submit" id="confirm-edit-restaurant" value="Confirm Edit"/>
     </form>
+
+    <button id="edit-restaurant">Edit Restaurant</button>
+    <button style="display: none" id="cancel-edit">Cancel</button>
+
+    <hr/>
+    <a th:href="@{/manager/{r_id}/create_product(r_id=${restaurant_id})}">
+        <button>Add Product</button>
+    </a>
+    <hr/>
+    <h1>ALL PRODUCTS FOR THIS PARTICULAR RESTAURANT:</h1>
+    <p th:if="${products.isEmpty()}">No products for this restaurant yet.</p>
+    <table th:unless="${products.isEmpty()}" class="table table-dark table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Weight in grams</th>
+            <th>Image URL</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product: ${products}">
+            <td th:text="${product.getName()}"></td>
+            <td th:text="${product.getPrice()}"></td>
+            <td th:text="${product.getWeightInGrams()}"></td>
+            <td th:text="${product.getImageUrl()}"></td>
+            <td th:text="${product.getDescription()}"></td>
+            <td><a th:href="@{/manager/edit-product/(id=${product.getId()})}"><button type="button" class="btn btn-primary">Edit</button></a></td>
+            <td><a th:href="@{/manager/delete-product/(id=${product.getId()})}"><button type="button" class="btn btn-danger">Delete</button></a></td>
+        </tr>
+        </tbody>
+    </table>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>
+<script th:src="@{/js_files/edit-restaurant.js}"></script>
 </body>
 </html>

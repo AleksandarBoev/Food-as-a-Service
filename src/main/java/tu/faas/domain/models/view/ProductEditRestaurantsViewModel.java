@@ -1,19 +1,23 @@
-package tu.faas.domain.entities;
+package tu.faas.domain.models.view;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
-public class Product extends BaseEntity {
+public class ProductEditRestaurantsViewModel {
+    private Long id;
     private String name;
     private BigDecimal price;
     private Integer weightInGrams;
     private String imageUrl;
     private String description;
-    private Restaurant restaurant;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -22,7 +26,6 @@ public class Product extends BaseEntity {
         this.name = name;
     }
 
-    @Column(nullable = false, columnDefinition = "DECIMAL(7,2)")
     public BigDecimal getPrice() {
         return price;
     }
@@ -31,7 +34,6 @@ public class Product extends BaseEntity {
         this.price = price;
     }
 
-    @Column(name = "weight_in_grams", nullable = false) //, columnDefinition = "INT(5)") //doesn't work for some reason
     public Integer getWeightInGrams() {
         return weightInGrams;
     }
@@ -40,7 +42,6 @@ public class Product extends BaseEntity {
         this.weightInGrams = weightInGrams;
     }
 
-    @Column(name = "image_url")
     public String getImageUrl() {
         return imageUrl;
     }
@@ -49,22 +50,11 @@ public class Product extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
-    @Column
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
     }
 }

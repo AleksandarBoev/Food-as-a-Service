@@ -5,8 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tu.faas.domain.models.multipurpose.ProductEditModel;
+import tu.faas.domain.models.multipurpose.RestaurantModel;
+import tu.faas.domain.models.binding.ProductCreateBindingModel;
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.view.ManagerRestaurantsViewModel;
+import tu.faas.domain.models.view.ProductEditRestaurantsViewModel;
 import tu.faas.services.ManagerService;
 
 import javax.servlet.http.HttpSession;
@@ -28,14 +32,14 @@ public class ManagerController {
     @GetMapping("/restaurants")
     public ModelAndView getRestaurantsPage(ModelAndView modelAndView, HttpSession httpSession) {
         List<ManagerRestaurantsViewModel> restaurants =
-                managerService.getRestaurantsByManager((Long)httpSession.getAttribute("userId"));
+                managerService.getRestaurantsByManager((Long) httpSession.getAttribute("userId"));
         modelAndView.addObject("restaurants", restaurants);
         modelAndView.setViewName("manager-restaurants.html");
         return modelAndView;
     }
 
     @GetMapping("/restaurants/create")
-    public String getRestaurantCreatePage(HttpSession httpSession) {
+    public String getRestaurantCreatePage() {
         return "create-restaurant.html";
     }
 
@@ -51,37 +55,133 @@ public class ManagerController {
             return modelAndView;
         }
 
-        managerService.createRestaurant(bindingModel, (Long)session.getAttribute("userId"));
+        managerService.createRestaurant(bindingModel, (Long) session.getAttribute("userId"));
         modelAndView.setViewName("redirect:/");
         return modelAndView;
     }
 
-    @GetMapping("/restaurants/edit/{id}")
-    public String getRestaurantEditPage(HttpSession httpSession) {
-        //za tova kak se vkarva promenliva v th:href=@{...(${})} -->
-        //https://www.thymeleaf.org/doc/articles/standardurlsyntax.html
-        return "manager-restaurants.html";
+    @GetMapping("/restaurants/edit")
+    public ModelAndView getRestaurantEditPage(
+            ModelAndView modelAndView,
+            @RequestParam(name = "id", required = true) Long restaurantId) {
+        modelAndView.addObject("restaurant_id", restaurantId);
+        RestaurantModel restaurantModel = managerService.getRestaurantById(restaurantId);
+        modelAndView.addObject("restaurantModel", restaurantModel);
+
+        List<ProductEditRestaurantsViewModel> productViewModels =
+                managerService.getProductViewModels(restaurantId);
+        modelAndView.addObject("products", productViewModels);
+
+        modelAndView.setViewName("edit-restaurant.html");
+        return modelAndView;
     }
 
-    @PutMapping("/restaurants/edit/{id}")
-    public String putRestaurantEditPage(HttpSession httpSession) {
-        //TODO v neta pishe che html ne poddurja put i delete. No puk gi polzvam prez thymeleaf.
-        //tui che ako ne se poluchi, post i na dvete. Ako se poluchi - yay.
-        return "manager-restaurants.html";
+    @PutMapping("/restaurants/edit")
+    public ModelAndView putRestaurantEditPage(
+            ModelAndView modelAndView,
+            @RequestParam(name = "id", required = true) Long restaurantId,
+            @Valid @ModelAttribute("restaurantModel") RestaurantModel bindingModel,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("restaurantModel", bindingModel);
+            modelAndView.setViewName("edit-restaurant.html");
+            return modelAndView;
+        }
+
+        managerService.editRestaurant(bindingModel);
+        modelAndView.setViewName("redirect:/manager/restaurants");
+        return modelAndView;
     }
 
-    @GetMapping("/restaurants/delete/{id}")
-    public String getRestaurantDeletePage(HttpSession httpSession) {
-        return "manager-restaurants.html";
+    @GetMapping("/restaurants/delete")
+    public ModelAndView getRestaurantDeletePage(
+            ModelAndView modelAndView,
+            @RequestParam(name = "id", required = true) Long restaurantId
+    ) {
+        RestaurantModel restaurantModel = managerService.getRestaurantById(restaurantId);
+        modelAndView.addObject("restaurantModel", restaurantModel);
+        modelAndView.setViewName("delete-restaurant.html");
+        return modelAndView;
     }
 
-    @DeleteMapping("/restaurants/delete/{id}")
-    public String deleteRestaurant(HttpSession httpSession) {
-        return "manager-restaurants.html";
+    @DeleteMapping("/restaurants/delete")
+    public String deleteRestaurant(@RequestParam(name = "id", required = true) Long restaurantId) {
+        managerService.deleteRestaurant(restaurantId);
+        return "redirect:/manager/restaurants";
+    }
+
+    @GetMapping("/{restaurant_id}/create_product")
+    public ModelAndView getCreateProductPage(
+            ModelAndView modelAndView,
+            @PathVariable(value = "restaurant_id") Long restaurantId) {
+        modelAndView.addObject("restaurant_id", restaurantId);
+        modelAndView.setViewName("create-product");
+        return modelAndView;
+    }
+
+    @PostMapping("/{restaurant_id}/create_product")
+    public ModelAndView postCreateProductPage(
+            ModelAndView modelAndView,
+            @PathVariable(value = "restaurant_id") Long restaurantId,
+            @Valid @ModelAttribute("productCreateBindingModel") ProductCreateBindingModel bindingModel,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("productCreateBindingModel", bindingModel);
+            modelAndView.setViewName("create-product.html");
+            return modelAndView;
+        }
+
+        managerService.createProduct(bindingModel, restaurantId);
+        modelAndView.setViewName("redirect:/manager/restaurants/edit?id=" + restaurantId);
+        return modelAndView;
+    }
+
+    @GetMapping("/edit-product")
+    public ModelAndView getEditProductPage(ModelAndView modelAndView,
+                                           @RequestParam(name = "id", required = true) Long productId) {
+        ProductEditModel productEditModel = managerService.getProductEditModel(productId);
+        modelAndView.addObject("productEditModel", productEditModel);
+
+        modelAndView.setViewName("edit-product.html");
+        return modelAndView;
+    }
+
+    @PutMapping("/edit-product")
+    public ModelAndView putEditProductPage(
+            ModelAndView modelAndView,
+            @RequestParam(name = "id", required = true) Long productId,
+            @Valid @ModelAttribute("productEditModel") ProductEditModel bindingModel,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            modelAndView.addObject("productEditModel", bindingModel);
+            modelAndView.setViewName("edit-restaurant.html");
+            return modelAndView;
+        }
+
+        managerService.editProduct(bindingModel);
+        modelAndView.setViewName("redirect:/manager/restaurants");
+        return modelAndView;
+    }
+
+    //TODO get and delete mappings for product
+
+    @ModelAttribute("restaurantModel")
+    public RestaurantModel getRestaurantModel() {
+        return new RestaurantModel();
     }
 
     @ModelAttribute("restaurantCreateBindingModel")
     public RestaurantCreateBindingModel getRestaurantCreateBindingModel() {
         return new RestaurantCreateBindingModel();
+    }
+
+    @ModelAttribute("productCreateBindingModel")
+    public ProductCreateBindingModel getProductCreateBindingModel() {
+        return new ProductCreateBindingModel();
+    }
+
+    @ModelAttribute("productEditModel")
+    public ProductEditModel getProductEditModel() {
+        return new ProductEditModel();
     }
 }

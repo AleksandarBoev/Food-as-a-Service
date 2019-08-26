@@ -32,7 +32,7 @@
 
         <div class="form-group">
             <label for="description">
-                Description: <textarea id="description" class="form-control" placeholder="description..." th:field="*{description}"></textarea>
+                Description: <textarea id="description" class="form-control" placeholder="Description..." th:field="*{description}"></textarea>
             </label>
             <th:block th:each="descriptionErrorMessage: ${#fields.errors('description')}">
                 <p class="text-danger" th:text="${descriptionErrorMessage}"></p>
