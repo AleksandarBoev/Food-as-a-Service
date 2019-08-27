@@ -8,12 +8,14 @@ import tu.faas.domain.entities.Restaurant;
 import tu.faas.domain.entities.User;
 import tu.faas.domain.exceptions.NoSuchProduct;
 import tu.faas.domain.exceptions.NoSuchRestaurant;
-import tu.faas.domain.models.multipurpose.ProductEditModel;
+import tu.faas.domain.models.multipurpose.ProductModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
 import tu.faas.domain.models.binding.ProductCreateBindingModel;
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
-import tu.faas.domain.models.view.ManagerRestaurantsViewModel;
-import tu.faas.domain.models.view.ProductEditRestaurantsViewModel;
+import tu.faas.domain.models.view.RestaurantListViewModel;
+import tu.faas.domain.models.view.ProductListViewModel;
+import tu.faas.domain.models.view.ProductViewModel;
+import tu.faas.domain.models.view.RestaurantViewModel;
 import tu.faas.repositories.ProductRepository;
 import tu.faas.repositories.RestaurantRepository;
 import tu.faas.repositories.UserRepository;
@@ -39,15 +41,15 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public List<ManagerRestaurantsViewModel> getRestaurantsByManager(Long managerId) {
+    public List<RestaurantListViewModel> getRestaurantsByManager(Long managerId) {
         return restaurantRepository.findAllByManagerId(managerId)
                 .stream()
-                .map(r -> modelMapper.map(r, ManagerRestaurantsViewModel.class))
+                .map(r -> modelMapper.map(r, RestaurantListViewModel.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void createRestaurant(RestaurantCreateBindingModel bindingModel, Long managerId) {
+    public Long createRestaurant(RestaurantCreateBindingModel bindingModel, Long managerId) {
         Restaurant restaurant = modelMapper.map(bindingModel, Restaurant.class);
 
         restaurant.setActive(false);
@@ -55,10 +57,11 @@ public class ManagerServiceImpl implements ManagerService {
         restaurant.setManager(manager);
 
         restaurantRepository.save(restaurant);
+        return restaurant.getId();
     }
 
     @Override
-    public RestaurantModel getRestaurantById(Long id) {
+    public RestaurantModel getRestaurantModelById(Long id) {
         //TODO test this logic
         return modelMapper.map(
                 restaurantRepository.findById(id).orElseThrow(NoSuchRestaurant::new),
@@ -92,12 +95,12 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public List<ProductEditRestaurantsViewModel> getProductViewModels(Long restaurantId) {
+    public List<ProductListViewModel> getProductViewModelsByRestaurantId(Long restaurantId) {
         return productRepository.findAllByRestaurantId(restaurantId)
                 .stream()
                 .map(p -> {
-                    ProductEditRestaurantsViewModel result =
-                            modelMapper.map(p, ProductEditRestaurantsViewModel.class);
+                    ProductListViewModel result =
+                            modelMapper.map(p, ProductListViewModel.class);
 
                     result.setName(cropString(result.getName(), 15, "..."));
                     result.setDescription(cropString(result.getDescription(), 15, "..."));
@@ -109,18 +112,58 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
-    public ProductEditModel getProductEditModel(Long productId) {
+    public ProductModel getProductModel(Long productId) {
         return modelMapper.map(
                 productRepository.findById(productId).orElseThrow(NoSuchProduct::new),
-                ProductEditModel.class);
+                ProductModel.class);
     }
 
     @Override
-    public void editProduct(ProductEditModel bindingModel) {
+    public Long editProduct(ProductModel bindingModel) {
         Product product =
                 productRepository.findById(bindingModel.getId()).orElseThrow(NoSuchProduct::new);
         modelMapper.map(bindingModel, product);
         productRepository.save(product);
+
+        Long restaurantId = product.getRestaurant().getId();
+        return restaurantId;
+    }
+
+    @Override
+    public Long deleteProduct(Long productId) {
+        Product productToBeDeleted =
+                productRepository.findById(productId).orElseThrow(NoSuchProduct::new);
+        Long restaurantId = productToBeDeleted.getRestaurant().getId();
+        productRepository.delete(productToBeDeleted);
+        return restaurantId;
+    }
+
+    @Override
+    public ProductViewModel getProductViewModel(Long id) {
+        Product productFound =
+                productRepository.findById(id).orElseThrow(NoSuchProduct::new);
+
+        ProductViewModel result = modelMapper.map(productFound, ProductViewModel.class);
+        result.setRestaurantName(productFound.getRestaurant().getName());
+
+        return result;
+    }
+
+    @Override
+    public RestaurantViewModel getRestaurantViewModel(Long restaurantId) {
+        Restaurant restaurant =
+                restaurantRepository.findById(restaurantId).orElseThrow(NoSuchRestaurant::new);
+
+        RestaurantViewModel result = modelMapper.map(restaurant, RestaurantViewModel.class);
+        List<ProductListViewModel> productListViewModels = restaurant.getProducts()
+                .stream()
+                .map(p -> {
+                    ProductListViewModel productListViewModel = modelMapper.map(p, ProductListViewModel.class);
+                    return productListViewModel;
+                }).collect(Collectors.toList());
+
+        result.setProductListViewModels(productListViewModels);
+        return result;
     }
 
     private String cropString(String string, int maxLength, String endingReplacement) {

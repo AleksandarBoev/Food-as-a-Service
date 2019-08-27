@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View Product</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<main>
+    <h1>Name</h1>
+    <h2 th:text="${productViewModel.getName()}"></h2>
+    <hr/>
+
+    <img th:src="${productViewModel.getImageUrl()}">
+
+    <h1>Price</h1>
+    <h2 th:text="${productViewModel.getPrice()}"></h2>
+    <hr/>
+
+    <h1>Weight in grams</h1>
+    <h2 th:text="${productViewModel.getWeightInGrams()}"></h2>
+    <hr/>
+
+    <h1>Description</h1>
+    <h2 th:text="${productViewModel.getDescription()}"></h2>
+    <hr/>
+
+    <h1>Restaurant</h1>
+    <h2 th:text="${productViewModel.getRestaurantName()}"></h2>
+    <hr/>
+
+<!--    <form th:action="@{/user/order-product/(id=${productViewModel.getId()})}" th:method="post">-->
+<!--    <a th:href="@{/user/order-product/(id=${productViewModel.getId()})}">-->
+        <button th:myTag="${productViewModel.getId()}" id="add-to-cart" class="btn btn-warning">Add to cart</button>
+<!--    </a>-->
+<!--    </form>-->
+
+    <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
+        <a th:href="@{/manager/edit-product/(id=${productViewModel.getId()})}">
+            <button type="button" class="btn btn-primary">Edit</button>
+        </a>
+        <a th:href="@{/manager/delete-product/(id=${productViewModel.getId()})}">
+            <button type="button" class="btn btn-danger">Delete</button>
+        </a>
+    </th:block>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+
+<script>
+    document.getElementById('add-to-cart').addEventListener('click', ev => {
+        const productId = ev.target.getAttribute('myTag');
+        console.log(productId);
+        fetch('/user/order-product', {
+            method: 'post',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: 'Aleksandar',
+                age: 23,
+                town: {
+                    population: 3000,
+                    country: 'Bulgaria',
+                },
+                nicknames: ['Dev', 'Java Master'],
+                languages: [
+                    {name: 'Java', level: 'pro'},
+                    {name: 'JavaScript', level: 'good'},
+                ]
+            })
+        });
+    })
+</script>
+</body>
+</html>

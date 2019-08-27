@@ -55,6 +55,9 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    //TODO session logic maybe needs to be in the controller
+    //that means this method should return a UserSession object and the controller
+    //just writes all the info. But as strings. Dunno if thymeleaf can do stuff...
     @Override
     public void loginUser(UserLoginBindingModel userLoginBindingModel, HttpSession session) {
         if (!userRepository.existsByNameAndPassword(
@@ -68,7 +71,7 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(role -> role.getName())
                 .collect(Collectors.toSet());
-        //TODO try the HashSet equals trick.
+
         session.setAttribute("roles", userRoles);
         session.setAttribute("userId", user.getId());
     }

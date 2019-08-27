@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Restaurant</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<h1>Editing Restaurant</h1>
+
+<form id="edit-form" th:action="@{/manager/restaurants/edit/(id=${restaurantModel.getId()})}" th:method="put" th:object="${restaurantModel}">
+    <div class="form-group">
+        <label for="name">
+            Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"
+                         th:value="${restaurantModel.getName()}"/>
+        </label>
+        <th:block th:each="nameErrorMessage: ${#fields.errors('name')}">
+            <p class="text-danger" th:text="${nameErrorMessage}"></p>
+        </th:block>
+    </div>
+
+    <div class="form-group">
+        <label for="imageUrl">
+            Image url: <input type="text" id="imageUrl" class="form-control"
+                              placeholder="Image URL..." th:field="*{imageUrl}"
+                              th:value="${restaurantModel.getImageUrl()}"/>
+        </label>
+        <th:block th:each="imageUrlErrorMessage: ${#fields.errors('imageUrl')}">
+            <p class="text-danger" th:text="${imageUrlErrorMessage}"></p>
+        </th:block>
+    </div>
+
+    <div class="form-group">
+        <label for="description">
+            Description: <textarea id="description" class="form-control"
+                                   th:field="*{description}" th:value="${restaurantModel.getDescription()}"></textarea>
+        </label>
+        <th:block th:each="descriptionErrorMessage: ${#fields.errors('description')}">
+            <p class="text-danger" th:text="${descriptionErrorMessage}"></p>
+        </th:block>
+    </div>
+
+    <input type="submit" id="confirm-edit-restaurant" value="Confirm Edit"/>
+</form>
+
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

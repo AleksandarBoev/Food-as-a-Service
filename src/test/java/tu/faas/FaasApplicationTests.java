@@ -1,5 +1,7 @@
 package tu.faas;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.hibernate.validator.internal.engine.ConstraintViolationImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,17 +18,23 @@ import java.util.Set;
 @RunWith(SpringRunner.class)
 public class FaasApplicationTests {
 
+    class SomeClass {
+        private Long productId;
 
+        public Long getProductId() {
+            return productId;
+        }
+
+        public void setProductId(Long productId) {
+            this.productId = productId;
+        }
+    }
 
     @Test
     public void printStuff() {
-        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        UserRegisterBindingModel userRegisterBindingModel = new UserRegisterBindingModel();
-        userRegisterBindingModel.setName("aa");
-        Set<ConstraintViolation<UserRegisterBindingModel>> errors = validator.validate(userRegisterBindingModel);
-
-        System.out.println("LOOK HERE");
-        System.out.println(errors);
+        Gson gson = new GsonBuilder().create();
+        SomeClass wat = gson.fromJson("{'productId':'10'}", SomeClass.class);
+        System.out.println(wat.getProductId());
     }
 
 }

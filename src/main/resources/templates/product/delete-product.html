@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Product</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<main>
+
+    <h1>Deleting "<span th:text="${productModel.getName()}"></span>"</h1>
+    <form th:href="@{/manager/delete-product/(id=${productModel.getId()})}" th:method="delete">
+        <div class="form-group">
+            <label for="name">
+                Name: <input disabled type="text" id="name" class="form-control"
+                             th:value="${productModel.getName()}"/>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="price">
+                Price: <input type="number" disabled step="0.01" id="price" class="form-control"
+                              th:value="${productModel.getPrice()}"/>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="weightInGrams">
+                Weight in grams: <input disabled type="number" id="weightInGrams" class="form-control"
+                                        th:value="${productModel.getWeightInGrams()}"/>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="imageUrl">
+                Image url: <input disabled type="text" id="imageUrl" class="form-control"
+                                  th:value="${productModel.getImageUrl()}"/>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="description">
+                Description: <textarea disabled id="description" class="form-control"
+                                       th:text="${productModel.getDescription()}"></textarea>
+            </label>
+        </div>
+
+        <input type="submit" value="Confirm Delete"/>
+    </form>
+
+
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

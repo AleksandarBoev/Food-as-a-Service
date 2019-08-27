@@ -59,7 +59,7 @@ public class Restaurant extends BaseEntity {
         isActive = active;
     }
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     public List<Product> getProducts() {
         return products;
     }

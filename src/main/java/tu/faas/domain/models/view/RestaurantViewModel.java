@@ -1,10 +1,14 @@
 package tu.faas.domain.models.view;
 
-public class ManagerRestaurantsViewModel {
+import java.util.List;
+
+public class RestaurantViewModel {
     private Long id;
     private String name;
     private String imageUrl;
+    private String description;
     private Boolean isActive;
+    private List<ProductListViewModel> productListViewModels;
 
     public Long getId() {
         return id;
@@ -30,6 +34,14 @@ public class ManagerRestaurantsViewModel {
         this.imageUrl = imageUrl;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Boolean getActive() {
         return isActive;
     }
@@ -38,5 +50,11 @@ public class ManagerRestaurantsViewModel {
         isActive = active;
     }
 
+    public List<ProductListViewModel> getProductListViewModels() {
+        return productListViewModels;
+    }
 
+    public void setProductListViewModels(List<ProductListViewModel> productListViewModels) {
+        this.productListViewModels = productListViewModels;
+    }
 }

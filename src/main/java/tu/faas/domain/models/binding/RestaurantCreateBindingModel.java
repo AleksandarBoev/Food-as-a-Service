@@ -14,14 +14,14 @@ public class RestaurantCreateBindingModel {
             " and " + RESTAURANT_NAME_MAX_LETTERS + " letters long!";
 
     public static final String RESTAURANT_NAME_FORMAT_ERROR_MESSAGE =
-            "Restaurant name should start with capital letter and contain only letters!";
+            "Restaurant name should start with capital letter and contain only letters and spaces!";
 
     private String name;
     private String imageUrl;
     private String description;
 
     @NotEmpty(message = RESTAURANT_NAME_NULL_OR_EMPTY)
-    @Pattern(regexp = "^[A-Z][A-z]+( [A-z]+)*$", message = RESTAURANT_NAME_FORMAT_ERROR_MESSAGE)
+    @Pattern(regexp = "^[A-Z][a-z]*[ A-z]*$", message = RESTAURANT_NAME_FORMAT_ERROR_MESSAGE)
     @Size(
             min = RESTAURANT_NAME_MIN_LETTERS,
             max = RESTAURANT_NAME_MAX_LETTERS,

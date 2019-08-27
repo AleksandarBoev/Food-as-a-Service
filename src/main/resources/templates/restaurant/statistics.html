@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurant Statistics</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+<h1>Statistics for restaurant <span th:text="${restaurant_id}"></span></h1>
+<h1>Option to select from which date to which orders are made. </h1>
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

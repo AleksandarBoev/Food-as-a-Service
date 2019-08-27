@@ -2,7 +2,10 @@ package tu.faas.domain.models.view;
 
 import java.math.BigDecimal;
 
-public class ProductEditRestaurantsViewModel {
+/**
+ * Used in the single restaurant view page.
+ */
+public class ProductListViewModel {
     private Long id;
     private String name;
     private BigDecimal price;
