@@ -44,7 +44,7 @@
                     <a class="nav-link" th:href="@{/manager/restaurants}">My Restaurants</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/somewhere}">Shopping Cart (<span th:text="${#session.getAttribute('shoppingCart').size()}"></span>)</a>
+                    <a class="nav-link" th:href="@{/order/shopping-cart}">Shopping Cart (<span th:text="${#session.getAttribute('shoppingCart').size()}"></span>)</a>
                 </li>
             </ul>
         </nav>

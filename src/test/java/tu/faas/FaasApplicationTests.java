@@ -9,11 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import tu.faas.domain.entities.User;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
+import tu.faas.domain.models.view.ProductShoppingCartViewModel;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 public class FaasApplicationTests {
@@ -32,9 +34,24 @@ public class FaasApplicationTests {
 
     @Test
     public void printStuff() {
-        Gson gson = new GsonBuilder().create();
-        SomeClass wat = gson.fromJson("{'productId':'10'}", SomeClass.class);
-        System.out.println(wat.getProductId());
+        List<ProductShoppingCartViewModel> productShoppingCartViewModels = new ArrayList<>();
+
+        ProductShoppingCartViewModel wat1 = new ProductShoppingCartViewModel();
+        wat1.setQuantity(2);
+        wat1.setPrice(new BigDecimal("10"));
+        productShoppingCartViewModels.add(wat1);
+
+        ProductShoppingCartViewModel wat2 = new ProductShoppingCartViewModel();
+        wat2.setQuantity(3);
+        wat2.setPrice(new BigDecimal("3"));
+        productShoppingCartViewModels.add(wat2);
+
+        BigDecimal totalPrice = new BigDecimal("0");
+        for (ProductShoppingCartViewModel productViewModel : productShoppingCartViewModels) {
+            BigDecimal totalPriceCurrentProduct = productViewModel.getPrice().multiply(new BigDecimal(productViewModel.getQuantity()));
+            totalPrice = totalPrice.add(totalPriceCurrentProduct);
+        }
+        System.out.println(totalPrice);
     }
 
 }

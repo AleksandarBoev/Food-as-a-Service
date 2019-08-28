@@ -1,15 +1,10 @@
 package tu.faas.web.controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import tu.faas.domain.beans.Person;
-import tu.faas.domain.beans.SomeClass;
 import tu.faas.domain.exceptions.NoSuchUser;
 import tu.faas.domain.exceptions.UserAlreadyExists;
 import tu.faas.domain.models.binding.UserLoginBindingModel;
@@ -88,26 +83,6 @@ public class UserController {
     @GetMapping("/profile")
     public String getProfilePage() {
         return "profile.html";
-    }
-
-    //    @PostMapping("/order-product")
-//    public String orderProduct(@RequestParam(name = "id") Long productId) {
-//        System.out.println("AAAAAA Product you want to purchase: " + productId);
-//        return "redirect:/";
-//    }
-
-
-    @PostMapping("/order-product")
-    @ResponseBody
-    public void orderProduct(@RequestBody Person person) {
-        //TODO just take the id, get info of the product from db and
-        //put that info in the Shopping Cart in the form of some model.
-        //"ProductShoppingCartModel". Sounds nice.
-        System.out.println(person.getName());
-        System.out.println(person.getAge());
-        System.out.println(person.getTown());
-        System.out.println(person.getNicknames());
-        System.out.println(person.getLanguages());
     }
 
     @ModelAttribute("userRegisterBindingModel")

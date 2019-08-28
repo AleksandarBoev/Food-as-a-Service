@@ -1,10 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Shopping Cart</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
 </head>
 <body>
+<th:block th:replace="../fragments/header"></th:block>
 
+<main>
+
+    <h1>Your shopping cart:</h1>
+    <p th:if="${shoppingCart.getProducts().isEmpty()}">No ordered products yet!</p>
+    <table th:unless="${shoppingCart.getProducts().isEmpty()}" class="table table-dark table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Weight in grams</th>
+            <th>Image URL</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Single Price</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="shoppingCartProduct: ${shoppingCart.products}">
+            <tr th:productId="${shoppingCartProduct.getId()}">
+                <td th:text="${shoppingCartProduct.getName()}"></td>
+                <td th:text="${shoppingCartProduct.getWeightInGrams()}"></td>
+                <td th:text="${shoppingCartProduct.getImageUrl()}"></td>
+                <td th:text="${shoppingCartProduct.getDescription()}"></td>
+                <td class="td-quantity">
+                    <div class="def-number-input number-input safari_only">
+                        <button
+                                onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                                class="btn btn-danger">-
+                        </button>
+                        <input class="quantity" min="1" name="quantity"
+                               th:value="${shoppingCartProduct.getQuantity()}" type="number">
+                        <button onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                                class="btn btn-success">+
+                        </button>
+                    </div>
+                </td>
+                <td class="td-price" th:text="${shoppingCartProduct.getPrice()}"></td>
+            </tr>
+        </th:block>
+        <tfoot>
+        <tr>
+            <td colspan="5">Total Price</td>
+            <td id="total-price" th:text="${shoppingCart.getTotalPrice()}"></td>
+        </tr>
+        </tfoot>
+        </tbody>
+    </table>
+    <button>Update Quantities</button>
+
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+
+<script th:src="@{/js_files/fetch-functions.js}"></script>
+<script>
+    const quantityTableDefinitions = [...document.getElementsByClassName('td-quantity')];
+    const inputQuantities = [...document.getElementsByName('quantity')];
+    const prices = [...document.getElementsByClassName('td-price')];
+    const tdTotalPrice = document.getElementById('total-price');
+
+    const updateTotalPrice = () => {
+        let totalPrice = 0;
+        for (let i = 0; i < inputQuantities.length; i += 1) {
+            totalPrice += Number(inputQuantities[i].value) * Number(prices[i].textContent);
+        }
+
+        tdTotalPrice.textContent = '' + totalPrice.toFixed(2);
+    };
+
+
+    const sendDelayedFetch = (timeoutIdArr, productId, inputQuantityElement) => {
+        clearTimeout(timeoutIdArr[0]);
+        timeoutIdArr[0] = setTimeout(() => {
+            const object = {
+                productId,
+                quantity: inputQuantityElement.value,
+            };
+            updateTotalPrice();
+            fetchFunctions.sendJsonToController('/order/adjust-quantity', object);
+        }, 1000);
+    };
+
+    quantityTableDefinitions.forEach(td => {
+        console.log(td);
+        const keyElements = {
+            buttonMinus: td.getElementsByTagName('button')[0],
+            inputQuantity: td.getElementsByTagName('input')[0],
+            buttonPlus: td.getElementsByTagName('button')[1],
+        };
+
+        const productId = td.parentNode.getAttribute('productId');
+
+        //not doing it with normal variable, because it gets copied in the function, but my
+        //function needs to change it
+        let timeoutIdArr = [];
+
+        const currentDelayedFetch = () => sendDelayedFetch(timeoutIdArr, productId, keyElements.inputQuantity);
+
+        console.log(keyElements.buttonPlus);
+        console.log(keyElements.buttonMinus);
+        console.log(keyElements.inputQuantity);
+        keyElements.buttonPlus.addEventListener('click', currentDelayedFetch);
+        keyElements.buttonMinus.addEventListener('click', currentDelayedFetch);
+        keyElements.inputQuantity.addEventListener('input', currentDelayedFetch);
+    })
+
+    // const elements = {
+    //     inputQuantity: document.getElementById('productId'),
+    //     buttonPlus: document.getElementById('button-plus'),
+    //     buttonMinus: document.getElementById('button-minus'),
+    // };
+    // const controllerUrl = '/order/adjust-quantity';
+    //
+    // let timeoutId;
+    // const buttonFunction = context => {
+    //     clearTimeout(timeoutId);
+    //     timeoutId = setTimeout(() => {
+    //         const productId =
+    //         fetchFunctions.sendJsonToController(controllerUrl, )
+    //     }, 1000);
+    // };
+    //
+    // buttonPlus.addEventListener('click', buttonFunction);
+    // buttonMinus.addEventListener('click', buttonFunction);
+
+</script>
 </body>
 </html>

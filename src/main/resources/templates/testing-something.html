@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Wat</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<h1>Hello</h1>
+
+<div class="def-number-input number-input safari_only">
+    <button id="button-minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="minus">-
+    </button>
+        <input id="productId" class="quantity" min="1" name="quantity" value="1" type="number">
+    <button id="button-plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus">+
+    </button>
+</div>
+
+
+<button id="button">Press</button>
+
+<script>
+    const inputElement = document.getElementById('productId');
+    const buttonPlus = document.getElementById('button-plus');
+    const buttonMinus = document.getElementById('button-minus');
+
+    inputElement.getElementsByClassName('wat');
+
+</script>
+</body>
+</html>
