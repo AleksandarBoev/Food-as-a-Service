@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Billing</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<main>
+    <h1>Billing information (this is a student project. Please do not enter real information)</h1>
+
+    <form th:action="@{/order/billing}" th:method="post" th:object="${billingInformation}">
+        <div class="form-group">
+            <label for="name">
+                Address: <input name="address" th:field="*{address}" type="text" id="name" class="form-control"/>
+            </label>
+            <th:block th:each="addressErrorMessage: ${#fields.errors('address')}">
+                <p class="text-danger" th:text="${addressErrorMessage}"></p>
+            </th:block>
+        </div>
+
+        <div class="form-check-inline">
+            <label class="form-check-label">
+                <input id="cash-radio-button" checked value="cash" type="radio" class="form-check-input" name="billingType">Cash
+            </label>
+        </div>
+        <div class="form-check-inline">
+            <label class="form-check-label">
+                <input id="credit-radio-button" value="credit" type="radio" class="form-check-input" name="billingType">Credit
+            </label>
+        </div>
+
+        <div id="credit-card-number-id" style="display: none" class="form-group">
+            <label for="creditCardNumber">
+                Credit card number: <input id="creditCardNumber" name="creditCardNumber" th:field="*{creditCardNumber}"
+                                           type="text" class="form-control"/>
+            </label>
+            <th:block th:each="creditCardNumberErrorMessage: ${#fields.errors('creditCardNumber')}">
+                <p class="text-danger" th:text="${creditCardNumberErrorMessage}"></p>
+            </th:block>
+        </div>
+        <div id="security-code-id" style="display: none"  class="form-group">
+            <label for="securityCode">
+                Security code: <input type="number" id="securityCode" name="securityCode" th:field="*{securityCode}"
+                                      class="form-control"/>
+            </label>
+            <th:block th:each="securityCodeErrorMessage: ${#fields.errors('securityCode')}">
+                <p class="text-danger" th:text="${securityCodeErrorMessage}"></p>
+            </th:block>
+        </div>
+
+        <input type="submit" value="Next"/>
+    </form>
+    <a th:href="@{/order/shopping-cart}">
+        <button>Back to shopping cart</button>
+    </a>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+
+<script>
+    const divCreditCardNumber = document.getElementById('credit-card-number-id');
+    const divSecurityCode = document.getElementById('security-code-id');
+    const radioCredit = document.getElementById('credit-radio-button');
+    const radioCash = document.getElementById('cash-radio-button');
+
+    radioCredit.addEventListener('click', () => {
+        divCreditCardNumber.style.display = 'block';
+        divSecurityCode.style.display = 'block';
+    });
+
+    radioCash.addEventListener('click', () =>{
+        divCreditCardNumber.style.display = 'none';
+        divSecurityCode.style.display = 'none';
+    })
+</script>
+</body>
+</html>

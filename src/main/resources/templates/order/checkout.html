@@ -2,12 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Chekout</title>
+    <title>Checkout</title>
     <th:block th:replace="../fragments/bootstrap4"></th:block>
 </head>
 <body>
 <th:block th:replace="../fragments/header"></th:block>
-
 <main>
     <section>
         <h1>Order information</h1>
@@ -47,10 +46,16 @@
     <hr/>
     <section>
         <h1>Billing information</h1>
+        <p>Address for delivery: <span th:text="${billingInformation.getAddress()}"></span></p>
+        <p>Payment method: <span th:text="${billingInformation.getBillingType()}"></span></p>
+        <ul th:if="${billingInformation.getBillingType() == 'credit'}">
+            <li>Credit card number: <span th:text="${billingInformation.getCreditCardNumber()}"></span></li>
+            <li>Security code: <span th:text="${billingInformation.getSecurityCode()}"></span></li>
+        </ul>
     </section>
-    <a th:href="@{/order/shopping-cart}"><button>Back to shopping cart</button></a>
+    <a th:href="@{/}"><button>Checkout</button></a>
 </main>
-
 <th:block th:replace="../fragments/footer"></th:block>
+
 </body>
 </html>

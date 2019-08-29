@@ -2,9 +2,12 @@ package tu.faas.web.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tu.faas.domain.constants.SessionConstants;
+import tu.faas.domain.models.binding.BillingInformationBindingModel;
 import tu.faas.domain.models.binding.ProductAddToCartBindingModel;
 import tu.faas.domain.models.binding.ProductAdjustQuantityBindingModel;
 import tu.faas.domain.models.view.ShoppingCartItemsCount;
@@ -12,6 +15,7 @@ import tu.faas.domain.models.view.ShoppingCartViewModel;
 import tu.faas.services.OrderService;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
@@ -29,7 +33,7 @@ public class OrderController {
     @ResponseBody
     public void addToShoppingCart(@RequestBody ProductAddToCartBindingModel bindingModel,
                                   HttpSession session) {
-        Map<Long, Integer> productIdCount = getShoppingCart(session);
+        Map<Long, Integer> productIdCount = getShoppingCartMap(session);
         incrementProductCount(productIdCount, bindingModel.getProductId());
         session.setAttribute(SessionConstants.SHOPPING_CART_ITEMS_COUNT, getShoppingCartItemsCount(productIdCount));
     }
@@ -38,7 +42,7 @@ public class OrderController {
     @ResponseBody
     public void adjustQuantity(@RequestBody ProductAdjustQuantityBindingModel bindingModel,
                                HttpSession session) {
-        Map<Long, Integer> productIdCount = getShoppingCart(session);
+        Map<Long, Integer> productIdCount = getShoppingCartMap(session);
 
         if (bindingModel.getProductId() == -1) { //remove all button pressed
             productIdCount.clear();
@@ -55,7 +59,7 @@ public class OrderController {
     @GetMapping(value = "/shopping-cart-items-count", produces = "application/json")
     @ResponseBody
     public ShoppingCartItemsCount getShoppingCartItemsCount(HttpSession session) {
-        Map<Long, Integer> productIdCount = getShoppingCart(session);
+        Map<Long, Integer> productIdCount = getShoppingCartMap(session);
 
         ShoppingCartItemsCount shoppingCartItemsCount = new ShoppingCartItemsCount();
         shoppingCartItemsCount.setItemsCount(getShoppingCartItemsCount(productIdCount));
@@ -66,25 +70,63 @@ public class OrderController {
     @GetMapping("/shopping-cart")
     public ModelAndView getShoppingCartPage(ModelAndView modelAndView, HttpSession session) {
         ShoppingCartViewModel shoppingCartViewModel =
-                orderService.getShoppingCartViewModel(getShoppingCart(session));
+                orderService.getShoppingCartViewModel(getShoppingCartMap(session));
 
         modelAndView.addObject(SessionConstants.SHOPPING_CART, shoppingCartViewModel);
         modelAndView.setViewName("/order/shopping-cart.html");
         return modelAndView;
     }
 
-    @GetMapping("/information-and-billing")
+    @GetMapping("/billing")
     public ModelAndView getInformationAndBillingPage(ModelAndView modelAndView,
                                                      HttpSession session) {
         ShoppingCartViewModel shoppingCartViewModel =
-                orderService.getShoppingCartViewModel(getShoppingCart(session));
+                orderService.getShoppingCartViewModel(getShoppingCartMap(session));
         modelAndView.addObject("shoppingCart", shoppingCartViewModel);
 
-        modelAndView.setViewName("/order/information-and-payment.html");
+        modelAndView.setViewName("/order/billing.html");
         return modelAndView;
     }
 
-    private Map<Long, Integer> getShoppingCart(HttpSession session) {
+    @PostMapping("/billing")
+    public String checkout(@Valid @ModelAttribute("billingInformation") BillingInformationBindingModel bindingModel,
+                           BindingResult bindingResult,
+                           RedirectAttributes redirectAttributes) {
+        //TODO if cash is selected and only address is wrong, then also credit info gets errors.
+        if ("cash".equals(bindingModel.getBillingType())
+                && bindingResult.getFieldError("address") == null) { //check validation for address only
+            redirectAttributes.addFlashAttribute("flashBillingInformation", bindingModel);
+            return "redirect:/order/checkout";
+        } else {
+            if (bindingResult.hasErrors()) {
+                return "order/billing.html";
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("flashBillingInformation", bindingModel);
+        return "redirect:/order/checkout";
+    }
+
+    @GetMapping("/checkout")
+    public ModelAndView modelAndView(ModelAndView modelAndView,
+                                     HttpSession session,
+                                     @ModelAttribute("flashBillingInformation") BillingInformationBindingModel billingInformationBindingModel) {
+        ShoppingCartViewModel shoppingCartViewModel =
+                orderService.getShoppingCartViewModel(getShoppingCartMap(session));
+        modelAndView.addObject("shoppingCart", shoppingCartViewModel);
+
+        modelAndView.addObject("billingInformation", billingInformationBindingModel);
+
+        modelAndView.setViewName("/order/checkout.html");
+        return modelAndView;
+    }
+
+    @ModelAttribute("billingInformation")
+    public BillingInformationBindingModel getBillingInformationModel() {
+        return new BillingInformationBindingModel();
+    }
+
+    private Map<Long, Integer> getShoppingCartMap(HttpSession session) {
         return (Map<Long, Integer>) session.getAttribute(SessionConstants.SHOPPING_CART);
     }
 

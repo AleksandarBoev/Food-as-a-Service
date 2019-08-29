@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Wat</title>
@@ -15,12 +15,15 @@
 
 <h1>Hello</h1>
 
-<div class="def-number-input number-input safari_only">
-    <button id="button-minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown()" class="minus">-
-    </button>
-        <input id="productId" class="quantity" min="1" name="quantity" value="1" type="number">
-    <button id="button-plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp()" class="plus">+
-    </button>
+<div class="form-check-inline">
+    <label class="form-check-label">
+        <input type="radio" class="form-check-input" name="cash" th:name="one">Cash
+    </label>
+</div>
+<div class="form-check-inline">
+    <label class="form-check-label">
+        <input type="radio" class="form-check-input" name="cash" th:name="two">Credit
+    </label>
 </div>
 
 
