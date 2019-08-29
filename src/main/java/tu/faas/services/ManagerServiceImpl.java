@@ -3,6 +3,7 @@ package tu.faas.services;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tu.faas.domain.beans.StringManipulation;
 import tu.faas.domain.entities.Product;
 import tu.faas.domain.entities.Restaurant;
 import tu.faas.domain.entities.User;
@@ -31,13 +32,15 @@ public class ManagerServiceImpl implements ManagerService {
     private UserRepository userRepository;
     private ProductRepository productRepository;
     private ModelMapper modelMapper;
+    private StringManipulation stringManipulation;
 
     @Autowired
-    public ManagerServiceImpl(RestaurantRepository restaurantRepository, UserRepository userRepository, ProductRepository productRepository, ModelMapper modelMapper) {
+    public ManagerServiceImpl(RestaurantRepository restaurantRepository, UserRepository userRepository, ProductRepository productRepository, ModelMapper modelMapper, StringManipulation stringManipulation) {
         this.restaurantRepository = restaurantRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.stringManipulation = stringManipulation;
     }
 
     @Override
@@ -102,9 +105,9 @@ public class ManagerServiceImpl implements ManagerService {
                     ProductListViewModel result =
                             modelMapper.map(p, ProductListViewModel.class);
 
-                    result.setName(cropString(result.getName(), 15, "..."));
-                    result.setDescription(cropString(result.getDescription(), 15, "..."));
-                    result.setImageUrl(cropString(result.getImageUrl(), 15, "..."));
+                    result.setName(stringManipulation.cropString(result.getName(), 15, "..."));
+                    result.setDescription(stringManipulation.cropString(result.getDescription(), 15, "..."));
+                    result.setImageUrl(stringManipulation.cropString(result.getImageUrl(), 15, "..."));
 
                     return result;
                 })
@@ -164,14 +167,5 @@ public class ManagerServiceImpl implements ManagerService {
 
         result.setProductListViewModels(productListViewModels);
         return result;
-    }
-
-    private String cropString(String string, int maxLength, String endingReplacement) {
-        if (string.length() > maxLength) {
-            string = string.substring(0, maxLength + 1);
-            string += endingReplacement;
-        }
-
-        return string;
     }
 }

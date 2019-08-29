@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ShoppingCartViewModel {
     private List<ProductShoppingCartViewModel> products;
-    private BigDecimal totalPrice;
+    private BigDecimal totalSum;
 
     public List<ProductShoppingCartViewModel> getProducts() {
         return products;
@@ -15,11 +15,11 @@ public class ShoppingCartViewModel {
         this.products = products;
     }
 
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
+    public BigDecimal getTotalSum() {
+        return totalSum;
     }
 
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
+    public void setTotalSum(BigDecimal totalSum) {
+        this.totalSum = totalSum;
     }
 }

@@ -6,7 +6,7 @@ const fetchFunctions = (() => {
          * @param object {Object} information in the body
          */
         sendJsonToController: (path, object) => {
-            fetch(path, {
+            return fetch(path, {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json',

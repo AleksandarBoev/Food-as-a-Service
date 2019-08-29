@@ -21,6 +21,7 @@
             <th>Description</th>
             <th>Quantity</th>
             <th>Single Price</th>
+            <th>Total Price</th>
         </tr>
         </thead>
         <tbody>
@@ -44,12 +45,13 @@
                     </div>
                 </td>
                 <td class="td-price" th:text="${shoppingCartProduct.getPrice()}"></td>
+                <td class="td-total-price" th:text="${shoppingCartProduct.getTotalPrice()}"></td>
             </tr>
         </th:block>
         <tfoot>
         <tr>
-            <td colspan="5">Total Price</td>
-            <td id="total-price" th:text="${shoppingCart.getTotalPrice()}"></td>
+            <td colspan="6">Total Sum</td>
+            <td id="total-price" th:text="${shoppingCart.getTotalSum()}"></td>
         </tr>
         </tfoot>
         </tbody>
@@ -60,22 +62,25 @@
 
 <th:block th:replace="../fragments/footer"></th:block>
 
+<script th:src="@{/js_files/update-items-count.js}"></script>
 <script th:src="@{/js_files/fetch-functions.js}"></script>
 <script>
     const quantityTableDefinitions = [...document.getElementsByClassName('td-quantity')];
     const inputQuantities = [...document.getElementsByName('quantity')];
     const prices = [...document.getElementsByClassName('td-price')];
-    const tdTotalPrice = document.getElementById('total-price');
+    const totalPrices = [...document.getElementsByClassName('td-total-price')];
+    const tdTotalSum = document.getElementById('total-price');
 
-    const updateTotalPrice = () => {
-        let totalPrice = 0;
+    const updateTotalSum = () => {
+        let totalSum = 0;
         for (let i = 0; i < inputQuantities.length; i += 1) {
-            totalPrice += Number(inputQuantities[i].value) * Number(prices[i].textContent);
+            const currentTotalPrice = Number(inputQuantities[i].value) * Number(prices[i].textContent);
+            totalPrices[i].textContent = currentTotalPrice.toFixed(2);
+            totalSum += currentTotalPrice;
         }
 
-        tdTotalPrice.textContent = '' + totalPrice.toFixed(2);
+        tdTotalSum.textContent = '' + totalSum.toFixed(2);
     };
-
 
     const sendDelayedFetch = (timeoutIdArr, productId, inputQuantityElement) => {
         clearTimeout(timeoutIdArr[0]);
@@ -84,14 +89,16 @@
                 productId,
                 quantity: inputQuantityElement.value,
             };
-            updateTotalPrice();
-            fetchFunctions.sendJsonToController('/order/adjust-quantity', object);
+            updateTotalSum();
+            fetchFunctions.sendJsonToController('/order/adjust-quantity', object)
+                .then(() => {
+                    updateItemsCount.update();
+                });
         }, 1000);
     };
 
     quantityTableDefinitions.forEach(td => {
-        console.log(td);
-        const keyElements = {
+        const tdElements = {
             buttonMinus: td.getElementsByTagName('button')[0],
             inputQuantity: td.getElementsByTagName('input')[0],
             buttonPlus: td.getElementsByTagName('button')[1],
@@ -99,39 +106,16 @@
 
         const productId = td.parentNode.getAttribute('productId');
 
-        //not doing it with normal variable, because it gets copied in the function, but my
-        //function needs to change it
+        //not doing it with normal variable, because it gets copied in the function and my
+        //function needs to change it. So I am using a reference type variable
         let timeoutIdArr = [];
+        //Partial function
+        const currentDelayedFetch = () => sendDelayedFetch(timeoutIdArr, productId, tdElements.inputQuantity);
 
-        const currentDelayedFetch = () => sendDelayedFetch(timeoutIdArr, productId, keyElements.inputQuantity);
-
-        console.log(keyElements.buttonPlus);
-        console.log(keyElements.buttonMinus);
-        console.log(keyElements.inputQuantity);
-        keyElements.buttonPlus.addEventListener('click', currentDelayedFetch);
-        keyElements.buttonMinus.addEventListener('click', currentDelayedFetch);
-        keyElements.inputQuantity.addEventListener('input', currentDelayedFetch);
+        tdElements.buttonPlus.addEventListener('click', currentDelayedFetch);
+        tdElements.buttonMinus.addEventListener('click', currentDelayedFetch);
+        tdElements.inputQuantity.addEventListener('input', currentDelayedFetch);
     })
-
-    // const elements = {
-    //     inputQuantity: document.getElementById('productId'),
-    //     buttonPlus: document.getElementById('button-plus'),
-    //     buttonMinus: document.getElementById('button-minus'),
-    // };
-    // const controllerUrl = '/order/adjust-quantity';
-    //
-    // let timeoutId;
-    // const buttonFunction = context => {
-    //     clearTimeout(timeoutId);
-    //     timeoutId = setTimeout(() => {
-    //         const productId =
-    //         fetchFunctions.sendJsonToController(controllerUrl, )
-    //     }, 1000);
-    // };
-    //
-    // buttonPlus.addEventListener('click', buttonFunction);
-    // buttonMinus.addEventListener('click', buttonFunction);
-
 </script>
 </body>
 </html>

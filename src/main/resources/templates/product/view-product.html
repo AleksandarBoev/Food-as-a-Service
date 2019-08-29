@@ -73,7 +73,7 @@
 
 <th:block th:replace="../fragments/footer"></th:block>
 
-
+<script th:src="@{/js_files/update-items-count.js}"></script>
 <script>
     document.getElementById('add-to-cart').addEventListener('click', ev => {
         const productId = ev.target.getAttribute('productIdTag');
@@ -85,6 +85,8 @@
             body: JSON.stringify({
                 productId,
             }),
+        }).then(() => {
+            updateItemsCount.update();
         });
     });
 </script>

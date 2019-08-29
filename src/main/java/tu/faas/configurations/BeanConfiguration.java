@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import tu.faas.domain.beans.SomeClass;
+import tu.faas.domain.beans.StringManipulation;
 
 @Configuration
 public class BeanConfiguration {
@@ -19,8 +20,8 @@ public class BeanConfiguration {
         return new GsonBuilder().create();
     }
 
-//    @Bean
-//    public SomeClass getSomeClass() {
-//        return new SomeClass();
-//    }
+    @Bean
+    public StringManipulation getStringManipulation() {
+        return new StringManipulation();
+    }
 }
