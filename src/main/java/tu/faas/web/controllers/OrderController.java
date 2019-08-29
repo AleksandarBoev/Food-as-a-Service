@@ -39,7 +39,14 @@ public class OrderController {
     public void adjustQuantity(@RequestBody ProductAdjustQuantityBindingModel bindingModel,
                                HttpSession session) {
         Map<Long, Integer> productIdCount = getShoppingCart(session);
-        productIdCount.put(bindingModel.getProductId(), bindingModel.getQuantity());
+
+        if (bindingModel.getProductId() == -1) { //remove all button pressed
+            productIdCount.clear();
+        } else if (bindingModel.getQuantity() <= 0) { //remove button pressed
+            productIdCount.remove(bindingModel.getProductId());
+        } else { //quantity adjust
+            productIdCount.put(bindingModel.getProductId(), bindingModel.getQuantity());
+        }
         System.out.println(bindingModel);
         System.out.println(productIdCount);
         session.setAttribute(SessionConstants.SHOPPING_CART_ITEMS_COUNT, getShoppingCartItemsCount(productIdCount));
@@ -63,6 +70,17 @@ public class OrderController {
 
         modelAndView.addObject(SessionConstants.SHOPPING_CART, shoppingCartViewModel);
         modelAndView.setViewName("/order/shopping-cart.html");
+        return modelAndView;
+    }
+
+    @GetMapping("/information-and-billing")
+    public ModelAndView getInformationAndBillingPage(ModelAndView modelAndView,
+                                                     HttpSession session) {
+        ShoppingCartViewModel shoppingCartViewModel =
+                orderService.getShoppingCartViewModel(getShoppingCart(session));
+        modelAndView.addObject("shoppingCart", shoppingCartViewModel);
+
+        modelAndView.setViewName("/order/information-and-payment.html");
         return modelAndView;
     }
 

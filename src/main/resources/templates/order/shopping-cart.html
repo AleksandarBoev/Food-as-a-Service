@@ -11,8 +11,9 @@
 <main>
 
     <h1>Your shopping cart:</h1>
-    <p th:if="${shoppingCart.getProducts().isEmpty()}">No ordered products yet!</p>
-    <table th:unless="${shoppingCart.getProducts().isEmpty()}" class="table table-dark table-hover">
+    <p id="no-items"><span th:if="${shoppingCart.getProducts().isEmpty()}">Shopping cart is empty</span></p>
+    <th:block th:unless="${shoppingCart.getProducts().isEmpty()}">
+    <table  class="table table-dark table-hover">
         <thead>
         <tr>
             <th>Name</th>
@@ -22,6 +23,7 @@
             <th>Quantity</th>
             <th>Single Price</th>
             <th>Total Price</th>
+            <th><button id="remove-all" class="btn btn-danger">Remove all</button></th>
         </tr>
         </thead>
         <tbody>
@@ -46,17 +48,20 @@
                 </td>
                 <td class="td-price" th:text="${shoppingCartProduct.getPrice()}"></td>
                 <td class="td-total-price" th:text="${shoppingCartProduct.getTotalPrice()}"></td>
+                <td><button class="btn btn-danger btn-remove">Remove</button></td>
             </tr>
         </th:block>
+        </tbody>
         <tfoot>
         <tr>
             <td colspan="6">Total Sum</td>
             <td id="total-price" th:text="${shoppingCart.getTotalSum()}"></td>
         </tr>
         </tfoot>
-        </tbody>
     </table>
-    <button>Update Quantities</button>
+
+    <a th:href="@{/order/information-and-billing}"><button>Go to checkout</button></a>
+    </th:block>
 
 </main>
 
@@ -65,13 +70,17 @@
 <script th:src="@{/js_files/update-items-count.js}"></script>
 <script th:src="@{/js_files/fetch-functions.js}"></script>
 <script>
-    const quantityTableDefinitions = [...document.getElementsByClassName('td-quantity')];
-    const inputQuantities = [...document.getElementsByName('quantity')];
-    const prices = [...document.getElementsByClassName('td-price')];
-    const totalPrices = [...document.getElementsByClassName('td-total-price')];
+    const removeButtons = [...document.getElementsByClassName('btn-remove')];
+    const removeAllButton = document.getElementById('remove-all');
+    const tableBody = document.getElementsByTagName('tbody')[0];
     const tdTotalSum = document.getElementById('total-price');
 
+    const quantityTableDefinitions = [...document.getElementsByClassName('td-quantity')];
     const updateTotalSum = () => {
+        const inputQuantities = [...document.getElementsByName('quantity')];
+        const prices = [...document.getElementsByClassName('td-price')];
+        const totalPrices = [...document.getElementsByClassName('td-total-price')];
+
         let totalSum = 0;
         for (let i = 0; i < inputQuantities.length; i += 1) {
             const currentTotalPrice = Number(inputQuantities[i].value) * Number(prices[i].textContent);
@@ -82,15 +91,20 @@
         tdTotalSum.textContent = '' + totalSum.toFixed(2);
     };
 
-    const sendDelayedFetch = (timeoutIdArr, productId, inputQuantityElement) => {
+    const sendDelayedFetch = (timeoutIdArr, productId, inputQuantity) => {
         clearTimeout(timeoutIdArr[0]);
         timeoutIdArr[0] = setTimeout(() => {
+            let quantity;
+            typeof inputQuantity === 'number'
+                ? quantity = inputQuantity
+                : quantity = inputQuantity.value;
+
             const object = {
                 productId,
-                quantity: inputQuantityElement.value,
+                quantity,
             };
-            updateTotalSum();
-            fetchFunctions.sendJsonToController('/order/adjust-quantity', object)
+            // updateTotalSum();
+            return fetchFunctions.sendJsonToController('/order/adjust-quantity', object)
                 .then(() => {
                     updateItemsCount.update();
                 });
@@ -110,12 +124,41 @@
         //function needs to change it. So I am using a reference type variable
         let timeoutIdArr = [];
         //Partial function
-        const currentDelayedFetch = () => sendDelayedFetch(timeoutIdArr, productId, tdElements.inputQuantity);
+        const currentDelayedFetch = () => {
+            sendDelayedFetch(timeoutIdArr, productId, tdElements.inputQuantity);
+            updateTotalSum();
+        };
 
         tdElements.buttonPlus.addEventListener('click', currentDelayedFetch);
         tdElements.buttonMinus.addEventListener('click', currentDelayedFetch);
         tdElements.inputQuantity.addEventListener('input', currentDelayedFetch);
-    })
+    });
+
+    removeButtons.forEach(button => {
+        button.addEventListener('click', ev => {
+            const tableRow = ev.target.parentNode.parentNode; //button --> td --> tr
+            console.log(tableRow);
+            const productId = tableRow.getAttribute('productId');
+            tableBody.removeChild(tableRow);
+            if (tableBody.children.length === 0) {
+                removeAll();
+            } else {
+                updateTotalSum();
+                sendDelayedFetch([-1], productId, 0);
+            }
+        })
+    });
+
+    const removeAll = () => {
+        document.getElementsByTagName('main')[0].removeChild(document.getElementsByTagName('table')[0]);
+        document.getElementById('no-items').textContent = 'Shopping cart is empty';
+        sendDelayedFetch([-1], -1, 0);
+    };
+
+    document.getElementById('remove-all').addEventListener('click', () => {
+        removeAll();
+    });
+
 </script>
 </body>
 </html>

@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Chekout</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
 </head>
 <body>
+<th:block th:replace="../fragments/header"></th:block>
 
+<main>
+    <section>
+        <h1>Order information</h1>
+        <table class="table table-dark table-hover">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Weight in grams</th>
+                <th>Image URL</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Single Price</th>
+                <th>Total Price</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="shoppingCartProduct: ${shoppingCart.products}">
+                <tr th:productId="${shoppingCartProduct.getId()}">
+                    <td th:text="${shoppingCartProduct.getName()}"></td>
+                    <td th:text="${shoppingCartProduct.getWeightInGrams()}"></td>
+                    <td th:text="${shoppingCartProduct.getImageUrl()}"></td>
+                    <td th:text="${shoppingCartProduct.getDescription()}"></td>
+                    <td th:text="${shoppingCartProduct.getQuantity()}"></td>
+                    <td class="td-price" th:text="${shoppingCartProduct.getPrice()}"></td>
+                    <td class="td-total-price" th:text="${shoppingCartProduct.getTotalPrice()}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="6">Total Sum</td>
+                <td id="total-price" th:text="${shoppingCart.getTotalSum()}"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </section>
+    <hr/>
+    <section>
+        <h1>Billing information</h1>
+    </section>
+    <a th:href="@{/order/shopping-cart}"><button>Back to shopping cart</button></a>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
 </body>
 </html>
