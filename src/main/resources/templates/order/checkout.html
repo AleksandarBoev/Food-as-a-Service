@@ -46,14 +46,14 @@
     <hr/>
     <section>
         <h1>Billing information</h1>
-        <p>Address for delivery: <span th:text="${billingInformation.getAddress()}"></span></p>
-        <p>Payment method: <span th:text="${billingInformation.getBillingType()}"></span></p>
-        <ul th:if="${billingInformation.getBillingType() == 'credit'}">
-            <li>Credit card number: <span th:text="${billingInformation.getCreditCardNumber()}"></span></li>
-            <li>Security code: <span th:text="${billingInformation.getSecurityCode()}"></span></li>
-        </ul>
+        <label>Address for delivery: <input disabled th:name="address"
+                                            th:value="${#session.getAttribute('address')}"/></label>
+        <label>Payment method: <input disabled
+                                      th:value="${#session.getAttribute('billingType')}"/></label>
+        <form th:action="@{/order/checkout}" th:method="post">
+            <input type="submit" value="Confirm Order"/>
+        </form>
     </section>
-    <a th:href="@{/}"><button>Checkout</button></a>
 </main>
 <th:block th:replace="../fragments/footer"></th:block>
 

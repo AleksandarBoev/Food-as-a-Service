@@ -1,4 +1,4 @@
-package tu.faas.services;
+package tu.faas.services.implementations;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import tu.faas.domain.models.view.RestaurantViewModel;
 import tu.faas.repositories.ProductRepository;
 import tu.faas.repositories.RestaurantRepository;
 import tu.faas.repositories.UserRepository;
+import tu.faas.services.contracts.ManagerService;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -162,6 +163,7 @@ public class ManagerServiceImpl implements ManagerService {
                 .stream()
                 .map(p -> {
                     ProductListViewModel productListViewModel = modelMapper.map(p, ProductListViewModel.class);
+                    productListViewModel.setDescription(stringManipulation.cropString(productListViewModel.getDescription(), 15, "..."));
                     return productListViewModel;
                 }).collect(Collectors.toList());
 

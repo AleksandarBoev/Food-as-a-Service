@@ -3,46 +3,47 @@ package tu.faas.domain.entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {
-    private User user;
-    private Product product;
-    private Integer quantity;
+    private User customer;
+    private LocalDateTime dateTimeOfOrder;
+    private List<ProductOrder> productOrders;
     private BigDecimal totalPrice;
-    private LocalDateTime date;
+    private String billingType;
+    private String address;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    public User getUser() {
-        return user;
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+    public User getCustomer() {
+        return customer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setCustomer(User customer) {
+        this.customer = customer;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    public Product getProduct() {
-        return product;
+    @Column(name = "date_time_of_order")
+    public LocalDateTime getDateTimeOfOrder() {
+        return dateTimeOfOrder;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setDateTimeOfOrder(LocalDateTime dateTimeOfOrder) {
+        this.dateTimeOfOrder = dateTimeOfOrder;
     }
 
-    @Column
-    public Integer getQuantity() {
-        return quantity;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    public List<ProductOrder> getProductOrders() {
+        return productOrders;
     }
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+    public void setProductOrders(List<ProductOrder> productOrders) {
+        this.productOrders = productOrders;
     }
 
-    @Column(name = "total_price", columnDefinition = "DECIMAL(7,2)")
+    @Column(name = "total_price")
     public BigDecimal getTotalPrice() {
         return totalPrice;
     }
@@ -51,12 +52,19 @@ public class Order extends BaseEntity {
         this.totalPrice = totalPrice;
     }
 
-    @Column
-    public LocalDateTime getDate() {
-        return date;
+    public String getBillingType() {
+        return billingType;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setBillingType(String billingType) {
+        this.billingType = billingType;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

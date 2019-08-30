@@ -3,13 +3,16 @@ package tu.faas.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tu.faas.domain.exceptions.EmailAlreadyExists;
 import tu.faas.domain.exceptions.NoSuchUser;
-import tu.faas.domain.exceptions.UserAlreadyExists;
+import tu.faas.domain.exceptions.PasswordsNotSame;
+import tu.faas.domain.exceptions.UsernameAlreadyExists;
 import tu.faas.domain.models.binding.UserLoginBindingModel;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
-import tu.faas.services.UserService;
+import tu.faas.services.contracts.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -44,9 +47,21 @@ public class UserController {
         try {
             userService.registerUser(userRegisterBindingModel);
             modelAndView.setViewName("redirect:/user/login");
-        } catch (UserAlreadyExists uae) {
+        } catch (PasswordsNotSame pns) {
             modelAndView.setViewName("register.html");
-            modelAndView.addObject("errorMessage", uae.getMessage());
+            FieldError fieldError =
+                    new FieldError("userRegisterBindingModel", "repassword", pns.getMessage());
+            bindingResult.addError(fieldError);
+        } catch (UsernameAlreadyExists uae) {
+            modelAndView.setViewName("register.html");
+            FieldError fieldError =
+                    new FieldError("userRegisterBindingModel", "name", uae.getMessage());
+            bindingResult.addError(fieldError);
+        } catch (EmailAlreadyExists eae) {
+            modelAndView.setViewName("register.html");
+            FieldError fieldError =
+                    new FieldError("userRegisterBindingModel", "email", eae.getMessage());
+            bindingResult.addError(fieldError);
         }
 
         return modelAndView;

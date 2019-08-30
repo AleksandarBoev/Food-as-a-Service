@@ -1,5 +1,6 @@
 package tu.faas.web.controllers;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -8,11 +9,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.models.binding.BillingInformationBindingModel;
+import tu.faas.domain.models.binding.OrderBindingModel;
 import tu.faas.domain.models.binding.ProductAddToCartBindingModel;
 import tu.faas.domain.models.binding.ProductAdjustQuantityBindingModel;
 import tu.faas.domain.models.view.ShoppingCartItemsCount;
 import tu.faas.domain.models.view.ShoppingCartViewModel;
-import tu.faas.services.OrderService;
+import tu.faas.services.contracts.OrderService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -89,13 +91,15 @@ public class OrderController {
     }
 
     @PostMapping("/billing")
-    public String checkout(@Valid @ModelAttribute("billingInformation") BillingInformationBindingModel bindingModel,
+    public String checkout(HttpSession session,
+                           @Valid @ModelAttribute("billingInformation") BillingInformationBindingModel bindingModel,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) {
         //TODO if cash is selected and only address is wrong, then also credit info gets errors.
         if ("cash".equals(bindingModel.getBillingType())
                 && bindingResult.getFieldError("address") == null) { //check validation for address only
-            redirectAttributes.addFlashAttribute("flashBillingInformation", bindingModel);
+            session.setAttribute("billingType", bindingModel.getBillingType());
+            session.setAttribute("address", bindingModel.getAddress());
             return "redirect:/order/checkout";
         } else {
             if (bindingResult.hasErrors()) {
@@ -103,22 +107,38 @@ public class OrderController {
             }
         }
 
-        redirectAttributes.addFlashAttribute("flashBillingInformation", bindingModel);
+        session.setAttribute("billingType", bindingModel.getBillingType());
+        session.setAttribute("address", bindingModel.getAddress());
         return "redirect:/order/checkout";
     }
 
     @GetMapping("/checkout")
-    public ModelAndView modelAndView(ModelAndView modelAndView,
-                                     HttpSession session,
-                                     @ModelAttribute("flashBillingInformation") BillingInformationBindingModel billingInformationBindingModel) {
+    public ModelAndView getCheckoutPage(ModelAndView modelAndView,
+                                        HttpSession session,
+                                        @ModelAttribute("flashBillingInformation") BillingInformationBindingModel billingInformationBindingModel) {
         ShoppingCartViewModel shoppingCartViewModel =
                 orderService.getShoppingCartViewModel(getShoppingCartMap(session));
         modelAndView.addObject("shoppingCart", shoppingCartViewModel);
-
         modelAndView.addObject("billingInformation", billingInformationBindingModel);
-
         modelAndView.setViewName("/order/checkout.html");
         return modelAndView;
+    }
+
+    @PostMapping("/checkout")
+    public String postCheckoutPage(HttpSession session,
+                                   @RequestParam(name = "address", required = false) String address,
+                                   @RequestParam(name = "billingType", required = false) String billingType) {
+        OrderBindingModel orderBindingModel = new OrderBindingModel();
+
+        orderBindingModel.setAddress((String) session.getAttribute("address"));
+        orderBindingModel.setBillingType((String) session.getAttribute("billingType"));
+
+        orderBindingModel.setCustomerId((Long) session.getAttribute("userId"));
+        orderBindingModel.setProductIdQuantities(getShoppingCartMap(session));
+
+        orderService.makeOrder(orderBindingModel);
+
+        return "/order/success-order.html";
     }
 
     @ModelAttribute("billingInformation")

@@ -2,6 +2,7 @@ package tu.faas.domain.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "products")
@@ -12,6 +13,7 @@ public class Product extends BaseEntity {
     private String imageUrl;
     private String description;
     private Restaurant restaurant;
+    private List<ProductOrder> productOrders;
 
     @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     public String getName() {
@@ -66,5 +68,14 @@ public class Product extends BaseEntity {
 
     public void setRestaurant(Restaurant restaurant) {
         this.restaurant = restaurant;
+    }
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    public List<ProductOrder> getProductOrders() {
+        return productOrders;
+    }
+
+    public void setProductOrders(List<ProductOrder> productOrders) {
+        this.productOrders = productOrders;
     }
 }

@@ -10,10 +10,9 @@ import tu.faas.domain.models.multipurpose.RestaurantModel;
 import tu.faas.domain.models.binding.ProductCreateBindingModel;
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.view.RestaurantListViewModel;
-import tu.faas.domain.models.view.ProductListViewModel;
 import tu.faas.domain.models.view.ProductViewModel;
 import tu.faas.domain.models.view.RestaurantViewModel;
-import tu.faas.services.ManagerService;
+import tu.faas.services.contracts.ManagerService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;

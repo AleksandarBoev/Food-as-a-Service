@@ -29,7 +29,7 @@
 
     <hr/>
     <h1>ALL PRODUCTS FOR THIS PARTICULAR RESTAURANT:</h1>
-    <p th:if="${restaurantViewModel.productListViewModels.isEmpty()}">No products for this restaurant yet.</p>
+    <p th:if="${restaurantViewModel.productListViewModels.isEmpty()}">No products for this restaurant yet. <a th:href="@{/manager/{r_id}/create_product(r_id=${restaurantViewModel.getId()})}">Create some!</a></p>
     <table th:unless="${restaurantViewModel.productListViewModels.isEmpty()}" class="table table-dark table-hover">
         <thead>
         <tr>

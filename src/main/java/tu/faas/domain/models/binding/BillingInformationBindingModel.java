@@ -5,7 +5,7 @@ import javax.validation.constraints.Pattern;
 
 public class BillingInformationBindingModel {
     public static final String ADDRESS_FORMAT_MESSAGE =
-            "Address should contain only letters, digits and dots and be at least 3 characters long!";
+            "Address should contain only letters, digits, spaces and dots and be at least 3 characters long!";
     public static final String BILLING_TYPE_MESSAGE =
             "Please select billing type!";
     public static final String CREDIT_CARD_FORMAT_MESSAGE =
@@ -18,7 +18,7 @@ public class BillingInformationBindingModel {
     private String creditCardNumber;
     private String securityCode;
 
-    @Pattern(regexp = "^[A-z0-9\\.]{3,}$", message = ADDRESS_FORMAT_MESSAGE)
+    @Pattern(regexp = "^[A-z0-9\\. ]{3,}$", message = ADDRESS_FORMAT_MESSAGE)
     public String getAddress() {
         return address;
     }

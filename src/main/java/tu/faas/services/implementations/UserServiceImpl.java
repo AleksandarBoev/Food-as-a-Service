@@ -1,4 +1,4 @@
-package tu.faas.services;
+package tu.faas.services.implementations;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,12 +6,15 @@ import org.springframework.stereotype.Service;
 import tu.faas.domain.constants.RoleConstants;
 import tu.faas.domain.entities.Role;
 import tu.faas.domain.entities.User;
+import tu.faas.domain.exceptions.EmailAlreadyExists;
 import tu.faas.domain.exceptions.NoSuchUser;
-import tu.faas.domain.exceptions.UserAlreadyExists;
+import tu.faas.domain.exceptions.PasswordsNotSame;
+import tu.faas.domain.exceptions.UsernameAlreadyExists;
 import tu.faas.domain.models.binding.UserLoginBindingModel;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
 import tu.faas.repositories.RoleRepository;
 import tu.faas.repositories.UserRepository;
+import tu.faas.services.contracts.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashSet;
@@ -33,12 +36,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserRegisterBindingModel userRegisterBindingModel) {
+        if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getRepassword())) {
+            throw new PasswordsNotSame();
+        }
+
         if (userRepository.existsByName(userRegisterBindingModel.getName())) {
-            throw new UserAlreadyExists(UserAlreadyExists.USERNAME_ALREADY_EXISTS);
+            throw new UsernameAlreadyExists();
         }
 
         if (userRepository.existsByEmail(userRegisterBindingModel.getEmail())) {
-            throw new UserAlreadyExists(UserAlreadyExists.EMAIL_ALREADY_EXISTS);
+            throw new EmailAlreadyExists();
         }
 
         User user = modelMapper.map(userRegisterBindingModel, User.class);

@@ -37,6 +37,9 @@
                 Re-enter password: <input type="password" name="repassword" id="repassword" class="form-control"
                                           placeholder="RePassword..." th:field="*{repassword}"/>
             </label>
+            <th:block th:each="repasswordErrorMEssage: ${#fields.errors('repassword')}">
+                <p class="text-danger" th:text="${repasswordErrorMEssage}"></p>
+            </th:block>
         </div>
 
         <div class="form-group">
@@ -47,17 +50,9 @@
             <th:block th:each="emailErrorMessage: ${#fields.errors('email')}">
                 <p class="text-danger" th:text="${emailErrorMessage}"></p>
             </th:block>
-            <p th:text="${userRegisterBindingModel.getEmail()}"></p>
         </div>
 
         <input type="submit" value="Register"/>
-
-        <p class="text-danger" th:text="${errorMessage}"></p>
-        <ul>
-            <li th:each="error: ${#fields.errors()}">
-                <span th:text="${error}"></span>
-            </li>
-        </ul>
     </form>
 
 

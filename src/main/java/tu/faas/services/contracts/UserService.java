@@ -1,4 +1,4 @@
-package tu.faas.services;
+package tu.faas.services.contracts;
 
 import tu.faas.domain.models.binding.UserLoginBindingModel;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
