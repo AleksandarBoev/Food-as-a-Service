@@ -1,0 +1,4 @@
+<ul xmlns:th="http://www.thymeleaf.org" th:each="someClass: ${someClasses}">
+    <li>Number: <span th:text="${someClass.getNumber()}"></span>,
+        name: <span th:text="${someClass.getName()}"></span></li>
+</ul>

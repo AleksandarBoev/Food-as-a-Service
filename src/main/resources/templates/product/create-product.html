@@ -11,7 +11,7 @@
 <main>
 
     <h1>Create Product!</h1>
-    <form th:action="@{/manager/{r_id}/create_product(r_id=${restaurant_id})}" th:method="post" th:object="${productCreateBindingModel}">
+    <form th:action="@{/products/{r_id}/create(r_id=${restaurant_id})}" th:method="post" th:object="${productCreateBindingModel}">
         <div class="form-group">
             <label for="name">
                 Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"

@@ -1,0 +1,22 @@
+<div class="row" xmlns:th="http://www.thymeleaf.org">
+    <div th:each="productAllViewModel: ${productAllViewModels}"
+         class="col-md-4 text-center overflow-hidden">
+
+        <img class="details-img"
+             th:src="${productAllViewModel.getImageUrl()}"/>
+        <div class="my-3 p-3">
+            <p th:text="${productAllViewModel.getName()}" style="font-size: 30px" class="display-5"></p>
+            <p>Price: <span th:text="${productAllViewModel.getPrice()}"></span>$</p>
+            <p>Weight in grams: <span th:text="${productAllViewModel.getWeightInGrams()}"></span></p>
+        </div>
+
+        <a th:href="@{/products/view(id=${productAllViewModel.getId()})}" class="btn btn-info btn-lg">View</a>
+
+        <th:block th:if="${productAllViewModel.getOwnerId()} == ${#session.getAttribute('userId')}">
+            <a th:href="@{/products/edit(id=${productAllViewModel.getId()})}"
+               class="btn btn-primary btn-lg">Edit</a>
+            <a th:href="@{/products/delete(id=${productAllViewModel.getId()})}"
+               class="btn btn-danger btn-lg">Delete</a>
+        </th:block>
+    </div>
+</div>

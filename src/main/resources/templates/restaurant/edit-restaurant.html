@@ -10,7 +10,7 @@
 
 <h1>Editing Restaurant</h1>
 
-<form id="edit-form" th:action="@{/manager/restaurants/edit/(id=${restaurantModel.getId()})}" th:method="put" th:object="${restaurantModel}">
+<form id="edit-form" th:action="@{/restaurants/edit/(id=${restaurantModel.getId()})}" th:method="put" th:object="${restaurantModel}">
     <div class="form-group">
         <label for="name">
             Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"

@@ -13,62 +13,31 @@
 </head>
 <body>
 
-<div class="row">
-    <div class="col-md-4 text-center overflow-hidden">
-
-        <img class="details-img"
-             src="https://amp.businessinsider.com/images/5c0990b1d5000c07f77ba114-750-563.jpg"/>
-        <div class="my-3 p-3">
-            <p style="font-size: 30px" class="display-5">This is main header</p>
-            <p>Description:</p>
-            <small>Some description</small>
-            <p class="infoType">Date: <small>current date</small></p>
-            <p class="infoType">Peope interested in: <small>23</small></p>
-            <p class="infoType">Organizer: <small>me</small></p>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <div class="input-group">
+                <div class="input-group-btn search-panel">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span id="search_concept">Sort by</span> <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>Name Asc</li>
+                        <li>Name Desc</li>
+                        <li class="divider"></li>
+                        <li>Price Asc</li>
+                        <li><a href="">Price Desc</a></li>
+                    </ul>
+                </div>
+                <input type="hidden" name="search_param" value="all" id="search_param">
+                <input type="text" class="form-control" name="x" placeholder="Search term...">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                </span>
+            </div>
         </div>
-        <a href="#/edit_event/{{currentEvent._id}}" class="btn btn-primary btn-lg">Edit the event</a>
-        <a href="#/close_event/{{currentEvent._id}}" class="btn btn-danger btn-lg">Close the event</a>
-        <a href="#/join_event/{{currentEvent._id}}" class="btn btn-info btn-lg">Join the event</a>
     </div>
-
-    <div class="col-md-4 text-center overflow-hidden">
-
-        <img class="details-img"
-             src="https://amp.businessinsider.com/images/5c0990b1d5000c07f77ba114-750-563.jpg"/>
-        <div class="my-3 p-3">
-            <h1 class="display-5">This is main header</h1>
-            <p class="infoType">Description:</p>
-            <small>Some description</small>
-            <p class="infoType">Date: <small>current date</small></p>
-            <p class="infoType">Peope interested in: <small>23</small></p>
-            <p class="infoType">Organizer: <small>me</small></p>
-        </div>
-        <a href="#/edit_event/{{currentEvent._id}}" class="btn btn-primary btn-lg">Edit the event</a>
-        <a href="#/close_event/{{currentEvent._id}}" class="btn btn-danger btn-lg">Close the event</a>
-        <a href="#/join_event/{{currentEvent._id}}" class="btn btn-info btn-lg">Join the event</a>
-    </div>
-
-    <div class="col-md-4 text-center overflow-hidden">
-
-        <img class="details-img"
-             src="https://amp.businessinsider.com/images/5c0990b1d5000c07f77ba114-750-563.jpg"/>
-        <div class="my-3 p-3">
-            <h1 class="display-5">This is main header</h1>
-            <p class="infoType">Description:</p>
-            <small>Some description</small>
-            <p class="infoType">Date: <small>current date</small></p>
-            <p class="infoType">Peope interested in: <small>23</small></p>
-            <p class="infoType">Organizer: <small>me</small></p>
-        </div>
-        <a href="#/edit_event/{{currentEvent._id}}" class="btn btn-primary btn-lg">Edit the event</a>
-        <a href="#/close_event/{{currentEvent._id}}" class="btn btn-danger btn-lg">Close the event</a>
-        <a href="#/join_event/{{currentEvent._id}}" class="btn btn-info btn-lg">Join the event</a>
-    </div>
-
 </div>
-
-
-
 
 <script>
 

@@ -38,10 +38,10 @@
     </button>
 
     <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
-        <a th:href="@{/manager/edit-product/(id=${productViewModel.getId()})}">
+        <a th:href="@{/products/edit(id=${productViewModel.getId()})}">
             <button type="button" class="btn btn-primary">Edit</button>
         </a>
-        <a th:href="@{/manager/delete-product/(id=${productViewModel.getId()})}">
+        <a th:href="@{/products/delete(id=${productViewModel.getId()})}">
             <button type="button" class="btn btn-danger">Delete</button>
         </a>
     </th:block>

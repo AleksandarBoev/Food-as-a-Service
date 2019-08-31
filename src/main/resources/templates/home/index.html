@@ -68,7 +68,7 @@
             </ol>
             <div class="carousel-inner">
                 <div class="carousel-item" th:each="productHomeViewModel: ${productHomeViewModels}">
-                    <a th:href="@{/manager/view-product/(id=${productHomeViewModel.getId()})}">
+                    <a th:href="@{/products/view(id=${productHomeViewModel.getId()})}">
                         <div class="centered">"<span th:text="${productHomeViewModel.getName()}"></span>" from <span
                                 th:text="${productHomeViewModel.getRestaurantName()}"></span> for <span
                                 th:text="${productHomeViewModel.getPrice()}"></span>$
@@ -97,7 +97,7 @@
             </ol>
             <div class="carousel-inner">
                 <div class="carousel-item" th:each="restaurantHomeViewModel: ${restaurantHomeViewModels}">
-                    <a th:href="@{/manager/restaurants/view/(id=${restaurantHomeViewModel.getId()})}">
+                    <a th:href="@{/restaurants/view(id=${restaurantHomeViewModel.getId()})}">
                         <div class="centered">
                             <span th:text="${restaurantHomeViewModel.getName()}"></span>
                              with <span th:text="${restaurantHomeViewModel.getProductsCount()}"></span>

@@ -8,7 +8,7 @@
 <body>
 <th:block th:replace="../fragments/header"></th:block>
 <h1>Editing "<span th:text="${productModel.getName()}"></span>"</h1>
-<form th:href="@{/manager/edit-product/(id=${productModel.getId()})}" th:method="put" th:object="${productModel}">
+<form th:href="@{/products/edit(id=${productModel.getId()})}" th:method="put" th:object="${productModel}">
     <div class="form-group">
         <label for="name">
             Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"

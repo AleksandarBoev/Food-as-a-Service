@@ -9,7 +9,7 @@
 <th:block th:replace="../fragments/header"></th:block>
 <main>
     <h1>Delete Restaurant!</h1>
-    <form th:action="@{/manager/restaurants/delete/(id=${restaurantModel.getId()})}" th:method="delete">
+    <form th:action="@{/restaurants/delete/(id=${restaurantModel.getId()})}" th:method="delete">
         <div class="form-group">
             <label for="name">
                 Name: <input disabled type="text" id="name" class="form-control"

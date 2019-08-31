@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing stuff</title>
+</head>
+<body>
+
+<th:block th:replace="../templates/test/some-fragment"></th:block>
+
+<script>
+    const firstLi = document.getElementsByTagName('li')[0];
+    firstLi.textContent = "AAAAAA";
+</script>
+</body>
+</html>
