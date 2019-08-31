@@ -15,7 +15,7 @@
     <li>gender radiobutton</li>
 </ul>
 <main>
-    <form th:action="@{/user/register}" th:method="post" th:object="${userRegisterBindingModel}">
+    <form th:action="@{/register}" th:method="post" th:object="${userRegisterBindingModel}">
         <div class="form-group">
             <label for="name">
                 Name: <input type="text" id="name" class="form-control" placeholder="Name..." th:field="*{name}"/>

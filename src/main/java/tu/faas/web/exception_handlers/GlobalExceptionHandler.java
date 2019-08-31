@@ -12,8 +12,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ModelAndView handleAnyError(Exception e) {
         e.printStackTrace();
-        ModelAndView modelAndView = new ModelAndView("error.html");
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("errorMessage", "Something went wrong.");
+        modelAndView.setViewName("error.html");
 
         return modelAndView;
     }

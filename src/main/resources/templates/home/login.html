@@ -8,7 +8,7 @@
 <body>
 <th:block th:replace="../fragments/header"></th:block>
 <main>
-    <form th:action="@{/user/login}" th:method="post" th:object="${userLoginBindingModel}">
+    <form th:action="@{/login}" th:method="post" th:object="${userLoginBindingModel}">
         <div class="form-group">
             <label for="name">
                 Name: <input th:field="*{name}" type="text" name="name" id="name" class="form-control" placeholder="Name..."/>

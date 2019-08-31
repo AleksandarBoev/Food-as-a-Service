@@ -21,8 +21,6 @@ import java.util.List;
 @Controller
 @RequestMapping("/manager")
 public class ManagerController {
-    //TODO dali pri razglejdane na restorant ot strana na user i manager da e edna i sushta stranica?
-    //no v zavisimost ot rolite... Nope. Shte ima edit stranica i view stranica!
     private ManagerService managerService;
 
     @Autowired

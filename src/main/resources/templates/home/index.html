@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+    <style>
+        /* Container holding the image and the text */
+        .container {
+            position: relative;
+            text-align: center;
+            color: black;
+            font-size: 30px;
+        }
+
+        /* Bottom left text */
+        .bottom-left {
+            position: absolute;
+            bottom: 8px;
+            left: 16px;
+        }
+
+        /* Top left text */
+        .top-left {
+            position: absolute;
+            top: 8px;
+            left: 16px;
+        }
+
+        /* Top right text */
+        .top-right {
+            position: absolute;
+            top: 8px;
+            right: 16px;
+        }
+
+        /* Bottom right text */
+        .bottom-right {
+            position: absolute;
+            bottom: 8px;
+            right: 16px;
+        }
+
+        /* Centered text */
+        .centered {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            opacity: 0.6;
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<main>
+    <p>Welcome to Food-as-a-Service! Take a look at the newest food and restaurants!</p>
+
+    <section>
+        <h1>Latest tasty food</h1>
+        <div id="carouselIndicators1" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselIndicators1" th:each="productHomeViewModel: ${productHomeViewModels}">
+                </li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item" th:each="productHomeViewModel: ${productHomeViewModels}">
+                    <a th:href="@{/manager/view-product/(id=${productHomeViewModel.getId()})}">
+                        <div class="centered">"<span th:text="${productHomeViewModel.getName()}"></span>" from <span
+                                th:text="${productHomeViewModel.getRestaurantName()}"></span> for <span
+                                th:text="${productHomeViewModel.getPrice()}"></span>$
+                        </div>
+                    </a>
+                    <img class="d-block w-100" th:src="@{${productHomeViewModel.getImageUrl()}}" alt="Product image">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselIndicators1" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselIndicators1" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </section>
+<hr/>
+    <section>
+        <h1>Latest Opened Restaurants</h1>
+        <div id="carouselIndicators2" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carouselIndicators2" th:each="restaurantHomeViewModel: ${restaurantHomeViewModels}">
+                </li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item" th:each="restaurantHomeViewModel: ${restaurantHomeViewModels}">
+                    <a th:href="@{/manager/restaurants/view/(id=${restaurantHomeViewModel.getId()})}">
+                        <div class="centered">
+                            <span th:text="${restaurantHomeViewModel.getName()}"></span>
+                             with <span th:text="${restaurantHomeViewModel.getProductsCount()}"></span>
+                             products!
+                        </div>
+                    </a>
+                    <img class="d-block w-100" th:src="@{${restaurantHomeViewModel.getImageUrl()}}" alt="Restaurant image">
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselIndicators2" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselIndicators2" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </section>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+<script>
+    const prepareCarousel = carousel => {
+        const liIndicators = carousel.getElementsByClassName('carousel-indicators')[0].children;
+        liIndicators[0].classList.add('active'); //set first indicator as active
+        for (let i = 0; i < liIndicators.length; i += 1) {
+            liIndicators[i].setAttribute('data-slide-to', i + 1);
+        }
+
+        carousel.getElementsByClassName('carousel-item')[0].classList.add('active');
+    };
+
+    prepareCarousel(document.getElementById('carouselIndicators1'));
+    prepareCarousel(document.getElementById('carouselIndicators2'));
+
+</script>
+</body>
+</html>

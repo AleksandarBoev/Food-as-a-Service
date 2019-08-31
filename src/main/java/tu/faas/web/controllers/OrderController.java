@@ -134,9 +134,11 @@ public class OrderController {
         orderBindingModel.setBillingType((String) session.getAttribute("billingType"));
 
         orderBindingModel.setCustomerId((Long) session.getAttribute("userId"));
-        orderBindingModel.setProductIdQuantities(getShoppingCartMap(session));
+        Map<Long, Integer> shoppingCartMap = getShoppingCartMap(session);
+        orderBindingModel.setProductIdQuantities(shoppingCartMap);
 
         orderService.makeOrder(orderBindingModel);
+        shoppingCartMap.clear();
 
         return "/order/success-order.html";
     }

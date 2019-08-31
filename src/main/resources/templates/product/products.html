@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<th:block th:replace="../fragments/header"></th:block>
+<main>
+
+    <div class="row">
+        <div class="col-md-4 text-center overflow-hidden">
+
+            <img class="details-img"
+                 src="https://amp.businessinsider.com/images/5c0990b1d5000c07f77ba114-750-563.jpg"/>
+            <div class="my-3 p-3">
+                <p style="font-size: 30px" class="display-5">This is main header</p>
+                <p>Description:</p>
+                <p>Products: <small></small></p>
+            </div>
+            <a href="#/edit_event/{{currentEvent._id}}" class="btn btn-primary btn-lg">Edit</a>
+            <a href="#/close_event/{{currentEvent._id}}" class="btn btn-danger btn-lg">Delete</a>
+            <a href="#/join_event/{{currentEvent._id}}" class="btn btn-info btn-lg">View</a>
+        </div>
+    </div>
+
+
+</main>
+<body>
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

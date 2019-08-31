@@ -2,7 +2,7 @@
     <header>
         <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <!-- Brand/logo -->
-            <a class="navbar-brand" href="#">FaaS</a>
+            <a class="navbar-brand" th:href="@{/}">FaaS</a>
 
             <!-- Links -->
             <ul class="navbar-nav justify-content-center">
@@ -16,10 +16,10 @@
 
             <ul th:if="${#session.getAttribute('username') == null}" class="navbar-nav justify-content-end">
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/user/register}">Register</a>
+                    <a class="nav-link" th:href="@{/register}">Register</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/user/login}">Login</a>
+                    <a class="nav-link" th:href="@{/login}">Login</a>
                 </li>
             </ul>
 
@@ -37,7 +37,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/user/logout}">Logout</a>
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
                 </li>
 
                 <li class="nav-item dropdown" th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
