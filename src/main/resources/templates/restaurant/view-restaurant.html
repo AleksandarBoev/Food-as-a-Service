@@ -15,19 +15,28 @@
 
     <p th:text="${restaurantViewModel.getDescription()}"></p>
 
-    <a th:href="@{/restaurants/edit/(id=${restaurantViewModel.getId()})}">
+    <a th:href="@{/restaurants/edit/{id}(id=${restaurantViewModel.getId()})}">
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
 
-    <a th:href="@{/restaurants/delete/(id=${restaurantViewModel.getId()})}">
+    <a th:href="@{/restaurants/delete/{id}(id=${restaurantViewModel.getId()})}">
         <button type="button" class="btn btn-danger">Delete</button>
     </a>
 
-    <a th:href="@{/restaurants/statistics/(id=${restaurantViewModel.getId()})}">
+    <a th:href="@{/restaurants/statistics/{id}(id=${restaurantViewModel.getId()})}">
         <button type="button" class="btn btn-secondary">Orders statistics</button>
     </a>
 
     <hr/>
+
+        <p th:if="${productAllViewModels.isEmpty()}">
+            No products!
+            <a th:href="@{/products/{id}/create(id=${restaurantViewModel.getId()})}">Create</a>
+            some
+        </p>
+        <a th:unless="${productAllViewModels.isEmpty()}" th:href="@{/products/{id}/create(id=${restaurantViewModel.getId()})}">
+            <button>Add Product</button>
+        </a>
     <th:block th:replace="../fragments/products-all-fragment"></th:block>
 </main>
 

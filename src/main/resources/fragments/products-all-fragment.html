@@ -10,12 +10,12 @@
             <p>Weight in grams: <span th:text="${productAllViewModel.getWeightInGrams()}"></span></p>
         </div>
 
-        <a th:href="@{/products/view(id=${productAllViewModel.getId()})}" class="btn btn-info btn-lg">View</a>
+        <a th:href="@{/products/view/{id}(id=${productAllViewModel.getId()})}" class="btn btn-info btn-lg">View</a>
 
         <th:block th:if="${productAllViewModel.getOwnerId()} == ${#session.getAttribute('userId')}">
-            <a th:href="@{/products/edit(id=${productAllViewModel.getId()})}"
+            <a th:href="@{/products/edit/{id}(id=${productAllViewModel.getId()})}"
                class="btn btn-primary btn-lg">Edit</a>
-            <a th:href="@{/products/delete(id=${productAllViewModel.getId()})}"
+            <a th:href="@{/products/delete/{id}(id=${productAllViewModel.getId()})}"
                class="btn btn-danger btn-lg">Delete</a>
         </th:block>
     </div>

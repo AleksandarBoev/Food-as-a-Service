@@ -12,6 +12,7 @@ import tu.faas.domain.exceptions.PasswordsNotSame;
 import tu.faas.domain.exceptions.UsernameAlreadyExists;
 import tu.faas.domain.models.binding.UserLoginBindingModel;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
+import tu.faas.domain.models.view.UserProfileViewModel;
 import tu.faas.repositories.RoleRepository;
 import tu.faas.repositories.UserRepository;
 import tu.faas.services.contracts.UserService;
@@ -81,5 +82,11 @@ public class UserServiceImpl implements UserService {
 
         session.setAttribute("roles", userRoles);
         session.setAttribute("userId", user.getId());
+    }
+
+    @Override
+    public UserProfileViewModel getUserProfileViewModel(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
+        return modelMapper.map(user, UserProfileViewModel.class);
     }
 }

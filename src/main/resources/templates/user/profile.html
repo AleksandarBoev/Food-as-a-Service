@@ -9,11 +9,8 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-    <p>Greetings, <span th:text="${#session.getAttribute('username')}"></span></p>
-    <p>Your roles are:</p>
-    <ul th:each="role: ${#session.getAttribute('roles')}">
-        <li th:text="${role}"></li>
-    </ul>
+    <h1>Name: </h1>
+    <p></p>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>

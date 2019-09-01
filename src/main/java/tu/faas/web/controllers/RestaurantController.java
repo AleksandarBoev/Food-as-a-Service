@@ -54,21 +54,6 @@ public class RestaurantController {
         return modelAndView;
     }
 
-    /*
-    @GetMapping
-    public ModelAndView getRestaurantsPage(ModelAndView modelAndView,
-                                           HttpSession httpSession,
-                                           @RequestParam(name = "search", required = false) String search,
-                                           @RequestParam(name = "option", required = false) String option) {
-        List<RestaurantListViewModel> restaurants =
-                restaurantService.getRestaurantsByManager((Long) httpSession.getAttribute("userId"));
-
-        modelAndView.addObject("restaurants", restaurants);
-        modelAndView.setViewName("restaurant/restaurants.html");
-        return modelAndView;
-    }
-     */
-
     @GetMapping("/create")
     public String getRestaurantCreatePage() {
         return "restaurant/create-restaurant.html";
@@ -86,14 +71,14 @@ public class RestaurantController {
         }
 
         Long restaurantId = restaurantService.createRestaurant(bindingModel, (Long) session.getAttribute("userId"));
-        modelAndView.setViewName("redirect:/restaurants/view?id=" + restaurantId);
+        modelAndView.setViewName("redirect:/restaurants/view/" + restaurantId);
         return modelAndView;
     }
 
-    @GetMapping("/view")
+    @GetMapping("/view/{restaurantId}")
     public ModelAndView getRestaurantViewPage(
             ModelAndView modelAndView,
-            @RequestParam(name = "id", required = true) Long restaurantId) {
+            @PathVariable(name = "restaurantId", required = true) Long restaurantId) {
         //TODO change up the way products are listed. List them like in "products" page.
         //Just filter out the ones, that aren't part of this restaurant.
         //TODO and while you're at it, add the table-kind of visualization to a fragment if you can
@@ -109,18 +94,18 @@ public class RestaurantController {
         return modelAndView;
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/edit/{restaurantId}")
     public ModelAndView getRestaurantEditPage(ModelAndView modelAndView,
-                                              @RequestParam(name = "id", required = true) Long restaurantId) {
+                                              @PathVariable(name = "restaurantId", required = true) Long restaurantId) {
         RestaurantModel restaurantModel = restaurantService.getRestaurantModelById(restaurantId);
         modelAndView.addObject("restaurantModel", restaurantModel);
         modelAndView.setViewName("restaurant/edit-restaurant.html");
         return modelAndView;
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/edit/{id}")
     public String putRestaurantEditPage(
-            @RequestParam(name = "id", required = true) Long restaurantId,
+            @PathVariable(name = "id", required = true) Long restaurantId,
             @Valid @ModelAttribute("restaurantModel") RestaurantModel bindingModel,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -128,13 +113,13 @@ public class RestaurantController {
         }
 
         restaurantService.editRestaurant(bindingModel);
-        return "redirect:/restaurants/view?id=" + restaurantId;
+        return "redirect:/restaurants/view/" + restaurantId;
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/delete/{id}")
     public ModelAndView getRestaurantDeletePage(
             ModelAndView modelAndView,
-            @RequestParam(name = "id", required = true) Long restaurantId
+            @PathVariable(name = "id", required = true) Long restaurantId
     ) {
         RestaurantModel restaurantModel = restaurantService.getRestaurantModelById(restaurantId);
         modelAndView.addObject("restaurantModel", restaurantModel);
@@ -142,15 +127,15 @@ public class RestaurantController {
         return modelAndView;
     }
 
-    @DeleteMapping("/delete")
-    public String deleteRestaurant(@RequestParam(name = "id", required = true) Long restaurantId) {
+    @DeleteMapping("/delete/{id}")
+    public String deleteRestaurant(@PathVariable(name = "id", required = true) Long restaurantId) {
         restaurantService.deleteRestaurant(restaurantId);
-        return "redirect:/restaurants";
+        return "redirect:/restaurants/my-restaurants";
     }
 
-    @GetMapping("/statistics")
+    @GetMapping("/statistics/{id}")
     public ModelAndView getRestaurantStatisticsPage(ModelAndView modelAndView,
-                                                    @RequestParam(name = "id", required = true) Long restaurantId) {
+                                                    @PathVariable(name = "id", required = true) Long restaurantId) {
 
         modelAndView.addObject("restaurant_id", restaurantId);
         modelAndView.setViewName("restaurant/statistics.html");

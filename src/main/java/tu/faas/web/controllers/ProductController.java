@@ -61,13 +61,13 @@ public class ProductController {
         }
 
         productService.createProduct(bindingModel, restaurantId);
-        modelAndView.setViewName("redirect:/restaurants/view?id=" + restaurantId);
+        modelAndView.setViewName("redirect:/restaurants/view/" + restaurantId);
         return modelAndView;
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/edit/{id}")
     public ModelAndView getEditProductPage(ModelAndView modelAndView,
-                                           @RequestParam(name = "id", required = true) Long productId) {
+                                           @PathVariable(name = "id", required = true) Long productId) {
         ProductModel productModel = productService.getProductModel(productId);
         modelAndView.addObject("productModel", productModel);
 
@@ -75,9 +75,9 @@ public class ProductController {
         return modelAndView;
     }
 
-    @PutMapping("/edit")
+    @PutMapping("/edit/{id}")
     public String putEditProductPage(
-            @RequestParam(name = "id", required = true) Long productId,
+            @PathVariable(name = "id", required = true) Long productId,
             @Valid @ModelAttribute("productModel") ProductModel bindingModel,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -85,28 +85,28 @@ public class ProductController {
         }
 
         Long restaurantId = productService.editProduct(bindingModel);
-        return "redirect:/restaurants/view?id=" + restaurantId;
+        return "redirect:/restaurants/view/" + restaurantId;
     }
 
-    @GetMapping("/delete")
+    @GetMapping("/delete/{id}")
     public ModelAndView deleteProductViewPage(
             ModelAndView modelAndView,
-            @RequestParam(name = "id", required = true) Long productId) {
+            @PathVariable(name = "id", required = true) Long productId) {
         ProductModel productModel = productService.getProductModel(productId);
         modelAndView.addObject("productModel", productModel);
         modelAndView.setViewName("product/delete-product.html");
         return modelAndView;
     }
 
-    @DeleteMapping("/delete")
-    public String deleteProductFormSubmit(@RequestParam(name = "id", required = true) Long productId) {
+    @DeleteMapping("/delete/{id}")
+    public String deleteProductFormSubmit(@PathVariable(name = "id", required = true) Long productId) {
         Long restaurantId = productService.deleteProduct(productId);
-        return "redirect:/restaurants/view?id=" + restaurantId;
+        return "redirect:/restaurants/view/" + restaurantId;
     }
 
-    @GetMapping("/view")
+    @GetMapping("/view/{id}")
     public ModelAndView getProductView(ModelAndView modelAndView,
-                                       @RequestParam(name = "id", required = true) Long productId) {
+                                       @PathVariable(name = "id", required = true) Long productId) {
         ProductViewModel productViewModel = productService.getProductViewModel(productId);
         modelAndView.addObject("productViewModel", productViewModel);
 
