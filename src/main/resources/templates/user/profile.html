@@ -10,7 +10,12 @@
 
 <main>
     <h1>Name: </h1>
-    <p></p>
+    <p th:text="${userProfileViewModel.getName()}"></p><a th:href="@{/user/profile/edit-name}"><button>Change</button></a>
+    <hr/>
+    <h1>Email: </h1>
+    <p th:text="${userProfileViewModel.getEmail()}"></p><a th:href="@{/user/profile/edit-email}"><button>Change</button></a>
+    <hr/>
+    <a th:href="@{/user/profile/edit-password}"><button>Change Password</button></a>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>

@@ -6,12 +6,11 @@ import org.springframework.stereotype.Service;
 import tu.faas.domain.constants.RoleConstants;
 import tu.faas.domain.entities.Role;
 import tu.faas.domain.entities.User;
-import tu.faas.domain.exceptions.EmailAlreadyExists;
-import tu.faas.domain.exceptions.NoSuchUser;
-import tu.faas.domain.exceptions.PasswordsNotSame;
-import tu.faas.domain.exceptions.UsernameAlreadyExists;
+import tu.faas.domain.exceptions.*;
 import tu.faas.domain.models.binding.UserLoginBindingModel;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
+import tu.faas.domain.models.multipurpose.UserEmailModel;
+import tu.faas.domain.models.multipurpose.UserNameModel;
 import tu.faas.domain.models.view.UserProfileViewModel;
 import tu.faas.repositories.RoleRepository;
 import tu.faas.repositories.UserRepository;
@@ -88,5 +87,56 @@ public class UserServiceImpl implements UserService {
     public UserProfileViewModel getUserProfileViewModel(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
         return modelMapper.map(user, UserProfileViewModel.class);
+    }
+
+    @Override
+    public UserNameModel getUserNameModel(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
+        return modelMapper.map(user, UserNameModel.class);
+    }
+
+    @Override
+    public void editUserName(UserNameModel userNameModel, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
+        if (!user.getPassword().equals(userNameModel.getPassword())) {
+            throw new WrongPassword();
+        }
+
+        if (user.getName().equals(userNameModel.getName())) {
+            throw new SameName();
+        }
+
+        if (userRepository.existsByName(userNameModel.getName())) {
+            throw new UsernameAlreadyExists();
+        }
+
+        user.setName(userNameModel.getName());
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserEmailModel getUserEmailModel(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
+        return modelMapper.map(user, UserEmailModel.class);
+    }
+
+
+    @Override
+    public void editUserEmail(UserEmailModel userEmailModel, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
+        if (!user.getPassword().equals(userEmailModel.getPassword())) {
+            throw new WrongPassword();
+        }
+
+        if (user.getEmail().equals(userEmailModel.getEmail())) {
+            throw new SameEmail();
+        }
+
+        if (userRepository.existsByEmail(userEmailModel.getEmail())) {
+            throw new EmailAlreadyExists();
+        }
+
+        user.setEmail(userEmailModel.getEmail());
+        userRepository.save(user);
     }
 }

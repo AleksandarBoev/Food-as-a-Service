@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Name</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<main>
+    <h1>Name</h1>
+
+    <form th:action="@{/user/profile/edit-name}" th:method="put" th:object="${userNameModel}">
+        <label>
+            Name: <input name="name" th:value="${userNameModel.getName()}" th:field="*{name}" placeholder="New Name..."/>
+        </label>
+        <th:block th:each="nameErrorMessage: ${#fields.errors('name')}">
+            <p class="text-danger" th:text="${nameErrorMessage}"></p>
+        </th:block>
+        <hr/>
+        <label>
+            Please enter password: <input type="password" name="password" placeholder="Password..."/>
+        </label>
+        <th:block th:each="passwordErrorMessage: ${#fields.errors('password')}">
+            <p class="text-danger" th:text="${passwordErrorMessage}"></p>
+        </th:block>
+
+        <input type="submit" value="Confirm change"/>
+    </form>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

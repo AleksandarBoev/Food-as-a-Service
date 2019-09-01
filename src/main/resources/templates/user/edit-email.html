@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Email</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<main>
+    <h1>Email</h1>
+
+    <form th:action="@{/user/profile/edit-email}" th:method="put" th:object="${userEmailModel}">
+        <label>
+            Email: <input name="email" th:value="${userEmailModel.getEmail()}" th:field="*{email}" placeholder="New Email..."/>
+        </label>
+        <th:block th:each="emailErrorMessage: ${#fields.errors('email')}">
+            <p class="text-danger" th:text="${emailErrorMessage}"></p>
+        </th:block>
+        <hr/>
+        <label>
+            Please enter password: <input type="password" name="password" placeholder="Password..."/>
+        </label>
+        <th:block th:each="passwordErrorMessage: ${#fields.errors('password')}">
+            <p class="text-danger" th:text="${passwordErrorMessage}"></p>
+        </th:block>
+
+        <input type="submit" value="Confirm change"/>
+    </form>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

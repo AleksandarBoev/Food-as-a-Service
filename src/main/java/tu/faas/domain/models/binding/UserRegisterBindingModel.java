@@ -1,23 +1,22 @@
 package tu.faas.domain.models.binding;
 
+import tu.faas.domain.constants.UserValidationConstants;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class UserRegisterBindingModel {
-    public static final int NAME_MIN_LENGTH = 3;
-    public static final int NAME_MAX_LENGTH = 15;
-    public static final String NAME_LENGTH_ERROR_MESSAGE =
-            "Name length should be between " + NAME_MIN_LENGTH + " and " + NAME_MAX_LENGTH + " letters long!";
-    public static final String NAME_FORMAT_ERROR_MESSAGE = "Name should contain only letters and numbers!";
-
     private String name;
     private String password;
     private String repassword;
     private String email;
 
-    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH, message = NAME_LENGTH_ERROR_MESSAGE)
-    @Pattern(regexp = "[A-z0-9]+", message = NAME_FORMAT_ERROR_MESSAGE)
+    @Size(min = UserValidationConstants.NAME_MIN_LENGTH,
+            max = UserValidationConstants.NAME_MAX_LENGTH,
+            message = UserValidationConstants.NAME_LENGTH_ERROR_MESSAGE)
+    @Pattern(regexp = UserValidationConstants.USER_NAME_REGEX,
+            message = UserValidationConstants.NAME_FORMAT_ERROR_MESSAGE)
     public String getName() {
         return name;
     }
