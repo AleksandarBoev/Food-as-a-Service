@@ -1,0 +1,21 @@
+<div class="row" xmlns:th="http://www.thymeleaf.org">
+    <div th:each="restaurantAllViewModel: ${restaurantAllViewModels}"
+         class="col-md-4 text-center overflow-hidden">
+
+        <img class="details-img"
+             th:src="${restaurantAllViewModel.getImageUrl()}"/>
+        <div class="my-3 p-3">
+            <p th:text="${restaurantAllViewModel.getName()}" style="font-size: 30px" class="display-5"></p>
+            <p>Number of products: #<span th:text="${restaurantAllViewModel.getNumberOfProducts()}"></span></p>
+        </div>
+
+        <a th:href="@{/restaurants/view(id=${restaurantAllViewModel.getId()})}" class="btn btn-info btn-lg">View</a>
+
+        <th:block th:if="${restaurantAllViewModel.getOwnerId()} == ${#session.getAttribute('userId')}">
+            <a th:href="@{/restaurants/edit(id=${restaurantAllViewModel.getId()})}"
+               class="btn btn-primary btn-lg">Edit</a>
+            <a th:href="@{/restaurants/delete(id=${restaurantAllViewModel.getId()})}"
+               class="btn btn-danger btn-lg">Delete</a>
+        </th:block>
+    </div>
+</div>

@@ -10,17 +10,9 @@
 <main>
     <h1>My restaurants</h1>
     <a th:href="@{/restaurants/create}"><button>Add Restaurant</button></a>
-    <p th:if="${restaurants.isEmpty()}">No restaurants yet.</p>
+    <p th:if="${restaurantAllViewModels.isEmpty()}">No restaurants yet. <a th:href="@{/restaurants/create}">Create one</a></p>
 
-    <th:block th:each="restaurant: ${restaurants}" class="row">
-        <a style="color: inherit" th:href="@{/restaurants/view(id=${restaurant.getId()})}">
-        <div>
-            <h2 th:text="${restaurant.getName()}"></h2>
-            <img th:src="${restaurant.getImageUrl()}"/>
-        </div>
-        </a>
-        <hr/>
-    </th:block>
+    <th:block th:replace="../fragments/restaurants-all-fragment"></th:block>
 </main>
 <th:block th:replace="../fragments/footer"></th:block>
 </body>

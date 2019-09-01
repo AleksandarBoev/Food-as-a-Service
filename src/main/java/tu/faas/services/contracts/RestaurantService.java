@@ -3,6 +3,7 @@ package tu.faas.services.contracts;
 
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
+import tu.faas.domain.models.view.RestaurantAllViewModel;
 import tu.faas.domain.models.view.RestaurantHomeViewModel;
 import tu.faas.domain.models.view.RestaurantListViewModel;
 import tu.faas.domain.models.view.RestaurantViewModel;
@@ -23,4 +24,9 @@ public interface RestaurantService {
     List<RestaurantHomeViewModel> getNewestRestaurantHomeViewModels(Integer count);
 
     List<RestaurantListViewModel> getRestaurantsByManager(Long managerId);
+
+    List<RestaurantAllViewModel> getRestaurantAllViewModels(String search, String sortBy);
+
+    List<RestaurantAllViewModel> getRestaurantsByManager2(Long managerId);
+
 }

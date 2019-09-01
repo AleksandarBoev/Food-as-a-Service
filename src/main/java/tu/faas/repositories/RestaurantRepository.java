@@ -11,4 +11,15 @@ import java.util.List;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findAllByManagerId(Long id);
     List<Restaurant> findAllByOrderByIdDesc(Pageable pageable);
+
+    List<Restaurant> findAllByNameContainsIgnoreCase(String name);
+    List<Restaurant> findAllByOrderByNameAsc();
+    List<Restaurant> findAllByOrderByNameDesc();
+    List<Restaurant> findAllByOrderByIdDesc();
+    List<Restaurant> findAllByOrderByIdAsc();
+
+    List<Restaurant> findAllByNameContainsIgnoreCaseOrderByNameAsc(String name);
+    List<Restaurant> findAllByNameContainsIgnoreCaseOrderByNameDesc(String name);
+    List<Restaurant> findAllByNameContainsIgnoreCaseOrderByIdAsc(String name);
+    List<Restaurant> findAllByNameContainsIgnoreCaseOrderByIdDesc(String name);
 }

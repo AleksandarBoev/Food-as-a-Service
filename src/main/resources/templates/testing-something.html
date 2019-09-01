@@ -13,31 +13,17 @@
 </head>
 <body>
 
-<div class="container">
-    <div class="row">
-        <div class="col-xs-8 col-xs-offset-2">
-            <div class="input-group">
-                <div class="input-group-btn search-panel">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                        <span id="search_concept">Sort by</span> <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>Name Asc</li>
-                        <li>Name Desc</li>
-                        <li class="divider"></li>
-                        <li>Price Asc</li>
-                        <li><a href="">Price Desc</a></li>
-                    </ul>
-                </div>
-                <input type="hidden" name="search_param" value="all" id="search_param">
-                <input type="text" class="form-control" name="x" placeholder="Search term...">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
+<form th:action="@{/test}" th:method="get">
+    <input name="search" placeholder="Search stuff..."/>
+    <select name="option">
+        <option selected disabled>Sort By</option>
+        <option value="wat1">Option 1</option>
+        <option value="wat2">Option 2</option>
+        <option value="wat3">Option 3</option>
+        <option value="wat4">Option 4</option>
+    </select>
+    <button>Search</button>
+</form>
 
 <script>
 

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
+import tu.faas.domain.models.view.RestaurantAllViewModel;
 import tu.faas.domain.models.view.RestaurantListViewModel;
 import tu.faas.domain.models.view.RestaurantViewModel;
 import tu.faas.services.contracts.RestaurantService;
@@ -26,7 +27,36 @@ public class RestaurantController {
     }
 
     @GetMapping
-    public ModelAndView getRestaurantsPage(ModelAndView modelAndView, HttpSession httpSession) {
+    public ModelAndView getRestaurantsPage(ModelAndView modelAndView,
+                                           @RequestParam(name = "search", required = false) String search,
+                                           @RequestParam(name = "option", required = false) String option) {
+        List<RestaurantAllViewModel> restaurantAllViewModels =
+                restaurantService.getRestaurantAllViewModels(search, option);
+
+        modelAndView.addObject("restaurantAllViewModels", restaurantAllViewModels);
+        modelAndView.setViewName("restaurant/restaurants2.html");
+        return modelAndView;
+    }
+
+    @GetMapping("/my-restaurants")
+    public ModelAndView getMyRestaurantsPage(ModelAndView modelAndView,
+                                             HttpSession session) {
+        //TODO rename html to my-restaurants
+        //TODO maybe throw in a statistics comparison between restauratns... or not.
+        List<RestaurantAllViewModel> restaurantAllViewModels =
+                restaurantService.getRestaurantsByManager2((Long)session.getAttribute("userId"));
+
+        modelAndView.addObject("restaurantAllViewModels", restaurantAllViewModels);
+        modelAndView.setViewName("/restaurant/restaurants.html");
+        return modelAndView;
+    }
+
+    /*
+    @GetMapping
+    public ModelAndView getRestaurantsPage(ModelAndView modelAndView,
+                                           HttpSession httpSession,
+                                           @RequestParam(name = "search", required = false) String search,
+                                           @RequestParam(name = "option", required = false) String option) {
         List<RestaurantListViewModel> restaurants =
                 restaurantService.getRestaurantsByManager((Long) httpSession.getAttribute("userId"));
 
@@ -34,6 +64,7 @@ public class RestaurantController {
         modelAndView.setViewName("restaurant/restaurants.html");
         return modelAndView;
     }
+     */
 
     @GetMapping("/create")
     public String getRestaurantCreatePage() {
@@ -60,6 +91,11 @@ public class RestaurantController {
     public ModelAndView getRestaurantViewPage(
             ModelAndView modelAndView,
             @RequestParam(name = "id", required = true) Long restaurantId) {
+        //TODO change up the way products are listed. List them like in "products" page.
+        //Just filter out the ones, that aren't part of this restaurant.
+        //TODO and while you're at it, add the table-kind of visualization to a fragment if you can
+        //But how is the quantities button and quantities field gonna be replaced? Maybe just
+        //make the input disabled.
         RestaurantViewModel restaurantViewModel = restaurantService.getRestaurantViewModel(restaurantId);
         modelAndView.addObject("restaurantViewModel", restaurantViewModel);
 

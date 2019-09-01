@@ -11,10 +11,7 @@ import tu.faas.domain.exceptions.NoSuchRestaurant;
 import tu.faas.domain.exceptions.NoSuchUser;
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
-import tu.faas.domain.models.view.ProductListViewModel;
-import tu.faas.domain.models.view.RestaurantHomeViewModel;
-import tu.faas.domain.models.view.RestaurantListViewModel;
-import tu.faas.domain.models.view.RestaurantViewModel;
+import tu.faas.domain.models.view.*;
 import tu.faas.repositories.RestaurantRepository;
 import tu.faas.repositories.UserRepository;
 import tu.faas.services.contracts.RestaurantService;
@@ -56,6 +53,44 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .stream()
                 .map(r -> modelMapper.map(r, RestaurantListViewModel.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RestaurantAllViewModel> getRestaurantsByManager2(Long managerId) {
+        List<Restaurant> restaurants = restaurantRepository.findAllByManagerId(managerId);
+        return getRestaurantAllViewModels(restaurants);
+    }
+
+    @Override
+    public List<RestaurantAllViewModel> getRestaurantAllViewModels(String search, String sortBy) {
+        List<Restaurant> restaurants = null;
+
+        if (search == null || "".equals(search)) {
+            if (sortBy == null) {
+                restaurants = restaurantRepository.findAllByOrderByIdDesc();
+            } else if ("nameAsc".equals(sortBy)) {
+                restaurants = restaurantRepository.findAllByOrderByNameAsc();
+            } else if ("nameDesc".equals(sortBy)) {
+                restaurants = restaurantRepository.findAllByOrderByNameDesc();
+            }  else if ("newest".equals(sortBy)) {
+                restaurants = restaurantRepository.findAllByOrderByIdDesc();
+            } else if ("oldest".equals(sortBy)) {
+                restaurants = restaurantRepository.findAllByOrderByIdAsc();
+            }
+        } else {
+            if (sortBy == null) {
+                restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByIdDesc(search);
+            } else if ("nameAsc".equals(sortBy)) {
+                restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByNameAsc(search);
+            } else if ("nameDesc".equals(sortBy)) {
+                restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByNameDesc(search);
+            }  else if ("newest".equals(sortBy)) {
+                restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByIdDesc(search);
+            } else if ("oldest".equals(sortBy)) {
+                restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByIdAsc(search);
+            }
+        }
+        return getRestaurantAllViewModels(restaurants);
     }
 
     @Override
@@ -110,5 +145,17 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         result.setProductListViewModels(productListViewModels);
         return result;
+    }
+
+    private List<RestaurantAllViewModel> getRestaurantAllViewModels(List<Restaurant> restaurants) {
+        return restaurants
+                .stream()
+                .map(restaurant -> {
+                    RestaurantAllViewModel restaurantAllViewModel =
+                            modelMapper.map(restaurant, RestaurantAllViewModel.class);
+                    restaurantAllViewModel.setNumberOfProducts(restaurant.getProducts().size());
+                    restaurantAllViewModel.setOwnerId(restaurant.getManager().getId());
+                    return restaurantAllViewModel;
+                }).collect(Collectors.toList());
     }
 }

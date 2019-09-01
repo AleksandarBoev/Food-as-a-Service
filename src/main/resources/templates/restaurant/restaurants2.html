@@ -2,30 +2,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Products</title>
+    <title>Restaurants</title>
     <th:block th:replace="../fragments/bootstrap4"></th:block>
 </head>
+<body>
 <th:block th:replace="../fragments/header"></th:block>
+
 <main>
-    <h1>Products Page</h1>
-    <form th:action="@{/products}" th:method="get">
-        <input name="search" placeholder="Search product..."/>
+
+    <h1>Restaurants Page</h1>
+    <form th:action="@{/restaurants}" th:method="get">
+        <input name="search" placeholder="Search restaurant..."/>
         <select name="option">
             <option selected disabled>Sort By</option>
             <option value="nameAsc">Name Ascending</option>
             <option value="nameDesc">Name Descending</option>
-            <option value="priceAsc">Price Ascending</option>
-            <option value="priceDesc">Price Descending</option>
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
         </select>
         <button>Search</button>
     </form>
 
-    <th:block th:replace="../fragments/products-all-fragment"></th:block>
+    <th:block th:replace="../fragments/restaurants-all-fragment"></th:block>
 
 </main>
-<body>
 <th:block th:replace="../fragments/footer"></th:block>
 </body>
 </html>

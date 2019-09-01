@@ -7,6 +7,7 @@ import tu.faas.domain.models.view.ProductHomeViewModel;
 import tu.faas.domain.models.view.ProductListViewModel;
 import tu.faas.domain.models.view.ProductViewModel;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ProductService {
@@ -24,6 +25,6 @@ public interface ProductService {
 
     List<ProductHomeViewModel> getNewestProductHomeViewModels(Integer count);
 
-    List<ProductAllViewModel> getNewestProductAllViewModels(Integer count);
+    List<ProductAllViewModel> getProductAllViewModels(String search, String sortBy);
 
 }

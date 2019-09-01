@@ -2,7 +2,9 @@ package tu.faas.web.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -11,48 +13,18 @@ import java.util.List;
 @Controller
 @RequestMapping("/test")
 public class TestController {
-    class SomeClass {
-        int number;
-        String name;
-
-        public SomeClass(int number, String name) {
-            this.number = number;
-            this.name = name;
-        }
-
-        public int getNumber() {
-            return number;
-        }
-
-        public void setNumber(int number) {
-            this.number = number;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
     @GetMapping
-    public ModelAndView getTestPage(ModelAndView modelAndView) {
-        List<SomeClass> someCLasses = new ArrayList<>();
-        SomeClass someClass = new SomeClass(1, "Name 1");
-        SomeClass someClass2 = new SomeClass(2, "Name Two");
-        SomeClass someClass3 = new SomeClass(3, "Name Three");
-        SomeClass someClass4 = new SomeClass(4, "Name 4");
+    public ModelAndView getTestPage(ModelAndView modelAndView,
+                                    @RequestParam(name = "search", required = false) String search,
+                                    @RequestParam(name = "option", required = false) String option) {
+        System.out.println(search);
+        System.out.println(option);
+        //search - typing nothing = null
+        //search - typing something and deleting it = empty string
+        //option - choosing nothing = null
+        //can't choose sortby
 
-        someCLasses.add(someClass);
-        someCLasses.add(someClass2);
-        someCLasses.add(someClass3);
-        someCLasses.add(someClass4);
-
-        modelAndView.addObject("someClasses", someCLasses);
-
-        modelAndView.setViewName("test/fragments-test.html");
+        modelAndView.setViewName("testing-something.html");
         return modelAndView;
     }
 }

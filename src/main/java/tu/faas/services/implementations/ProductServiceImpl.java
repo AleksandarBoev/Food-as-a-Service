@@ -49,18 +49,49 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductAllViewModel> getNewestProductAllViewModels(Integer count) {
-        List<Product> products = productRepository.findAllByOrderByIdDesc(new PageRequest(0, count));
-        return products
-                .stream()
-                .map(product -> {
-                    ProductAllViewModel result =
-                            modelMapper.map(product, ProductAllViewModel.class);
-                    result.setOwnerId(product.getRestaurant().getManager().getId());
+    public List<ProductAllViewModel> getProductAllViewModels(String search, String sortBy) {
+        List<Product> products = null;
 
-                    return result;
-                })
-                .collect(Collectors.toList());
+        if (search == null || "".equals(search)) {
+            if (sortBy == null) {
+                products = productRepository.findAllByOrderByIdDesc();
+            } else if ("nameAsc".equals(sortBy)) {
+                products = productRepository.findAllByOrderByNameAsc();
+            } else if ("nameDesc".equals(sortBy)) {
+                products = productRepository.findAllByOrderByNameDesc();
+            } else if ("priceAsc".equals(sortBy)) {
+                products = productRepository.findAllByOrderByPriceAsc();
+            } else if ("priceDesc".equals(sortBy)) {
+                products = productRepository.findAllByOrderByPriceDesc();
+            } else if ("newest".equals(sortBy)) {
+                products = productRepository.findAllByOrderByIdDesc();
+            } else if ("oldest".equals(sortBy)) {
+                products = productRepository.findAllByOrderByIdAsc();
+            }
+        } else {
+            if (sortBy == null) {
+                products = productRepository.findAllByNameContainsIgnoreCase(search);
+            } else if ("nameAsc".equals(sortBy)) {
+                products = productRepository.findAllByNameContainsIgnoreCaseOrderByNameAsc(search);
+            } else if ("nameDesc".equals(sortBy)) {
+                products = productRepository.findAllByNameContainsIgnoreCaseOrderByNameDesc(search);
+            } else if ("priceAsc".equals(sortBy)) {
+                products = productRepository.findAllByNameContainsIgnoreCaseOrderByPriceAsc(search);
+            } else if ("priceDesc".equals(sortBy)) {
+                products = productRepository.findAllByNameContainsIgnoreCaseOrderByPriceDesc(search);
+            } else if ("newest".equals(sortBy)) {
+                products = productRepository.findAllByNameContainsIgnoreCaseOrderByIdDesc(search);
+            } else if ("oldest".equals(sortBy)) {
+                products = productRepository.findAllByNameContainsIgnoreCaseOrderByIdAsc(search);
+            }
+        }
+
+        return products.stream().map(product -> {
+            ProductAllViewModel productAllViewModel =
+                    modelMapper.map(product, ProductAllViewModel.class);
+            productAllViewModel.setOwnerId(product.getRestaurant().getManager().getId());
+            return productAllViewModel;
+        }).collect(Collectors.toList());
     }
 
     @Override

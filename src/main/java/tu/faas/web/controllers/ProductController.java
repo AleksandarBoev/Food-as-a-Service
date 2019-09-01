@@ -26,15 +26,14 @@ public class ProductController {
     }
 
     @GetMapping
-    public ModelAndView getProductsPage(ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getProductsPage(ModelAndView modelAndView,
+                                        HttpSession session,
+                                        @RequestParam(name = "search", required = false) String search,
+                                        @RequestParam(name = "option", required = false) String option) {
         List<ProductAllViewModel> productAllViewModels =
-                productService.getNewestProductAllViewModels(18); //6 rows
+                productService.getProductAllViewModels(search, option); //6 rows
         modelAndView.addObject("productAllViewModels", productAllViewModels);
-        String wat1 = "aa";
-        String wat2 = "aa";
-        modelAndView.addObject("wat1", wat1);
-        modelAndView.addObject("wat2", wat2);
-        modelAndView.addObject("userId", session.getAttribute("userId"));
+
         modelAndView.setViewName("product/products.html");
         return modelAndView;
     }

@@ -33,7 +33,7 @@ public class Product extends BaseEntity {
         this.price = price;
     }
 
-    @Column(name = "weight_in_grams", nullable = false) //, columnDefinition = "INT(5)") //doesn't work for some reason
+    @Column(name = "weight_in_grams") //, columnDefinition = "INT(5)") //doesn't work for some reason
     public Integer getWeightInGrams() {
         return weightInGrams;
     }
