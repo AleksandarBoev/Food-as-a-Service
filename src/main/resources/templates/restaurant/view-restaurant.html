@@ -28,36 +28,7 @@
     </a>
 
     <hr/>
-    <h1>ALL PRODUCTS FOR THIS PARTICULAR RESTAURANT:</h1>
-    <p th:if="${restaurantViewModel.productListViewModels.isEmpty()}">No products for this restaurant yet. <a th:href="@{/products/{r_id}/create(r_id=${restaurantViewModel.getId()})}">Create some!</a></p>
-    <table th:unless="${restaurantViewModel.productListViewModels.isEmpty()}" class="table table-dark table-hover">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Weight in grams</th>
-            <th>Image URL</th>
-            <th>Description</th>
-            <th th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
-                <a th:href="@{/products/{r_id}/create(r_id=${restaurantViewModel.getId()})}">
-                    <button>Add Product</button>
-                </a>
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="productListViewModel: ${restaurantViewModel.productListViewModels}">
-            <td th:text="${productListViewModel.getName()}"></td>
-            <td th:text="${productListViewModel.getPrice()}"></td>
-            <td th:text="${productListViewModel.getWeightInGrams()}"></td>
-            <td th:text="${productListViewModel.getImageUrl()}"></td>
-            <td th:text="${productListViewModel.getDescription()}"></td>
-            <td><a th:href="@{/products/view(id=${productListViewModel.getId()})}"><button type="button" class="btn btn-success">View</button></a></td>
-            <td><a th:href="@{/products/edit(id=${productListViewModel.getId()})}"><button type="button" class="btn btn-primary">Edit</button></a></td>
-            <td><a th:href="@{/products/delete(id=${productListViewModel.getId()})}"><button type="button" class="btn btn-danger">Delete</button></a></td>
-        </tr>
-        </tbody>
-    </table>
+    <th:block th:replace="../fragments/products-all-fragment"></th:block>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>

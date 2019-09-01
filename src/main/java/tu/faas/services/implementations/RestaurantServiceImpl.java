@@ -134,17 +134,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         Restaurant restaurant =
                 restaurantRepository.findById(restaurantId).orElseThrow(NoSuchRestaurant::new);
 
-        RestaurantViewModel result = modelMapper.map(restaurant, RestaurantViewModel.class);
-        List<ProductListViewModel> productListViewModels = restaurant.getProducts()
-                .stream()
-                .map(p -> {
-                    ProductListViewModel productListViewModel = modelMapper.map(p, ProductListViewModel.class);
-                    productListViewModel.setDescription(stringManipulation.cropString(productListViewModel.getDescription(), 15, "..."));
-                    return productListViewModel;
-                }).collect(Collectors.toList());
-
-        result.setProductListViewModels(productListViewModels);
-        return result;
+        return modelMapper.map(restaurant, RestaurantViewModel.class);
     }
 
     private List<RestaurantAllViewModel> getRestaurantAllViewModels(List<Restaurant> restaurants) {

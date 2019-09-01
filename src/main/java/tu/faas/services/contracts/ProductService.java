@@ -27,4 +27,6 @@ public interface ProductService {
 
     List<ProductAllViewModel> getProductAllViewModels(String search, String sortBy);
 
-}
+    List<ProductAllViewModel> getProductAllViewModelsByRestaurantId(Long restaurantId);
+
+    }

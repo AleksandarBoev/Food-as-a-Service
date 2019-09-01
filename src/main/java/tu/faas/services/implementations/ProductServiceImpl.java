@@ -86,12 +86,10 @@ public class ProductServiceImpl implements ProductService {
             }
         }
 
-        return products.stream().map(product -> {
-            ProductAllViewModel productAllViewModel =
-                    modelMapper.map(product, ProductAllViewModel.class);
-            productAllViewModel.setOwnerId(product.getRestaurant().getManager().getId());
-            return productAllViewModel;
-        }).collect(Collectors.toList());
+        return products
+                .stream()
+                .map(product -> mapToProductAllViewModel(product))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -155,5 +153,20 @@ public class ProductServiceImpl implements ProductService {
         result.setRestaurantName(productFound.getRestaurant().getName());
 
         return result;
+    }
+
+    @Override
+    public List<ProductAllViewModel> getProductAllViewModelsByRestaurantId(Long restaurantId) {
+        return productRepository.findAllByRestaurantId(restaurantId)
+                .stream()
+                .map(product -> mapToProductAllViewModel(product))
+                .collect(Collectors.toList());
+    }
+
+    private ProductAllViewModel mapToProductAllViewModel(Product product) {
+        ProductAllViewModel productAllViewModel =
+                modelMapper.map(product, ProductAllViewModel.class);
+        productAllViewModel.setOwnerId(product.getRestaurant().getManager().getId());
+        return productAllViewModel;
     }
 }

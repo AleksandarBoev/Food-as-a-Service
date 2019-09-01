@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
+import tu.faas.domain.models.view.ProductAllViewModel;
 import tu.faas.domain.models.view.RestaurantAllViewModel;
-import tu.faas.domain.models.view.RestaurantListViewModel;
 import tu.faas.domain.models.view.RestaurantViewModel;
+import tu.faas.services.contracts.ProductService;
 import tu.faas.services.contracts.RestaurantService;
 
 import javax.servlet.http.HttpSession;
@@ -20,10 +21,12 @@ import java.util.List;
 @RequestMapping("/restaurants")
 public class RestaurantController {
     private RestaurantService restaurantService;
+    private ProductService productService;
 
     @Autowired
-    public RestaurantController(RestaurantService restaurantService) {
+    public RestaurantController(RestaurantService restaurantService, ProductService productService) {
         this.restaurantService = restaurantService;
+        this.productService = productService;
     }
 
     @GetMapping
@@ -98,6 +101,9 @@ public class RestaurantController {
         //make the input disabled.
         RestaurantViewModel restaurantViewModel = restaurantService.getRestaurantViewModel(restaurantId);
         modelAndView.addObject("restaurantViewModel", restaurantViewModel);
+        List<ProductAllViewModel> productAllViewModels =
+                productService.getProductAllViewModelsByRestaurantId(restaurantId);
+        modelAndView.addObject("productAllViewModels", productAllViewModels);
 
         modelAndView.setViewName("restaurant/view-restaurant.html");
         return modelAndView;
