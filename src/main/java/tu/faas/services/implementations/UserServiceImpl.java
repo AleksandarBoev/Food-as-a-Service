@@ -7,6 +7,7 @@ import tu.faas.domain.constants.RoleConstants;
 import tu.faas.domain.entities.Role;
 import tu.faas.domain.entities.User;
 import tu.faas.domain.exceptions.*;
+import tu.faas.domain.models.binding.UserEditPasswordModel;
 import tu.faas.domain.models.binding.UserLoginBindingModel;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
 import tu.faas.domain.models.multipurpose.UserEmailModel;
@@ -62,9 +63,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    //TODO session logic maybe needs to be in the controller
-    //that means this method should return a UserSession object and the controller
-    //just writes all the info. But as strings. Dunno if thymeleaf can do stuff...
+    //TODO maybe session logic should be in controller
     @Override
     public void loginUser(UserLoginBindingModel userLoginBindingModel, HttpSession session) {
         if (!userRepository.existsByNameAndPassword(
@@ -137,6 +136,26 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setEmail(userEmailModel.getEmail());
+        userRepository.save(user);
+    }
+
+    @Override
+    public void editPassword(UserEditPasswordModel userEditPasswordModel, Long userId) {
+        if (!userEditPasswordModel.getNewPassword().equals(userEditPasswordModel.getRePassword())) {
+            throw new PasswordsNotSame(PasswordsNotSame.NEW_PASSWORD_RE_PASSWORD_DONT_MATCH);
+        }
+
+        User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
+
+        if (user.getPassword().equals(userEditPasswordModel.getNewPassword())) {
+            throw new SamePassword();
+        }
+
+        if (!user.getPassword().equals(userEditPasswordModel.getOldPassword())) {
+            throw new WrongPassword();
+        }
+
+        user.setPassword(userEditPasswordModel.getNewPassword());
         userRepository.save(user);
     }
 }

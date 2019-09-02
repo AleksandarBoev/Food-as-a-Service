@@ -9,7 +9,6 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-
     <h1>Your shopping cart:</h1>
     <p id="no-items"><span th:if="${shoppingCart.getProducts().isEmpty()}">Shopping cart is empty</span></p>
     <th:block th:unless="${shoppingCart.getProducts().isEmpty()}">

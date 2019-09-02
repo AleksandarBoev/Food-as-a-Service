@@ -3,11 +3,9 @@ package tu.faas.services.contracts;
 
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
-import tu.faas.domain.models.view.RestaurantAllViewModel;
-import tu.faas.domain.models.view.RestaurantHomeViewModel;
-import tu.faas.domain.models.view.RestaurantListViewModel;
-import tu.faas.domain.models.view.RestaurantViewModel;
+import tu.faas.domain.models.view.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface RestaurantService {
@@ -29,4 +27,5 @@ public interface RestaurantService {
 
     List<RestaurantAllViewModel> getRestaurantsByManager2(Long managerId);
 
+    RestaurantSalesViewModel getRestaurantSalesViewModel(Long restaurantId, LocalDate date1, LocalDate date2);
 }

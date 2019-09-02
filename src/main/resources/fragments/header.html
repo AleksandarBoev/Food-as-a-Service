@@ -30,14 +30,10 @@
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" th:href="@{/user/profile}">Information</a>
+                        <a class="dropdown-item" th:href="@{/user/order-history}">
+                            Order History
+                        </a>
                     </div>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" th:href="@{/user/order-history}">Order History</a>
-                    </div>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/logout}">Logout</a>
                 </li>
 
                 <li class="nav-item dropdown" th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
@@ -51,6 +47,10 @@
 
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/order/shopping-cart}">Shopping Cart(<span id="shopping-cart-count" th:text="${#session.getAttribute('shoppingCartItemsCount')}"></span>)</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}">Logout</a>
                 </li>
             </ul>
         </nav>

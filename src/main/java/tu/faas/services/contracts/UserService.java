@@ -1,5 +1,6 @@
 package tu.faas.services.contracts;
 
+import tu.faas.domain.models.binding.UserEditPasswordModel;
 import tu.faas.domain.models.binding.UserLoginBindingModel;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
 import tu.faas.domain.models.multipurpose.UserEmailModel;
@@ -22,4 +23,6 @@ public interface UserService {
     UserEmailModel getUserEmailModel(Long userId);
 
     void editUserEmail(UserEmailModel userEmailModel, Long userId);
+
+    void editPassword(UserEditPasswordModel userEditPasswordModel, Long userId);
 }

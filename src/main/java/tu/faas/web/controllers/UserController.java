@@ -8,22 +8,28 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.exceptions.*;
+import tu.faas.domain.models.binding.UserEditPasswordModel;
 import tu.faas.domain.models.multipurpose.UserEmailModel;
 import tu.faas.domain.models.multipurpose.UserNameModel;
+import tu.faas.domain.models.view.OrderHistoryViewModel;
 import tu.faas.domain.models.view.UserProfileViewModel;
+import tu.faas.services.contracts.OrderService;
 import tu.faas.services.contracts.UserService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     private UserService userService;
+    private OrderService orderService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, OrderService orderService) {
         this.userService = userService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/profile")
@@ -81,7 +87,7 @@ public class UserController {
 
     @GetMapping("/profile/edit-email")
     public ModelAndView getEditEmailPage(ModelAndView modelAndView,
-                                        HttpSession session) {
+                                         HttpSession session) {
         UserEmailModel userEmailModel =
                 userService.getUserEmailModel((Long) session.getAttribute(SessionConstants.USER_ID));
         modelAndView.addObject(userEmailModel);
@@ -92,9 +98,9 @@ public class UserController {
 
     @PutMapping("/profile/edit-email")
     public ModelAndView putEditEmailPage(ModelAndView modelAndView,
-                                        HttpSession session,
-                                        @Valid @ModelAttribute("userEmailModel") UserEmailModel bindingModel,
-                                        BindingResult bindingResult) {
+                                         HttpSession session,
+                                         @Valid @ModelAttribute("userEmailModel") UserEmailModel bindingModel,
+                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("user/edit-email.html");
             modelAndView.addObject("userEmailModel", bindingModel);
@@ -121,6 +127,64 @@ public class UserController {
         return modelAndView;
     }
 
+    @GetMapping("/profile/edit-password")
+    public String getEditPasswordPage(HttpSession session) {
+        return "user/edit-password.html";
+    }
+
+    @PutMapping("/profile/edit-password")
+    public ModelAndView putEditPasswordPage(ModelAndView modelAndView,
+                                            HttpSession session,
+                                            @Valid @ModelAttribute("userEditPasswordModel") UserEditPasswordModel bindingModel,
+                                            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            modelAndView.setViewName("user/edit-password.html");
+            modelAndView.addObject("userEditPasswordModel", bindingModel);
+            return modelAndView;
+        }
+
+        try {
+            userService.editPassword(bindingModel,
+                    (Long) session.getAttribute(SessionConstants.USER_ID));
+
+            modelAndView.setViewName("redirect:/user/profile");
+
+        } catch (PasswordsNotSame pns) {
+            modelAndView.setViewName("user/edit-password.html");
+
+            FieldError fieldError =
+                    new FieldError("userEditPasswordModel", "rePassword", pns.getMessage());
+            bindingResult.addError(fieldError);
+        } catch (SamePassword sp) {
+            modelAndView.setViewName("user/edit-password.html");
+
+            FieldError fieldError =
+                    new FieldError("userEditPasswordModel", "newPassword", sp.getMessage());
+            bindingResult.addError(fieldError);
+        } catch (WrongPassword wp) {
+            modelAndView.setViewName("user/edit-password.html");
+
+            FieldError fieldError =
+                    new FieldError("userEditPasswordModel", "oldPassword", wp.getMessage());
+            bindingResult.addError(fieldError);
+        }
+
+        return modelAndView;
+    }
+
+    @GetMapping("order-history")
+    public ModelAndView getOrderHistoryPage(ModelAndView modelAndView,
+                                            HttpSession session) {
+        Long userId = (Long)session.getAttribute(SessionConstants.USER_ID);
+        List<OrderHistoryViewModel> orderHistoryViewModels =
+                orderService.getOrderHistoryViewModelsByUserIdOrderedByDateNewest(userId);
+
+        modelAndView.addObject("orderHistoryViewModels", orderHistoryViewModels);
+
+        modelAndView.setViewName("user/order-history.html");
+        return modelAndView;
+    }
+
     @ModelAttribute("userNameModel")
     public UserNameModel getUserNameModel() {
         return new UserNameModel();
@@ -129,5 +193,10 @@ public class UserController {
     @ModelAttribute("userEmailModel")
     public UserEmailModel getUserEmailModel() {
         return new UserEmailModel();
+    }
+
+    @ModelAttribute("userEditPasswordModel")
+    public UserEditPasswordModel getUserEditPasswordModel() {
+        return new UserEditPasswordModel();
     }
 }

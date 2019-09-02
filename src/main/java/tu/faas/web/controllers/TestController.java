@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,15 +17,12 @@ import java.util.List;
 public class TestController {
     @GetMapping
     public ModelAndView getTestPage(ModelAndView modelAndView,
-                                    @RequestParam(name = "search", required = false) String search,
-                                    @RequestParam(name = "option", required = false) String option) {
-        System.out.println(search);
-        System.out.println(option);
-        //search - typing nothing = null
-        //search - typing something and deleting it = empty string
-        //option - choosing nothing = null
-        //can't choose sortby
-
+                                    @RequestParam(name = "date", required = false)String date) {
+        System.out.println(date);
+        if (date != null && !"".equals(date)) {
+            LocalDate localDate = LocalDate.parse(date);
+            System.out.println(localDate);
+        }
         modelAndView.setViewName("testing-something.html");
         return modelAndView;
     }

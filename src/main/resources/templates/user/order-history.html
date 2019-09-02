@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order History</title>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
+</head>
+<body>
+<th:block th:replace="../fragments/header"></th:block>
+
+<main>
+    <h1>Order History</h1>
+    <hr/>
+
+    <th:block th:each="orderHistoryViewModel: ${orderHistoryViewModels}">
+        <p>Order date and time: <span
+                th:text="${#temporals.format(orderHistoryViewModel.getDateTimeOfOrder(), 'dd/MM/yyyy HH:mm:ss')}"></span>
+        </p>
+
+        <p>Total price: <span th:text="${orderHistoryViewModel.getTotalPrice()}"></span></p>
+        <p>Billing information:</p>
+        <ul>
+            <li>Billing type: <span th:text="${orderHistoryViewModel.getBillingType()}"></span></li>
+            <li>Delivery address: <span th:text="${orderHistoryViewModel.getAddress()}"></span></li>
+        </ul>
+        <p>Products:</p>
+        <ul th:each="productViewModel: ${orderHistoryViewModel.getProductOrders()}">
+            <li>Name: <span th:text="${productViewModel.getProductName()}"></span></li>
+            <ul>
+                <li>Restaurant name: <span th:text="${productViewModel.getRestaurantName()}"></span></li>
+                <li>Price: <span th:text="${productViewModel.getPriceAtCheckout()}"></span></li>
+                <li>Quantity: <span th:text="${productViewModel.getQuantity()}"></span></li>
+            </ul>
+        </ul>
+        <hr/>
+    </th:block>
+</main>
+
+<th:block th:replace="../fragments/footer"></th:block>
+</body>
+</html>

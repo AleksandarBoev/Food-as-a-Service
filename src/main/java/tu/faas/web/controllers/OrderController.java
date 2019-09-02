@@ -37,7 +37,7 @@ public class OrderController {
                                   HttpSession session) {
         Map<Long, Integer> productIdCount = getShoppingCartMap(session);
         incrementProductCount(productIdCount, bindingModel.getProductId());
-        session.setAttribute(SessionConstants.SHOPPING_CART_ITEMS_COUNT, getShoppingCartItemsCount(productIdCount));
+        updateFrontEndShoppingCartItemsCount(session);
     }
 
     @PostMapping("/adjust-quantity")
@@ -55,7 +55,7 @@ public class OrderController {
         }
         System.out.println(bindingModel);
         System.out.println(productIdCount);
-        session.setAttribute(SessionConstants.SHOPPING_CART_ITEMS_COUNT, getShoppingCartItemsCount(productIdCount));
+        updateFrontEndShoppingCartItemsCount(session);
     }
 
     @GetMapping(value = "/shopping-cart-items-count", produces = "application/json")
@@ -139,6 +139,7 @@ public class OrderController {
 
         orderService.makeOrder(orderBindingModel);
         shoppingCartMap.clear();
+        updateFrontEndShoppingCartItemsCount(session);
 
         return "/order/success-order.html";
     }
@@ -167,5 +168,11 @@ public class OrderController {
         }
 
         return result;
+    }
+
+    private void updateFrontEndShoppingCartItemsCount(HttpSession session) {
+        session.setAttribute(
+                SessionConstants.SHOPPING_CART_ITEMS_COUNT,
+                getShoppingCartItemsCount(getShoppingCartMap(session)));
     }
 }

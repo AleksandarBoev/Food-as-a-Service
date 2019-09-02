@@ -14,15 +14,12 @@
 <body>
 
 <form th:action="@{/test}" th:method="get">
-    <input name="search" placeholder="Search stuff..."/>
-    <select name="option">
-        <option selected disabled>Sort By</option>
-        <option value="wat1">Option 1</option>
-        <option value="wat2">Option 2</option>
-        <option value="wat3">Option 3</option>
-        <option value="wat4">Option 4</option>
-    </select>
-    <button>Search</button>
+    <div class="md-form col-md-2">
+        <input name="date" type="date" id="inputMDEx" class="form-control">
+        <label for="inputMDEx">Choose your date</label>
+    </div>
+
+    <input type="submit" value="Submit"/>
 </form>
 
 <script>

@@ -9,12 +9,15 @@ import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
 import tu.faas.domain.models.view.ProductAllViewModel;
 import tu.faas.domain.models.view.RestaurantAllViewModel;
+import tu.faas.domain.models.view.RestaurantSalesViewModel;
 import tu.faas.domain.models.view.RestaurantViewModel;
 import tu.faas.services.contracts.ProductService;
 import tu.faas.services.contracts.RestaurantService;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Controller
@@ -133,12 +136,30 @@ public class RestaurantController {
         return "redirect:/restaurants/my-restaurants";
     }
 
-    @GetMapping("/statistics/{id}")
+    @GetMapping("/sales/{id}")
     public ModelAndView getRestaurantStatisticsPage(ModelAndView modelAndView,
-                                                    @PathVariable(name = "id", required = true) Long restaurantId) {
+                                                    @PathVariable(name = "id", required = true) Long restaurantId,
+                                                    @RequestParam(name = "dateFrom", required = false) String dateFrom,
+                                                    @RequestParam(name = "dateTo", required = false) String dateTo) {
+        LocalDate dateFromLocalDate;
+        try {
+            dateFromLocalDate = LocalDate.parse(dateFrom);
+        } catch (DateTimeParseException | NullPointerException err) {
+            dateFromLocalDate = null;
+        }
 
-        modelAndView.addObject("restaurant_id", restaurantId);
-        modelAndView.setViewName("restaurant/statistics.html");
+        LocalDate dateToLocalDate;
+        try {
+            dateToLocalDate = LocalDate.parse(dateTo);
+        } catch (DateTimeParseException | NullPointerException err) {
+            dateToLocalDate = null;
+        }
+
+        RestaurantSalesViewModel restaurantSalesViewModel =
+                restaurantService.getRestaurantSalesViewModel(restaurantId, dateFromLocalDate, dateToLocalDate);
+        modelAndView.addObject("restaurantSalesViewModel", restaurantSalesViewModel);
+
+        modelAndView.setViewName("restaurant/sales.html");
         return modelAndView;
     }
 
@@ -151,4 +172,5 @@ public class RestaurantController {
     public RestaurantCreateBindingModel getRestaurantCreateBindingModel() {
         return new RestaurantCreateBindingModel();
     }
+
 }
