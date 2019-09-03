@@ -3,8 +3,9 @@ package tu.faas.services.implementations;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import tu.faas.domain.lib.Calculation;
-import tu.faas.domain.lib.StringManipulation;
+import tu.faas.domain.beans.Calculation;
+import tu.faas.domain.beans.RegionDateTime;
+import tu.faas.domain.beans.StringManipulation;
 import tu.faas.domain.entities.Order;
 import tu.faas.domain.entities.Product;
 import tu.faas.domain.entities.ProductOrder;
@@ -25,7 +26,6 @@ import tu.faas.services.contracts.OrderService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,21 +33,31 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private static final ZoneId BULGARIA_ZONE_ID = ZoneId.of("Europe/Helsinki");
-
     private ProductRepository productRepository;
     private ProductOrderRepository productOrderRepository;
     private OrderRepository orderRepository;
     private UserRepository userRepository;
     private ModelMapper modelMapper;
+    private RegionDateTime regionDateTime;
+    private Calculation calculation;
+    private StringManipulation stringManipulation;
 
     @Autowired
-    public OrderServiceImpl(ProductRepository productRepository, ProductOrderRepository productOrderRepository, OrderRepository orderRepository, UserRepository userRepository, ModelMapper modelMapper) {
+    public OrderServiceImpl(ProductRepository productRepository,
+                            ProductOrderRepository productOrderRepository,
+                            OrderRepository orderRepository,
+                            UserRepository userRepository,
+                            ModelMapper modelMapper,
+                            RegionDateTime regionDateTime,
+                            Calculation calculation,
+                            StringManipulation stringManipulation) {
         this.productRepository = productRepository;
         this.productOrderRepository = productOrderRepository;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
+        this.regionDateTime = regionDateTime;
+        this.calculation = calculation;
     }
 
 
@@ -68,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
                 .map(productCartViewModel -> productCartViewModel.getTotalPrice())
                 .collect(Collectors.toList());
 
-        shoppingCartViewModel.setTotalSum(Calculation.getSum(productTotalPrices));
+        shoppingCartViewModel.setTotalSum(calculation.getSum(productTotalPrices));
 
         return shoppingCartViewModel;
     }
@@ -84,7 +94,7 @@ public class OrderServiceImpl implements OrderService {
         order.setBillingType(orderBindingModel.getBillingType());
         order.setAddress(orderBindingModel.getAddress());
 
-        order.setDateTimeOfOrder(LocalDateTime.now(BULGARIA_ZONE_ID));
+        order.setDateTimeOfOrder(regionDateTime.getPresentDateTime());
 
         User customer = userRepository.findById(orderBindingModel.getCustomerId()).orElseThrow(NoSuchUser::new);
         order.setCustomer(customer);
@@ -105,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
             Integer quantity = orderBindingModel.getProductIdQuantities().get(product.getId());
             productOrder.setQuantity(quantity);
             productOrder.setProductPriceAtCheckout(product.getPrice());
-            productOrder.setDateOfOrder(LocalDate.now(BULGARIA_ZONE_ID));
+            productOrder.setDateOfOrder(regionDateTime.getPresentDate());
 
             productOrders.add(productOrder);
 
@@ -113,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         productOrderRepository.saveAll(productOrders);
-        BigDecimal totalPrice = Calculation.getSum(prices);
+        BigDecimal totalPrice = calculation.getSum(prices);
         order.setTotalPrice(totalPrice);
         orderRepository.save(order);
     }
@@ -130,10 +140,10 @@ public class OrderServiceImpl implements OrderService {
         ProductShoppingCartViewModel productViewModel =
                 modelMapper.map(product, ProductShoppingCartViewModel.class);
 
-        String croppedName = StringManipulation.cropString(productViewModel.getName(), 15, "...");
+        String croppedName = stringManipulation.cropString(productViewModel.getName(), 15, "...");
         productViewModel.setName(croppedName);
 
-        String croppedDescription = StringManipulation.cropString(productViewModel.getDescription(), 15, "...");
+        String croppedDescription = stringManipulation.cropString(productViewModel.getDescription(), 15, "...");
         productViewModel.setDescription(croppedDescription);
 
         productViewModel.setQuantity(quantity);

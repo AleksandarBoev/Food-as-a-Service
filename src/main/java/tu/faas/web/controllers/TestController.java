@@ -1,11 +1,11 @@
 package tu.faas.web.controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tu.faas.domain.models.binding.AdminAction;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,4 +26,27 @@ public class TestController {
         modelAndView.setViewName("testing-something.html");
         return modelAndView;
     }
+
+    @GetMapping("/data")
+    public String getPage() {
+        return "testingagain.html";
+    }
+
+    @PostMapping("/data")
+    @ResponseBody
+    public ResponseEntity orderProduct(@RequestBody AdminAction requestBodyAdminAction) {
+        System.out.println(requestBodyAdminAction.getAction());
+        System.out.println(requestBodyAdminAction.getPassword());
+        System.out.println(requestBodyAdminAction.getUserId());
+
+        Long userId = requestBodyAdminAction.getUserId();
+        if (userId == 1L) {//TODO if credentials are wrong:
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        } else if (userId == 2L){
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+    }
+
 }

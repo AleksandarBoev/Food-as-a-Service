@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import tu.faas.domain.lib.StringManipulation;
+import tu.faas.domain.beans.StringManipulation;
 import tu.faas.domain.entities.Product;
 import tu.faas.domain.exceptions.NoSuchProduct;
 import tu.faas.domain.exceptions.NoSuchRestaurant;
@@ -26,12 +26,14 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
     private ModelMapper modelMapper;
     private RestaurantRepository restaurantRepository;
+    private StringManipulation stringManipulation;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper, RestaurantRepository restaurantRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper, RestaurantRepository restaurantRepository, StringManipulation stringManipulation) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
         this.restaurantRepository = restaurantRepository;
+        this.stringManipulation = stringManipulation;
     }
 
     @Override
@@ -106,9 +108,9 @@ public class ProductServiceImpl implements ProductService {
                     ProductListViewModel result =
                             modelMapper.map(p, ProductListViewModel.class);
 
-                    result.setName(StringManipulation.cropString(result.getName(), 15, "..."));
-                    result.setDescription(StringManipulation.cropString(result.getDescription(), 15, "..."));
-                    result.setImageUrl(StringManipulation.cropString(result.getImageUrl(), 15, "..."));
+                    result.setName(stringManipulation.cropString(result.getName(), 15, "..."));
+                    result.setDescription(stringManipulation.cropString(result.getDescription(), 15, "..."));
+                    result.setImageUrl(stringManipulation.cropString(result.getImageUrl(), 15, "..."));
 
                     return result;
                 })

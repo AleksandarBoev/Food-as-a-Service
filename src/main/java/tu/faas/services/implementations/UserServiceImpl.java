@@ -7,18 +7,21 @@ import tu.faas.domain.constants.RoleConstants;
 import tu.faas.domain.entities.Role;
 import tu.faas.domain.entities.User;
 import tu.faas.domain.exceptions.*;
+import tu.faas.domain.models.binding.AdminAction;
 import tu.faas.domain.models.binding.UserEditPasswordModel;
 import tu.faas.domain.models.binding.UserLoginBindingModel;
 import tu.faas.domain.models.binding.UserRegisterBindingModel;
 import tu.faas.domain.models.multipurpose.UserEmailModel;
 import tu.faas.domain.models.multipurpose.UserNameModel;
 import tu.faas.domain.models.view.UserProfileViewModel;
+import tu.faas.domain.models.view.UserUsersViewModel;
 import tu.faas.repositories.RoleRepository;
 import tu.faas.repositories.UserRepository;
 import tu.faas.services.contracts.UserService;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -157,5 +160,52 @@ public class UserServiceImpl implements UserService {
 
         user.setPassword(userEditPasswordModel.getNewPassword());
         userRepository.save(user);
+    }
+
+    @Override
+    public List<UserUsersViewModel> getUserViewModelsWithoutAdmin(Long adminId) {
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> !user.getId().equals(adminId))
+                .map(user -> mapToUserUsersViewModel(user, modelMapper))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Boolean validCredentials(Long userId, String userPassword) {
+        return userRepository.existsByIdAndPassword(userId, userPassword);
+    }
+
+    @Override
+    public void updateUser(AdminAction adminAction, Long adminId) {
+        User adminUser = userRepository.findById(adminId).orElseThrow(NoSuchUser::new);
+        if (!adminUser.getPassword().equals(adminAction.getPassword())) {
+            throw new WrongPassword();
+        }
+
+        User userToBeChanged = userRepository.findById(adminAction.getUserId()).orElseThrow(NoSuchUser::new);
+        Role managerRole = roleRepository.findRoleByName(RoleConstants.ROLE_MANAGER);
+
+        switch (adminAction.getAction()) {
+            case "Make manager":
+                userToBeChanged.getRoles().add(managerRole);
+                userRepository.save(userToBeChanged);
+                break;
+
+            case "Make user":
+                userToBeChanged.getRoles().remove(managerRole);
+                userRepository.save(userToBeChanged);
+                break;
+
+            case "Delete":
+                userRepository.delete(userToBeChanged);
+                break;
+        }
+    }
+
+    private UserUsersViewModel mapToUserUsersViewModel(User user, ModelMapper modelMapper) {
+        UserUsersViewModel userUsersViewModel = modelMapper.map(user, UserUsersViewModel.class);
+        userUsersViewModel.setRoles(user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet()));
+        return userUsersViewModel;
     }
 }

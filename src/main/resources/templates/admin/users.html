@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Users</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <th:block th:replace="../fragments/bootstrap4"></th:block>
 </head>
 <body>
+<th:block th:replace="../fragments/header"></th:block>
 
 <main>
     <table class="table table-striped">
@@ -23,21 +20,34 @@
         </tr>
         </thead>
         <tbody>
-        <tr userId="2">
-            <td class="username">Mark</td>
-            <td>Otto</td>
-            <td>
-                <button data-toggle="modal" data-target="#modalForm" class="btn btn-success btn-manager">Make Manager
-                </button>
-            </td>
-            <td>
-                <button data-toggle="modal" data-target="#modalForm" class="btn btn-secondary btn-user">Make User
-                </button>
-            </td>
-            <td>
-                <button data-toggle="modal" data-target="#modalForm" class="btn btn-danger btn-delete">Delete</button>
-            </td>
-        </tr>
+        <th:block th:each="userViewModel: ${userViewModels}">
+            <tr th:userId="${userViewModel.getId()}">
+                <td th:text="${userViewModel.getName()}" class="username"></td>
+                <td th:text="${userViewModel.getEmail()}"></td>
+                <td>
+
+                    <button th:if="${userViewModel.getRoles().contains('ROLE_MANAGER')}" disabled data-toggle="modal" data-target="#modalForm" class="btn btn-success btn-manager">
+                        Make Manager
+                    </button>
+                    <button th:unless="${userViewModel.getRoles().contains('ROLE_MANAGER')}" data-toggle="modal" data-target="#modalForm" class="btn btn-success btn-manager">
+                        Make Manager
+                    </button>
+                </td>
+                <td>
+                    <button th:if="${userViewModel.getRoles().contains('ROLE_MANAGER')}" data-toggle="modal" data-target="#modalForm" class="btn btn-secondary btn-user">
+                        Make User
+                    </button>
+                    <button th:unless="${userViewModel.getRoles().contains('ROLE_MANAGER')}" disabled data-toggle="modal" data-target="#modalForm" class="btn btn-secondary btn-user">
+                        Make User
+                    </button>
+                </td>
+                <td>
+                    <button data-toggle="modal" data-target="#modalForm" class="btn btn-danger btn-delete">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        </th:block>
         </tbody>
     </table>
 
@@ -71,6 +81,7 @@
     </div>
 </main>
 
+<th:block th:replace="../fragments/footer"></th:block>
 
 <script>
     const formElements = {
@@ -125,7 +136,7 @@
             userId: userData.userId,
         };
         formElements.inputPassword.value = '';
-        fetch('/test/data', {
+        fetch('/admin/users', {
             method: 'post',
             headers: {
                 Accept: "application/json",

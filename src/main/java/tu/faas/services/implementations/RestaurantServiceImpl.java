@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import tu.faas.domain.lib.Calculation;
+import tu.faas.domain.beans.Calculation;
 import tu.faas.domain.entities.Restaurant;
 import tu.faas.domain.entities.User;
 import tu.faas.domain.exceptions.NoSuchRestaurant;
@@ -29,16 +29,19 @@ public class RestaurantServiceImpl implements RestaurantService {
     private ModelMapper modelMapper;
     private UserRepository userRepository;
     private ProductOrderService productOrderService;
+    private Calculation calculation;
 
     @Autowired
     public RestaurantServiceImpl(RestaurantRepository restaurantRepository,
                                  ModelMapper modelMapper,
                                  UserRepository userRepository,
-                                 ProductOrderService productOrderService) {
+                                 ProductOrderService productOrderService,
+                                 Calculation calculation) {
         this.restaurantRepository = restaurantRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.productOrderService = productOrderService;
+        this.calculation = calculation;
     }
 
     @Override
@@ -170,7 +173,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .stream()
                 .map(productOrderViewModel -> productOrderViewModel.getTotalPrice())
                 .collect(Collectors.toList());
-        BigDecimal restaurantTotalIncome = Calculation.getSum(productOrderPrices);
+        BigDecimal restaurantTotalIncome = calculation.getSum(productOrderPrices);
 
         restaurantSalesViewModel.setProductSaleViewModes(productOrderViewModels);
         restaurantSalesViewModel.setTotalIncome(restaurantTotalIncome);
