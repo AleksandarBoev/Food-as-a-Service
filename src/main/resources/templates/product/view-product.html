@@ -31,11 +31,21 @@
     <h2 th:text="${productViewModel.getRestaurantName()}"></h2>
     <hr/>
 
-    <button type="button" th:productIdTag="${productViewModel.getId()}"
-            id="add-to-cart" class="btn btn-warning"
-            data-toggle="modal" data-target="#myModal">
-        Add to cart
-    </button>
+    <th:block th:if="${#session.getAttribute('roles').contains('ROLE_USER')}">
+        <button type="button" th:productIdTag="${productViewModel.getId()}"
+                id="add-to-cart" class="btn btn-warning"
+                data-toggle="modal" data-target="#myModal">
+            Add to cart
+        </button>
+    </th:block>
+
+    <th:block th:unless="${#session.getAttribute('roles').contains('ROLE_USER')}">
+        <a th:href="@{/login}">
+            <button type="button" class="btn btn-warning">
+                Add to cart
+            </button>
+        </a>
+    </th:block>
 
     <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
         <a th:href="@{/products/edit/{id}(id=${productViewModel.getId()})}">

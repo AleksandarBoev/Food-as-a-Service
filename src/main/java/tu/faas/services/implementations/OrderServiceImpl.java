@@ -24,8 +24,6 @@ import tu.faas.repositories.UserRepository;
 import tu.faas.services.contracts.OrderService;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +56,7 @@ public class OrderServiceImpl implements OrderService {
         this.modelMapper = modelMapper;
         this.regionDateTime = regionDateTime;
         this.calculation = calculation;
+        this.stringManipulation = stringManipulation;
     }
 
 

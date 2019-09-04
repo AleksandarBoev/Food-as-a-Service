@@ -7,6 +7,7 @@ import tu.faas.domain.models.view.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface RestaurantService {
     RestaurantModel getRestaurantModelById(Long id);
@@ -28,4 +29,6 @@ public interface RestaurantService {
     List<RestaurantAllViewModel> getRestaurantsByManager2(Long managerId);
 
     RestaurantSalesViewModel getRestaurantSalesViewModel(Long restaurantId, LocalDate date1, LocalDate date2);
+
+    Set<String> getRestaurantIdsByManagerId(Long managerId);
 }

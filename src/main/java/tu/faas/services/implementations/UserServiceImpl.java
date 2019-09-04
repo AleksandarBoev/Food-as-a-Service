@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tu.faas.domain.constants.RoleConstants;
+import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.entities.Role;
 import tu.faas.domain.entities.User;
 import tu.faas.domain.exceptions.*;
@@ -17,6 +18,7 @@ import tu.faas.domain.models.view.UserProfileViewModel;
 import tu.faas.domain.models.view.UserUsersViewModel;
 import tu.faas.repositories.RoleRepository;
 import tu.faas.repositories.UserRepository;
+import tu.faas.services.contracts.RestaurantService;
 import tu.faas.services.contracts.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -30,12 +32,14 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private ModelMapper modelMapper;
     private RoleRepository roleRepository;
+    private RestaurantService restaurantService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, RoleRepository roleRepository) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, RoleRepository roleRepository, RestaurantService restaurantService) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.roleRepository = roleRepository;
+        this.restaurantService = restaurantService;
     }
 
     @Override
@@ -80,6 +84,10 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(role -> role.getName())
                 .collect(Collectors.toSet());
+        if (userRoles.contains(RoleConstants.ROLE_MANAGER)) {
+            Set<String> myRestaurants = restaurantService.getRestaurantIdsByManagerId(user.getId());
+            session.setAttribute(SessionConstants.MY_RESTAURANTS, myRestaurants);
+        }
 
         session.setAttribute("roles", userRoles);
         session.setAttribute("userId", user.getId());

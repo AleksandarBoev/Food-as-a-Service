@@ -20,6 +20,7 @@ import tu.faas.services.contracts.RestaurantService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -179,6 +180,14 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurantSalesViewModel.setTotalIncome(restaurantTotalIncome);
 
         return restaurantSalesViewModel;
+    }
+
+    @Override
+    public Set<String> getRestaurantIdsByManagerId(Long managerId) {
+        return restaurantRepository.findAllByManagerId(managerId)
+                .stream()
+                .map(restaurant -> "" + restaurant.getId())
+                .collect(Collectors.toSet());
     }
 
     private List<RestaurantAllViewModel> getRestaurantAllViewModels(List<Restaurant> restaurants) {

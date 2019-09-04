@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
 import tu.faas.domain.models.view.ProductAllViewModel;
@@ -19,6 +20,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/restaurants")
@@ -74,6 +76,7 @@ public class RestaurantController {
         }
 
         Long restaurantId = restaurantService.createRestaurant(bindingModel, (Long) session.getAttribute("userId"));
+        ((Set<String>)session.getAttribute(SessionConstants.MY_RESTAURANTS)).add("" + restaurantId);
         modelAndView.setViewName("redirect:/restaurants/view/" + restaurantId);
         return modelAndView;
     }
