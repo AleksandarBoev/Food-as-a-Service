@@ -15,7 +15,7 @@
 
     <p th:text="${restaurantViewModel.getDescription()}"></p>
 
-<!--    <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">-->
+    <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
     <a th:href="@{/restaurants/edit/{id}(id=${restaurantViewModel.getId()})}">
         <button type="button" class="btn btn-primary">Edit</button>
     </a>
@@ -26,10 +26,10 @@
     <a th:href="@{/restaurants/sales/{id}(id=${restaurantViewModel.getId()})}">
         <button type="button" class="btn btn-secondary">Sales</button>
     </a>
-<!--    </th:block>-->
+    </th:block>
 
     <hr/>
-<!--    <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">-->
+    <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
 
         <p th:if="${productAllViewModels.isEmpty()}">
             No products!
@@ -39,7 +39,7 @@
         <a th:unless="${productAllViewModels.isEmpty()}" th:href="@{/products/{id}/create(id=${restaurantViewModel.getId()})}">
             <button>Add Product</button>
         </a>
-<!--    </th:block>-->
+    </th:block>
 
     <th:block th:replace="../fragments/products-all-fragment"></th:block>
 </main>

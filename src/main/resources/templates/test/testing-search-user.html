@@ -9,58 +9,43 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-    <form th:action="@{/admin/users}" th:method="get">
-        <input name="search" placeholder="Search user..."/>
-        <select name="option">
-            <option selected disabled>Search By</option>
-            <option value="name">Name</option>
-            <option value="email">Email</option>
-        </select>
-        <button>Search</button>
-    </form>
-
+    <input id="search-input" placeholder="Search..."/>
+    <button id="search-button">Search</button>
     <table class="table table-striped">
         <thead>
         <tr>
-            <th scope="col">Email</th>
             <th scope="col">Name</th>
+            <th scope="col">Email</th>
             <th scope="col"></th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
-        <th:block th:each="userViewModel: ${userViewModels}">
-            <tr th:userId="${userViewModel.getId()}">
-                <td th:text="${userViewModel.getEmail()}" class="email"></td>
-                <td th:text="${userViewModel.getName()}" class="username"></td>
-                <td>
-                    <button th:if="${userViewModel.getRoles().contains('ROLE_MANAGER')}" disabled data-toggle="modal"
-                            data-target="#modalForm" class="btn btn-success btn-manager">
-                        Make Manager
-                    </button>
-                    <button th:unless="${userViewModel.getRoles().contains('ROLE_MANAGER')}" data-toggle="modal"
-                            data-target="#modalForm" class="btn btn-success btn-manager">
-                        Make Manager
-                    </button>
-                </td>
-                <td>
-                    <button th:if="${userViewModel.getRoles().contains('ROLE_MANAGER')}" data-toggle="modal"
-                            data-target="#modalForm" class="btn btn-secondary btn-user">
-                        Make User
-                    </button>
-                    <button th:unless="${userViewModel.getRoles().contains('ROLE_MANAGER')}" disabled
-                            data-toggle="modal" data-target="#modalForm" class="btn btn-secondary btn-user">
-                        Make User
-                    </button>
-                </td>
-                <td>
-                    <button data-toggle="modal" data-target="#modalForm" class="btn btn-danger btn-delete">
-                        Delete
-                    </button>
-                </td>
+            <tr>
+                <td class="name">George</td>
+                <td class="email">111@abv.bg</td>
             </tr>
-        </th:block>
+
+            <tr>
+                <td class="name">Pesho</td>
+                <td class="email">222@abv.bg</td>
+            </tr>
+
+            <tr>
+                <td class="name">Gosho</td>
+                <td class="email">333@abv.bg</td>
+            </tr>
+
+            <tr>
+                <td class="name">Tosho</td>
+                <td class="email">123@abv.bg</td>
+            </tr>
+
+            <tr>
+                <td class="name">Petrakan</td>
+                <td class="email">444@abv.bg</td>
+            </tr>
         </tbody>
     </table>
 
@@ -196,39 +181,38 @@
     });
 
 
-    // const searchButton = document.getElementById('search-button');
-    // const searchInput = document.getElementById('search-input');
-    // const allNamesTds = [...document.getElementsByClassName('username')];
-    // const allEmailsTds = [...document.getElementsByClassName('email')];
-    //
-    // const hideTr = td => {
-    //     td.parentNode.style.backgroundColor = 'white';
-    // };
-    //
-    // const showTr = td => {
-    //     td.parentNode.style.backgroundColor = '#FFF842';
-    // };
-    // searchButton.addEventListener('click', () => {
-    //         const word = searchInput.value.toLowerCase();
-    //
-    //         if (word === "") {
-    //             allNamesTds.forEach(hideTr);
-    //         } else {
-    //             for (let i = 0; i < allNamesTds.length; i += 1) {
-    //                 console.log(allNamesTds[i].textContent.toLowerCase());
-    //                 console.log(allEmailsTds[i].textContent.toLowerCase());
-    //                 // hideTr(allNamesTds[0]);
-    //
-    //                 if (allNamesTds[i].textContent.toLowerCase().includes(word)
-    //                     || allEmailsTds[i].textContent.toLowerCase().includes(word)) {
-    //                     showTr(allEmailsTds[i]);
-    //                 } else {
-    //                     hideTr(allEmailsTds[i]);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // )
+    const searchButton = document.getElementById('search-button');
+    const searchInput = document.getElementById('search-input');
+    const allNamesTds = [...document.getElementsByClassName('name')];
+    const allEmailsTds = [...document.getElementsByClassName('email')];
+
+    const hideTr = td => {
+        td.parentNode.style.display = 'none';
+    };
+
+    const showTr = td => {
+        td.parentNode.style.display = 'block';
+    };
+    searchButton.addEventListener('click', () => {
+            const word = searchInput.value.toLowerCase();
+            console.log(allEmailsTds);
+            console.log(allEmailsTds[0]);
+            console.log(allEmailsTds[0].textContent);
+
+            if (word === "") {
+                allNamesTds.forEach(showTr);
+            } else {
+                for (let i = 0; i < allNamesTds.length; i += 1) {
+                    if (allNamesTds[i].textContent.toLocaleLowerCase().includes(word)
+                        || allEmailsTds[i].textContent.toLowerCase().includes(word)) {
+                        showTr(allEmailsTds[i]);
+                    } else {
+                        hideTr(allEmailsTds[i]);
+                    }
+                }
+            }
+        }
+    )
 </script>
 </body>
 </html>

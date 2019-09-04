@@ -28,9 +28,11 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ModelAndView getUsersPage(ModelAndView modelAndView, HttpSession session) {
+    public ModelAndView getUsersPage(ModelAndView modelAndView, HttpSession session,
+                                     @RequestParam(name = "search", required = false) String search,
+                                     @RequestParam(name = "option", required = false) String option) {
         List<UserUsersViewModel> userViewModels =
-                userService.getUserViewModelsWithoutAdmin((Long) session.getAttribute(SessionConstants.USER_ID));
+                userService.getUserViewModelsWithoutAdmin((Long) session.getAttribute(SessionConstants.USER_ID), search, option);
         modelAndView.addObject("userViewModels", userViewModels);
 
         modelAndView.setViewName("admin/users.html");

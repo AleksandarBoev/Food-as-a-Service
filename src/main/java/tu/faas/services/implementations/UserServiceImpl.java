@@ -171,12 +171,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserUsersViewModel> getUserViewModelsWithoutAdmin(Long adminId) {
-        return userRepository.findAll()
-                .stream()
-                .filter(user -> !user.getId().equals(adminId))
-                .map(user -> mapToUserUsersViewModel(user, modelMapper))
-                .collect(Collectors.toList());
+    public List<UserUsersViewModel> getUserViewModelsWithoutAdmin(Long adminId, String search, String option) {
+        if ("".equals(search) || search == null) {
+            return mapToUserUsersViewModels(userRepository.findAll(), modelMapper, adminId);
+        } else {
+            if ("".equals(option) || option == null) {
+                return mapToUserUsersViewModels(userRepository
+                        .findAllByNameContainsIgnoreCaseOrEmailContainsIgnoreCase(search, search), modelMapper, adminId);
+            } else if ("name".equals(option)) {
+                return mapToUserUsersViewModels(userRepository.findAllByNameContainsIgnoreCase(search), modelMapper, adminId);
+            } else {
+                return mapToUserUsersViewModels(userRepository.findAllByEmailContainsIgnoreCase(search), modelMapper, adminId);
+            }
+        }
     }
 
     @Override
@@ -215,5 +222,13 @@ public class UserServiceImpl implements UserService {
         UserUsersViewModel userUsersViewModel = modelMapper.map(user, UserUsersViewModel.class);
         userUsersViewModel.setRoles(user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toSet()));
         return userUsersViewModel;
+    }
+
+    private List<UserUsersViewModel> mapToUserUsersViewModels(List<User> users, ModelMapper modelMapper, Long adminId) {
+        return users
+                .stream()
+                .filter(user -> !user.getId().equals(adminId))
+                .map(user -> mapToUserUsersViewModel(user, modelMapper))
+                .collect(Collectors.toList());
     }
 }

@@ -29,7 +29,7 @@ public interface UserService {
 
     void editPassword(UserEditPasswordModel userEditPasswordModel, Long userId);
 
-    List<UserUsersViewModel> getUserViewModelsWithoutAdmin(Long adminId);
+    List<UserUsersViewModel> getUserViewModelsWithoutAdmin(Long adminId, String search, String option);
 
     Boolean validCredentials(Long userId, String userPassword);
 

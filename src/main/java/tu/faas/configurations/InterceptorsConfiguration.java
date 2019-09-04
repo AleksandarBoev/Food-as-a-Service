@@ -31,17 +31,17 @@ public class InterceptorsConfiguration implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(guestPagesInterceptor).addPathPatterns("/guest-stuff");
-//        registry.addInterceptor(userPagesInterceptor).addPathPatterns("/user/**", "/order/**");
-//        registry.addInterceptor(managerPagesInterceptor).addPathPatterns(
-//                "/restaurants/my-restaurants",
-//                "/restaurants/create",
-//                "/restaurants/edit/**",
-//                "/restaurants/delete/**",
-//                "/restaurants/sales/**",
-//                "/products/*/create",
-//                "/products/edit/**",
-//                "/products/delete/**");
-//        registry.addInterceptor(globalInterceptor);
+        registry.addInterceptor(guestPagesInterceptor).addPathPatterns("/guest-stuff");
+        registry.addInterceptor(userPagesInterceptor).addPathPatterns("/user/**", "/order/**");
+        registry.addInterceptor(managerPagesInterceptor).addPathPatterns(
+                "/restaurants/my-restaurants",
+                "/restaurants/create",
+                "/restaurants/edit/**",
+                "/restaurants/delete/**",
+                "/restaurants/sales/**",
+                "/products/*/create",
+                "/products/edit/**",
+                "/products/delete/**");
+        registry.addInterceptor(globalInterceptor);
     }
 }
