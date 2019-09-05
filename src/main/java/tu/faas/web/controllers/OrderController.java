@@ -2,11 +2,14 @@ package tu.faas.web.controllers;
 
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import tu.faas.domain.constants.RoleConstants;
 import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.models.binding.BillingInformationBindingModel;
 import tu.faas.domain.models.binding.OrderBindingModel;
@@ -19,6 +22,7 @@ import tu.faas.services.contracts.OrderService;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/order")
@@ -33,11 +37,18 @@ public class OrderController {
 
     @PostMapping("/add-to-cart")
     @ResponseBody
-    public void addToShoppingCart(@RequestBody ProductAddToCartBindingModel bindingModel,
-                                  HttpSession session) {
-        Map<Long, Integer> productIdCount = getShoppingCartMap(session);
-        incrementProductCount(productIdCount, bindingModel.getProductId());
-        updateFrontEndShoppingCartItemsCount(session);
+    public ResponseEntity addToShoppingCart(@RequestBody ProductAddToCartBindingModel bindingModel,
+                                            HttpSession session) {
+        Set<String> userRoles = (Set<String>)session.getAttribute(SessionConstants.ROLES);
+
+        if (!userRoles.contains(RoleConstants.ROLE_USER)) {
+            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+        } else {
+            Map<Long, Integer> productIdCount = getShoppingCartMap(session);
+            incrementProductCount(productIdCount, bindingModel.getProductId());
+            updateFrontEndShoppingCartItemsCount(session);
+            return new ResponseEntity(HttpStatus.OK);
+        }
     }
 
     @PostMapping("/adjust-quantity")

@@ -58,20 +58,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<RestaurantListViewModel> getRestaurantsByManager(Long managerId) {
-        return restaurantRepository.findAllByManagerId(managerId)
-                .stream()
-                .map(r -> modelMapper.map(r, RestaurantListViewModel.class))
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<RestaurantAllViewModel> getRestaurantsByManager2(Long managerId) {
-        List<Restaurant> restaurants = restaurantRepository.findAllByManagerId(managerId);
-        return getRestaurantAllViewModels(restaurants);
-    }
-
-    @Override
     public List<RestaurantAllViewModel> getRestaurantAllViewModels(String search, String sortBy) {
         List<Restaurant> restaurants = null;
 
@@ -101,6 +87,14 @@ public class RestaurantServiceImpl implements RestaurantService {
             }
         }
         return getRestaurantAllViewModels(restaurants);
+    }
+
+    @Override
+    public List<RestaurantAllViewModel> getRestaurantsByManager(Long managerId, String search, String sortBy) {
+        return getRestaurantAllViewModels(search, sortBy)
+                .stream()
+                .filter(restaurant -> restaurant.getOwnerId().equals(managerId))
+                .collect(Collectors.toList());
     }
 
     @Override

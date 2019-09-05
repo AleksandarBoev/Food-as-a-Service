@@ -42,17 +42,18 @@ public class RestaurantController {
                 restaurantService.getRestaurantAllViewModels(search, option);
 
         modelAndView.addObject("restaurantAllViewModels", restaurantAllViewModels);
-        modelAndView.setViewName("restaurant/restaurants2.html");
+        modelAndView.setViewName("restaurant/restaurants.html");
         return modelAndView;
     }
 
     @GetMapping("/my-restaurants")
     public ModelAndView getMyRestaurantsPage(ModelAndView modelAndView,
-                                             HttpSession session) {
-        //TODO rename html to my-restaurants
-        //TODO maybe throw in a statistics comparison between restauratns... or not.
+                                             HttpSession session,
+                                             @RequestParam(name = "search", required = false) String search,
+                                             @RequestParam(name = "option", required = false) String option) {
+        Long managerId = (Long) session.getAttribute("userId");
         List<RestaurantAllViewModel> restaurantAllViewModels =
-                restaurantService.getRestaurantsByManager2((Long)session.getAttribute("userId"));
+                restaurantService.getRestaurantsByManager(managerId, search, option);
 
         modelAndView.addObject("restaurantAllViewModels", restaurantAllViewModels);
         modelAndView.setViewName("/restaurant/restaurants.html");
@@ -76,7 +77,7 @@ public class RestaurantController {
         }
 
         Long restaurantId = restaurantService.createRestaurant(bindingModel, (Long) session.getAttribute("userId"));
-        ((Set<String>)session.getAttribute(SessionConstants.MY_RESTAURANTS)).add("" + restaurantId);
+        ((Set<String>) session.getAttribute(SessionConstants.MY_RESTAURANTS)).add("" + restaurantId);
         modelAndView.setViewName("redirect:/restaurants/view/" + restaurantId);
         return modelAndView;
     }

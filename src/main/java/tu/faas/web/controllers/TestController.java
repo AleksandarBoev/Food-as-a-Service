@@ -5,8 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import tu.faas.domain.SessionClass;
 import tu.faas.domain.models.binding.AdminAction;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -49,4 +51,12 @@ public class TestController {
         }
     }
 
+    @GetMapping("/session")
+    public ModelAndView getSessionPage(HttpSession session,
+                                       ModelAndView modelAndView) {
+        SessionClass sessionClass = (SessionClass)session.getAttribute("sessionClass");
+
+        modelAndView.setViewName("test/session.html");
+        return modelAndView;
+    }
 }

@@ -36,13 +36,8 @@
                     </div>
                 </li>
 
-                <li class="nav-item dropdown" th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                        Manager
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" th:href="@{/restaurants/my-restaurants}">My Restaurants</a>
-                    </div>
+                <li class="nav-item" th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
+                    <a class="nav-link" th:href="@{/restaurants/my-restaurants}">My Restaurants</a>
                 </li>
 
                 <li class="nav-item">

@@ -22,11 +22,9 @@ public interface RestaurantService {
 
     List<RestaurantHomeViewModel> getNewestRestaurantHomeViewModels(Integer count);
 
-    List<RestaurantListViewModel> getRestaurantsByManager(Long managerId);
+    List<RestaurantAllViewModel> getRestaurantsByManager(Long managerId, String search, String option);
 
     List<RestaurantAllViewModel> getRestaurantAllViewModels(String search, String sortBy);
-
-    List<RestaurantAllViewModel> getRestaurantsByManager2(Long managerId);
 
     RestaurantSalesViewModel getRestaurantSalesViewModel(Long restaurantId, LocalDate date1, LocalDate date2);
 

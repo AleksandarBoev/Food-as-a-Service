@@ -2,6 +2,7 @@ package tu.faas.web.interceptors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import tu.faas.domain.SessionClass;
 import tu.faas.domain.constants.RoleConstants;
 import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.models.view.ProductShoppingCartViewModel;
@@ -26,6 +27,9 @@ public class GlobalInterceptor extends HandlerInterceptorAdapter {
             Map<Long, Integer> productIdCount = new LinkedHashMap<>();
             session.setAttribute(SessionConstants.SHOPPING_CART, productIdCount);
             session.setAttribute(SessionConstants.SHOPPING_CART_ITEMS_COUNT, 0);
+
+            SessionClass sessionClass = new SessionClass();
+            session.setAttribute("sessionClass", sessionClass);
         }
         return true;
     }

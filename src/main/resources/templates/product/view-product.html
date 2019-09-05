@@ -31,21 +31,17 @@
     <h2 th:text="${productViewModel.getRestaurantName()}"></h2>
     <hr/>
 
-    <th:block th:if="${#session.getAttribute('roles').contains('ROLE_USER')}">
-        <button type="button" th:productIdTag="${productViewModel.getId()}"
-                id="add-to-cart" class="btn btn-warning"
-                data-toggle="modal" data-target="#myModal">
+    <button th:if="${#session.getAttribute('roles').contains('ROLE_USER')}" type="button"
+            th:productIdTag="${productViewModel.getId()}"
+            id="add-to-cart" class="btn btn-warning"
+            data-toggle="modal" data-target="#myModal">
+        Add to cart
+    </button>
+    <a th:unless="${#session.getAttribute('roles').contains('ROLE_USER')}" th:href="@{/login}">
+        <button type="button" class="btn btn-warning">
             Add to cart
         </button>
-    </th:block>
-
-    <th:block th:unless="${#session.getAttribute('roles').contains('ROLE_USER')}">
-        <a th:href="@{/login}">
-            <button type="button" class="btn btn-warning">
-                Add to cart
-            </button>
-        </a>
-    </th:block>
+    </a>
 
     <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
         <a th:href="@{/products/edit/{id}(id=${productViewModel.getId()})}">
@@ -95,8 +91,12 @@
             body: JSON.stringify({
                 productId,
             }),
-        }).then(() => {
-            updateItemsCount.update();
+        }).then(response => {
+            if (response.status === 200) {
+                updateItemsCount.update();
+            } else if (response.status === 401) {
+                alert('You need to be logged in to order products!');
+            }
         });
     });
 </script>
