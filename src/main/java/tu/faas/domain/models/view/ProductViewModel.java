@@ -10,6 +10,8 @@ public class ProductViewModel {
     private String imageUrl;
     private String description;
     private String restaurantName;
+    private Long restaurantId;
+    private Long ownerId;
 
     public Long getId() {
         return id;
@@ -65,5 +67,21 @@ public class ProductViewModel {
 
     public void setRestaurantName(String restaurantName) {
         this.restaurantName = restaurantName;
+    }
+
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 }

@@ -35,6 +35,7 @@ public class ProductOrder extends BaseEntity {
         this.order = order;
     }
 
+    @Column
     public Integer getQuantity() {
         return quantity;
     }
@@ -52,6 +53,7 @@ public class ProductOrder extends BaseEntity {
         this.productPriceAtCheckout = productPriceAtCheckout;
     }
 
+    @Column
     public LocalDate getDateOfOrder() {
         return dateOfOrder;
     }

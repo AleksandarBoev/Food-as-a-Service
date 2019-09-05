@@ -17,6 +17,7 @@ public class UserRegisterBindingModel {
             message = UserValidationConstants.NAME_LENGTH_ERROR_MESSAGE)
     @Pattern(regexp = UserValidationConstants.USER_NAME_REGEX,
             message = UserValidationConstants.NAME_FORMAT_ERROR_MESSAGE)
+    @NotNull(message = UserValidationConstants.NAME_NULL_MESSAGE)
     public String getName() {
         return name;
     }
@@ -26,6 +27,8 @@ public class UserRegisterBindingModel {
     }
 
     @NotNull(message = "Password can\'t be null!")
+    @Size(min = UserValidationConstants.PASSWORD_MIN_LENGTH,
+            message = UserValidationConstants.PASSWORD_LENGTH_MESSAGE)
     public String getPassword() {
         return password;
     }
@@ -42,6 +45,9 @@ public class UserRegisterBindingModel {
         this.repassword = repassword;
     }
 
+    @Pattern(regexp = UserValidationConstants.EMAIL_REGEX,
+            message = UserValidationConstants.EMAIL_FORMAT_ERROR_MESSAGE)
+    @NotNull(message = UserValidationConstants.EMAIL_NULL_MESSAGE)
     public String getEmail() {
         return email;
     }

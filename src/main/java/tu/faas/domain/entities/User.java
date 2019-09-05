@@ -1,5 +1,7 @@
 package tu.faas.domain.entities;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -54,7 +56,7 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     public List<Order> getOrders() {
         return orders;
     }

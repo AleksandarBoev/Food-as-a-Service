@@ -150,7 +150,6 @@ public class OrderServiceImpl implements OrderService {
         return productViewModel;
     }
 
-    //TODO maybe this logic belongs in a ProductOrderService class
     private ProductOrderUserHistoryViewModel mapProductOrderToProductOrderUserHistoryViewModel(
             ProductOrder productOrder,
             ModelMapper modelMapper) {

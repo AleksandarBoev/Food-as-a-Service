@@ -11,6 +11,7 @@ import tu.faas.services.contracts.HomeService;
 import tu.faas.services.contracts.ProductService;
 import tu.faas.services.contracts.RestaurantService;
 import tu.faas.services.contracts.UserService;
+import tu.faas.web.session.UserData;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -46,7 +47,7 @@ public class HomeServiceImpl implements HomeService {
     }
 
     @Override
-    public void loginUser(UserLoginBindingModel userLoginBindingModel, HttpSession session) {
-        userService.loginUser(userLoginBindingModel, session);
+    public UserData loginUser(UserLoginBindingModel userLoginBindingModel) {
+        return userService.loginUser(userLoginBindingModel);
     }
 }

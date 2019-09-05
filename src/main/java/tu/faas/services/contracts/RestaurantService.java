@@ -28,5 +28,7 @@ public interface RestaurantService {
 
     RestaurantSalesViewModel getRestaurantSalesViewModel(Long restaurantId, LocalDate date1, LocalDate date2);
 
-    Set<String> getRestaurantIdsByManagerId(Long managerId);
+    Set<Long> getRestaurantIdsByManagerId(Long managerId);
+
+    void deleteRestaurantsByManagerId(Long managerId);
 }

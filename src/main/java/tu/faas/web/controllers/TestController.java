@@ -42,7 +42,7 @@ public class TestController {
         System.out.println(requestBodyAdminAction.getUserId());
 
         Long userId = requestBodyAdminAction.getUserId();
-        if (userId == 1L) {//TODO if credentials are wrong:
+        if (userId == 1L) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         } else if (userId == 2L){
             return new ResponseEntity(HttpStatus.OK);

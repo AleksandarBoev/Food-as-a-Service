@@ -151,6 +151,8 @@ public class ProductServiceImpl implements ProductService {
 
         ProductViewModel result = modelMapper.map(productFound, ProductViewModel.class);
         result.setRestaurantName(productFound.getRestaurant().getName());
+        result.setRestaurantId(productFound.getRestaurant().getId());
+        result.setOwnerId(productFound.getRestaurant().getManager().getId());
 
         return result;
     }
@@ -167,6 +169,7 @@ public class ProductServiceImpl implements ProductService {
         ProductAllViewModel productAllViewModel =
                 modelMapper.map(product, ProductAllViewModel.class);
         productAllViewModel.setOwnerId(product.getRestaurant().getManager().getId());
+        productAllViewModel.setRestaurantId(product.getRestaurant().getId());
         return productAllViewModel;
     }
 }

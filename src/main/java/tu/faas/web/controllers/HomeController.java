@@ -18,6 +18,7 @@ import tu.faas.domain.models.binding.UserRegisterBindingModel;
 import tu.faas.domain.models.view.ProductHomeViewModel;
 import tu.faas.domain.models.view.RestaurantHomeViewModel;
 import tu.faas.services.contracts.HomeService;
+import tu.faas.web.session.UserData;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -100,7 +101,8 @@ public class HomeController {
             HttpSession session) {
         System.out.println(userLoginBindingModel);
         try {
-            homeService.loginUser(userLoginBindingModel, session);
+            UserData userData = homeService.loginUser(userLoginBindingModel);
+            session.setAttribute(UserData.NAME, userData);
             modelAndView.setViewName("redirect:/");
             return modelAndView;
         } catch (NoSuchUser nsu) {
@@ -112,7 +114,8 @@ public class HomeController {
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();
+        UserData userData = new UserData(); //empty data
+        session.setAttribute(UserData.NAME, userData);
         return "redirect:/";
     }
 

@@ -177,11 +177,21 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Set<String> getRestaurantIdsByManagerId(Long managerId) {
+    public Set<Long> getRestaurantIdsByManagerId(Long managerId) {
         return restaurantRepository.findAllByManagerId(managerId)
                 .stream()
-                .map(restaurant -> "" + restaurant.getId())
+                .map(restaurant -> restaurant.getId())
                 .collect(Collectors.toSet());
+    }
+
+    @Override
+    public void deleteRestaurantsByManagerId(Long managerId) {
+        List<Restaurant> restaurantsByManager =
+                restaurantRepository.findAllByManagerId(managerId);
+
+        for (Restaurant restaurant: restaurantsByManager) {
+            restaurantRepository.delete(restaurant);
+        }
     }
 
     private List<RestaurantAllViewModel> getRestaurantAllViewModels(List<Restaurant> restaurants) {

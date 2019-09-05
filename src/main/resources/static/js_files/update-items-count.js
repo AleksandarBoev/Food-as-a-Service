@@ -6,8 +6,7 @@ const updateItemsCount = (() => {
             fetch("/order/shopping-cart-items-count")
                 .then(response => response.json())
                 .then(jsonData => {
-                    const itemsCount = jsonData.itemsCount;
-                    spanElementCartCount.textContent = itemsCount;
+                    spanElementCartCount.textContent = jsonData; //just a number
                 });
         }
     }

@@ -9,6 +9,7 @@ public class ProductAllViewModel {
     private Integer weightInGrams;
     private String imageUrl;
     private Long ownerId;
+    private Long restaurantId;
 
     public Long getId() {
         return id;
@@ -56,5 +57,13 @@ public class ProductAllViewModel {
 
     public void setOwnerId(Long ownerId) {
         this.ownerId = ownerId;
+    }
+
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }

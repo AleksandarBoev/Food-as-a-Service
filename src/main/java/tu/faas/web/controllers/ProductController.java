@@ -27,7 +27,6 @@ public class ProductController {
 
     @GetMapping
     public ModelAndView getProductsPage(ModelAndView modelAndView,
-                                        HttpSession session,
                                         @RequestParam(name = "search", required = false) String search,
                                         @RequestParam(name = "option", required = false) String option) {
         List<ProductAllViewModel> productAllViewModels =
@@ -65,7 +64,7 @@ public class ProductController {
         return modelAndView;
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/{restaurant_id}/edit/{id}")
     public ModelAndView getEditProductPage(ModelAndView modelAndView,
                                            @PathVariable(name = "id", required = true) Long productId) {
         ProductModel productModel = productService.getProductModel(productId);
@@ -75,7 +74,7 @@ public class ProductController {
         return modelAndView;
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("/{restaurant_id}/edit/{id}")
     public String putEditProductPage(
             @PathVariable(name = "id", required = true) Long productId,
             @Valid @ModelAttribute("productModel") ProductModel bindingModel,
@@ -88,7 +87,7 @@ public class ProductController {
         return "redirect:/restaurants/view/" + restaurantId;
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/{restaurant_id}/delete/{id}")
     public ModelAndView deleteProductViewPage(
             ModelAndView modelAndView,
             @PathVariable(name = "id", required = true) Long productId) {
@@ -98,7 +97,7 @@ public class ProductController {
         return modelAndView;
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{restaurant_id}/delete/{id}")
     public String deleteProductFormSubmit(@PathVariable(name = "id", required = true) Long productId) {
         Long restaurantId = productService.deleteProduct(productId);
         return "redirect:/restaurants/view/" + restaurantId;

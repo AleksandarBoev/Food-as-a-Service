@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.models.binding.RestaurantCreateBindingModel;
 import tu.faas.domain.models.multipurpose.RestaurantModel;
 import tu.faas.domain.models.view.ProductAllViewModel;
@@ -14,13 +13,13 @@ import tu.faas.domain.models.view.RestaurantSalesViewModel;
 import tu.faas.domain.models.view.RestaurantViewModel;
 import tu.faas.services.contracts.ProductService;
 import tu.faas.services.contracts.RestaurantService;
+import tu.faas.web.session.UserData;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/restaurants")
@@ -51,7 +50,7 @@ public class RestaurantController {
                                              HttpSession session,
                                              @RequestParam(name = "search", required = false) String search,
                                              @RequestParam(name = "option", required = false) String option) {
-        Long managerId = (Long) session.getAttribute("userId");
+        Long managerId = ((UserData) session.getAttribute(UserData.NAME)).getId();
         List<RestaurantAllViewModel> restaurantAllViewModels =
                 restaurantService.getRestaurantsByManager(managerId, search, option);
 
@@ -76,8 +75,10 @@ public class RestaurantController {
             return modelAndView;
         }
 
-        Long restaurantId = restaurantService.createRestaurant(bindingModel, (Long) session.getAttribute("userId"));
-        ((Set<String>) session.getAttribute(SessionConstants.MY_RESTAURANTS)).add("" + restaurantId);
+        UserData userData = (UserData)session.getAttribute(UserData.NAME);
+
+        Long restaurantId = restaurantService.createRestaurant(bindingModel, userData.getId());
+        userData.getManagedRestaurants().add(restaurantId);
         modelAndView.setViewName("redirect:/restaurants/view/" + restaurantId);
         return modelAndView;
     }
@@ -86,11 +87,6 @@ public class RestaurantController {
     public ModelAndView getRestaurantViewPage(
             ModelAndView modelAndView,
             @PathVariable(name = "restaurantId", required = true) Long restaurantId) {
-        //TODO change up the way products are listed. List them like in "products" page.
-        //Just filter out the ones, that aren't part of this restaurant.
-        //TODO and while you're at it, add the table-kind of visualization to a fragment if you can
-        //But how is the quantities button and quantities field gonna be replaced? Maybe just
-        //make the input disabled.
         RestaurantViewModel restaurantViewModel = restaurantService.getRestaurantViewModel(restaurantId);
         modelAndView.addObject("restaurantViewModel", restaurantViewModel);
         List<ProductAllViewModel> productAllViewModels =

@@ -1,6 +1,5 @@
 package tu.faas.web.controllers;
 
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,19 +9,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tu.faas.domain.constants.RoleConstants;
-import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.models.binding.BillingInformationBindingModel;
 import tu.faas.domain.models.binding.OrderBindingModel;
 import tu.faas.domain.models.binding.ProductAddToCartBindingModel;
 import tu.faas.domain.models.binding.ProductAdjustQuantityBindingModel;
-import tu.faas.domain.models.view.ShoppingCartItemsCount;
 import tu.faas.domain.models.view.ShoppingCartViewModel;
 import tu.faas.services.contracts.OrderService;
+import tu.faas.web.session.UserData;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Map;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/order")
@@ -39,14 +36,13 @@ public class OrderController {
     @ResponseBody
     public ResponseEntity addToShoppingCart(@RequestBody ProductAddToCartBindingModel bindingModel,
                                             HttpSession session) {
-        Set<String> userRoles = (Set<String>)session.getAttribute(SessionConstants.ROLES);
+        UserData userData = (UserData) session.getAttribute(UserData.NAME);
 
-        if (!userRoles.contains(RoleConstants.ROLE_USER)) {
+        if (!userData.getRoles().contains(RoleConstants.ROLE_USER)) {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         } else {
-            Map<Long, Integer> productIdCount = getShoppingCartMap(session);
-            incrementProductCount(productIdCount, bindingModel.getProductId());
-            updateFrontEndShoppingCartItemsCount(session);
+            Map<Long, Integer> shoppingCart = userData.getShoppingCart();
+            incrementProductCount(shoppingCart, bindingModel.getProductId());
             return new ResponseEntity(HttpStatus.OK);
         }
     }
@@ -55,37 +51,32 @@ public class OrderController {
     @ResponseBody
     public void adjustQuantity(@RequestBody ProductAdjustQuantityBindingModel bindingModel,
                                HttpSession session) {
-        Map<Long, Integer> productIdCount = getShoppingCartMap(session);
+        Map<Long, Integer> shoppingCart = ((UserData)session.getAttribute(UserData.NAME)).getShoppingCart();
 
         if (bindingModel.getProductId() == -1) { //remove all button pressed
-            productIdCount.clear();
+            shoppingCart.clear();
         } else if (bindingModel.getQuantity() <= 0) { //remove button pressed
-            productIdCount.remove(bindingModel.getProductId());
+            shoppingCart.remove(bindingModel.getProductId());
         } else { //quantity adjust
-            productIdCount.put(bindingModel.getProductId(), bindingModel.getQuantity());
+            shoppingCart.put(bindingModel.getProductId(), bindingModel.getQuantity());
         }
-        System.out.println(bindingModel);
-        System.out.println(productIdCount);
-        updateFrontEndShoppingCartItemsCount(session);
     }
 
     @GetMapping(value = "/shopping-cart-items-count", produces = "application/json")
     @ResponseBody
-    public ShoppingCartItemsCount getShoppingCartItemsCount(HttpSession session) {
-        Map<Long, Integer> productIdCount = getShoppingCartMap(session);
-
-        ShoppingCartItemsCount shoppingCartItemsCount = new ShoppingCartItemsCount();
-        shoppingCartItemsCount.setItemsCount(getShoppingCartItemsCount(productIdCount));
-
-        return shoppingCartItemsCount;
+    public Integer getShoppingCartItemsCount(HttpSession session) {
+        UserData userData = (UserData)session.getAttribute(UserData.NAME);
+        Integer itemsCount = userData.getShoppingCartItemsCount();
+        return itemsCount;
     }
 
     @GetMapping("/shopping-cart")
     public ModelAndView getShoppingCartPage(ModelAndView modelAndView, HttpSession session) {
+        Map<Long, Integer> shoppingCart = ((UserData) session.getAttribute(UserData.NAME)).getShoppingCart();
         ShoppingCartViewModel shoppingCartViewModel =
-                orderService.getShoppingCartViewModel(getShoppingCartMap(session));
+                orderService.getShoppingCartViewModel(shoppingCart);
 
-        modelAndView.addObject(SessionConstants.SHOPPING_CART, shoppingCartViewModel);
+        modelAndView.addObject("shoppingCart", shoppingCartViewModel);
         modelAndView.setViewName("/order/shopping-cart.html");
         return modelAndView;
     }
@@ -93,20 +84,20 @@ public class OrderController {
     @GetMapping("/billing")
     public ModelAndView getInformationAndBillingPage(ModelAndView modelAndView,
                                                      HttpSession session) {
+        Map<Long, Integer> shoppingCart = ((UserData) session.getAttribute(UserData.NAME)).getShoppingCart();
         ShoppingCartViewModel shoppingCartViewModel =
-                orderService.getShoppingCartViewModel(getShoppingCartMap(session));
-        modelAndView.addObject("shoppingCart", shoppingCartViewModel);
+                orderService.getShoppingCartViewModel(shoppingCart);
 
+        modelAndView.addObject("shoppingCart", shoppingCartViewModel);
         modelAndView.setViewName("/order/billing.html");
         return modelAndView;
     }
 
     @PostMapping("/billing")
-    public String checkout(HttpSession session,
+    public String postInformationAndPilling(HttpSession session,
                            @Valid @ModelAttribute("billingInformation") BillingInformationBindingModel bindingModel,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes) {
-        //TODO if cash is selected and only address is wrong, then also credit info gets errors.
         if ("cash".equals(bindingModel.getBillingType())
                 && bindingResult.getFieldError("address") == null) { //check validation for address only
             session.setAttribute("billingType", bindingModel.getBillingType());
@@ -127,8 +118,10 @@ public class OrderController {
     public ModelAndView getCheckoutPage(ModelAndView modelAndView,
                                         HttpSession session,
                                         @ModelAttribute("flashBillingInformation") BillingInformationBindingModel billingInformationBindingModel) {
+        Map<Long, Integer> shoppingCart = ((UserData)session.getAttribute(UserData.NAME)).getShoppingCart();
         ShoppingCartViewModel shoppingCartViewModel =
-                orderService.getShoppingCartViewModel(getShoppingCartMap(session));
+                orderService.getShoppingCartViewModel(shoppingCart);
+
         modelAndView.addObject("shoppingCart", shoppingCartViewModel);
         modelAndView.addObject("billingInformation", billingInformationBindingModel);
         modelAndView.setViewName("/order/checkout.html");
@@ -144,13 +137,14 @@ public class OrderController {
         orderBindingModel.setAddress((String) session.getAttribute("address"));
         orderBindingModel.setBillingType((String) session.getAttribute("billingType"));
 
-        orderBindingModel.setCustomerId((Long) session.getAttribute("userId"));
-        Map<Long, Integer> shoppingCartMap = getShoppingCartMap(session);
-        orderBindingModel.setProductIdQuantities(shoppingCartMap);
+        UserData userData = (UserData)session.getAttribute(UserData.NAME);
+        orderBindingModel.setCustomerId(userData.getId());
+
+        Map<Long, Integer> shoppingCart = userData.getShoppingCart();
+        orderBindingModel.setProductIdQuantities(shoppingCart);
 
         orderService.makeOrder(orderBindingModel);
-        shoppingCartMap.clear();
-        updateFrontEndShoppingCartItemsCount(session);
+        shoppingCart.clear();
 
         return "/order/success-order.html";
     }
@@ -160,30 +154,11 @@ public class OrderController {
         return new BillingInformationBindingModel();
     }
 
-    private Map<Long, Integer> getShoppingCartMap(HttpSession session) {
-        return (Map<Long, Integer>) session.getAttribute(SessionConstants.SHOPPING_CART);
-    }
-
     private void incrementProductCount(Map<Long, Integer> productIdCount, Long productId) {
         if (!productIdCount.containsKey(productId)) {
             productIdCount.put(productId, 0);
         }
 
         productIdCount.put(productId, productIdCount.get(productId) + 1);
-    }
-
-    private int getShoppingCartItemsCount(Map<? extends Number, ? extends Number> productIdCount) {
-        int result = 0;
-        for (Number count : productIdCount.values()) {
-            result += count.intValue();
-        }
-
-        return result;
-    }
-
-    private void updateFrontEndShoppingCartItemsCount(HttpSession session) {
-        session.setAttribute(
-                SessionConstants.SHOPPING_CART_ITEMS_COUNT,
-                getShoppingCartItemsCount(getShoppingCartMap(session)));
     }
 }

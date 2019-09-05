@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tu.faas.domain.constants.RoleConstants;
-import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.entities.Role;
 import tu.faas.domain.entities.User;
 import tu.faas.domain.exceptions.*;
@@ -20,8 +19,8 @@ import tu.faas.repositories.RoleRepository;
 import tu.faas.repositories.UserRepository;
 import tu.faas.services.contracts.RestaurantService;
 import tu.faas.services.contracts.UserService;
+import tu.faas.web.session.UserData;
 
-import javax.servlet.http.HttpSession;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -70,27 +69,29 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    //TODO maybe session logic should be in controller
     @Override
-    public void loginUser(UserLoginBindingModel userLoginBindingModel, HttpSession session) {
+    public UserData loginUser(UserLoginBindingModel userLoginBindingModel) {
         if (!userRepository.existsByNameAndPassword(
                 userLoginBindingModel.getName(), userLoginBindingModel.getPassword())) {
             throw new NoSuchUser();
         }
 
         User user = userRepository.findUserByName(userLoginBindingModel.getName());
-        session.setAttribute("username", user.getName());
+        UserData userData = new UserData();
+        userData.setId(user.getId());
+
         Set<String> userRoles = user.getRoles()
                 .stream()
                 .map(role -> role.getName())
                 .collect(Collectors.toSet());
+        userData.setRoles(userRoles);
+
         if (userRoles.contains(RoleConstants.ROLE_MANAGER)) {
-            Set<String> myRestaurants = restaurantService.getRestaurantIdsByManagerId(user.getId());
-            session.setAttribute(SessionConstants.MY_RESTAURANTS, myRestaurants);
+            Set<Long> managedRestaurants = restaurantService.getRestaurantIdsByManagerId(user.getId());
+            userData.setManagedRestaurants(managedRestaurants);
         }
 
-        session.setAttribute("roles", userRoles);
-        session.setAttribute("userId", user.getId());
+        return userData;
     }
 
     @Override
@@ -173,15 +174,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserUsersViewModel> getUserViewModelsWithoutAdmin(Long adminId, String search, String option) {
         if ("".equals(search) || search == null) {
-            return mapToUserUsersViewModels(userRepository.findAll(), modelMapper, adminId);
+            return mapToUserUsersViewModelsFilterOutAdmins(userRepository.findAll(), modelMapper, adminId);
         } else {
             if ("".equals(option) || option == null) {
-                return mapToUserUsersViewModels(userRepository
+                return mapToUserUsersViewModelsFilterOutAdmins(userRepository
                         .findAllByNameContainsIgnoreCaseOrEmailContainsIgnoreCase(search, search), modelMapper, adminId);
             } else if ("name".equals(option)) {
-                return mapToUserUsersViewModels(userRepository.findAllByNameContainsIgnoreCase(search), modelMapper, adminId);
+                return mapToUserUsersViewModelsFilterOutAdmins(userRepository.findAllByNameContainsIgnoreCase(search), modelMapper, adminId);
             } else {
-                return mapToUserUsersViewModels(userRepository.findAllByEmailContainsIgnoreCase(search), modelMapper, adminId);
+                return mapToUserUsersViewModelsFilterOutAdmins(userRepository.findAllByEmailContainsIgnoreCase(search), modelMapper, adminId);
             }
         }
     }
@@ -213,6 +214,7 @@ public class UserServiceImpl implements UserService {
                 break;
 
             case "Delete":
+                restaurantService.deleteRestaurantsByManagerId(userToBeChanged.getId());
                 userRepository.delete(userToBeChanged);
                 break;
         }
@@ -224,10 +226,11 @@ public class UserServiceImpl implements UserService {
         return userUsersViewModel;
     }
 
-    private List<UserUsersViewModel> mapToUserUsersViewModels(List<User> users, ModelMapper modelMapper, Long adminId) {
+    private List<UserUsersViewModel> mapToUserUsersViewModelsFilterOutAdmins(List<User> users, ModelMapper modelMapper, Long adminId) {
+        Role adminRole = roleRepository.findRoleByName(RoleConstants.ROLE_ROOT_ADMIN);
         return users
                 .stream()
-                .filter(user -> !user.getId().equals(adminId))
+                .filter(user -> !user.getRoles().contains(adminRole))
                 .map(user -> mapToUserUsersViewModel(user, modelMapper))
                 .collect(Collectors.toList());
     }

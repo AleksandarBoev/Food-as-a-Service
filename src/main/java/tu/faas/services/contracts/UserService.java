@@ -8,6 +8,7 @@ import tu.faas.domain.models.multipurpose.UserEmailModel;
 import tu.faas.domain.models.multipurpose.UserNameModel;
 import tu.faas.domain.models.view.UserProfileViewModel;
 import tu.faas.domain.models.view.UserUsersViewModel;
+import tu.faas.web.session.UserData;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 public interface UserService {
     void registerUser(UserRegisterBindingModel userRegisterBindingModel);
 
-    void loginUser(UserLoginBindingModel userLoginBindingModel, HttpSession session);
+    UserData loginUser(UserLoginBindingModel userLoginBindingModel);
 
     UserProfileViewModel getUserProfileViewModel(Long userId);
 

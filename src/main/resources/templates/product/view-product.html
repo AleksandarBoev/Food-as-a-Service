@@ -31,23 +31,23 @@
     <h2 th:text="${productViewModel.getRestaurantName()}"></h2>
     <hr/>
 
-    <button th:if="${#session.getAttribute('roles').contains('ROLE_USER')}" type="button"
+    <button th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_USER')}" type="button"
             th:productIdTag="${productViewModel.getId()}"
             id="add-to-cart" class="btn btn-warning"
             data-toggle="modal" data-target="#myModal">
         Add to cart
     </button>
-    <a th:unless="${#session.getAttribute('roles').contains('ROLE_USER')}" th:href="@{/login}">
+    <a th:unless="${#session.getAttribute('userData').getRoles().contains('ROLE_USER')}" th:href="@{/login}">
         <button type="button" class="btn btn-warning">
             Add to cart
         </button>
     </a>
 
-    <th:block th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
-        <a th:href="@{/products/edit/{id}(id=${productViewModel.getId()})}">
+    <th:block th:if="${productViewModel.getOwnerId()} == ${#session.getAttribute('userData').getId()}">
+        <a th:href="@{/products/{restaurant_id}/edit/{id}(id=${productViewModel.getId()}, restaurant_id=${productViewModel.getRestaurantId()})}">
             <button type="button" class="btn btn-primary">Edit</button>
         </a>
-        <a th:href="@{/products/delete/{id}(id=${productViewModel.getId()})}">
+        <a th:href="@{/products/{restaurant_id}/delete/{id}(id=${productViewModel.getId()}, restaurant_id=${productViewModel.getRestaurantId()})}">
             <button type="button" class="btn btn-danger">Delete</button>
         </a>
     </th:block>

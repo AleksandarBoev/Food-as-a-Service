@@ -14,7 +14,7 @@
                 </li>
             </ul>
 
-            <ul th:if="${#session.getAttribute('username') == null}" class="navbar-nav justify-content-end">
+            <ul th:if="${#session.getAttribute('userData').getId() == 0L}" class="navbar-nav justify-content-end">
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/register}">Register</a>
                 </li>
@@ -23,8 +23,8 @@
                 </li>
             </ul>
 
-            <ul th:if="${#session.getAttribute('username') != null}" class="navbar-nav justify-content-end">
-                <li class="nav-item dropdown" th:if="${#session.getAttribute('roles').contains('ROLE_USER')}">
+            <ul th:if="${#session.getAttribute('userData').getId() != 0L}" class="navbar-nav justify-content-end">
+                <li class="nav-item dropdown" th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_USER')}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         Profile
                     </a>
@@ -36,15 +36,15 @@
                     </div>
                 </li>
 
-                <li class="nav-item" th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
+                <li class="nav-item" th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_MANAGER')}">
                     <a class="nav-link" th:href="@{/restaurants/my-restaurants}">My Restaurants</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/order/shopping-cart}">Shopping Cart(<span id="shopping-cart-count" th:text="${#session.getAttribute('shoppingCartItemsCount')}"></span>)</a>
+                    <a class="nav-link" th:href="@{/order/shopping-cart}">Shopping Cart(<span id="shopping-cart-count" th:text="${#session.getAttribute('userData').getShoppingCartItemsCount()}"></span>)</a>
                 </li>
 
-                <li th:if="${#session.getAttribute('roles').contains('ROLE_ROOT_ADMIN')}" class="nav-item">
+                <li th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_ROOT_ADMIN')}" class="nav-item">
                     <a class="nav-link" th:href="@{/admin/users}">Admin</a>
                 </li>
 

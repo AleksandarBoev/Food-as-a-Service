@@ -12,10 +12,10 @@
 
         <a th:href="@{/products/view/{id}(id=${productAllViewModel.getId()})}" class="btn btn-info btn-lg">View</a>
 
-        <th:block th:if="${productAllViewModel.getOwnerId()} == ${#session.getAttribute('userId')}">
-            <a th:href="@{/products/edit/{id}(id=${productAllViewModel.getId()})}"
+        <th:block th:if="${productAllViewModel.getOwnerId()} == ${#session.getAttribute('userData').getId()}">
+            <a th:href="@{/products/{restaurant_id}/edit/{id}(id=${productAllViewModel.getId()}, restaurant_id=${productAllViewModel.getRestaurantId()})}"
                class="btn btn-primary btn-lg">Edit</a>
-            <a th:href="@{/products/delete/{id}(id=${productAllViewModel.getId()})}"
+            <a th:href="@{/products/{restaurant_id}/delete/{id}(id=${productAllViewModel.getId()}, restaurant_id=${productAllViewModel.getRestaurantId()})}"
                class="btn btn-danger btn-lg">Delete</a>
         </th:block>
     </div>

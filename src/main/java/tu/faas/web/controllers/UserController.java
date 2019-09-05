@@ -6,7 +6,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import tu.faas.domain.constants.SessionConstants;
 import tu.faas.domain.exceptions.*;
 import tu.faas.domain.models.binding.UserEditPasswordModel;
 import tu.faas.domain.models.multipurpose.UserEmailModel;
@@ -15,6 +14,7 @@ import tu.faas.domain.models.view.OrderHistoryViewModel;
 import tu.faas.domain.models.view.UserProfileViewModel;
 import tu.faas.services.contracts.OrderService;
 import tu.faas.services.contracts.UserService;
+import tu.faas.web.session.UserData;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public ModelAndView getProfilePage(ModelAndView modelAndView, HttpSession session) {
-        Long userId = (Long) session.getAttribute(SessionConstants.USER_ID);
+        Long userId = ((UserData) session.getAttribute(UserData.NAME)).getId();
         UserProfileViewModel userProfileViewModel = userService.getUserProfileViewModel(userId);
         modelAndView.addObject("userProfileViewModel", userProfileViewModel);
 
@@ -46,7 +46,7 @@ public class UserController {
     public ModelAndView getEditNamePage(ModelAndView modelAndView,
                                         HttpSession session) {
         UserNameModel userNameModel =
-                userService.getUserNameModel((Long) session.getAttribute(SessionConstants.USER_ID));
+                userService.getUserNameModel(((UserData) session.getAttribute(UserData.NAME)).getId());
         modelAndView.addObject(userNameModel);
 
         modelAndView.setViewName("user/edit-name.html");
@@ -66,7 +66,7 @@ public class UserController {
 
         try {
             userService.editUserName(bindingModel,
-                    (Long) session.getAttribute(SessionConstants.USER_ID));
+                    ((UserData) session.getAttribute(UserData.NAME)).getId());
 
             modelAndView.setViewName("redirect:/user/profile");
         } catch (WrongPassword wp) {
@@ -89,7 +89,7 @@ public class UserController {
     public ModelAndView getEditEmailPage(ModelAndView modelAndView,
                                          HttpSession session) {
         UserEmailModel userEmailModel =
-                userService.getUserEmailModel((Long) session.getAttribute(SessionConstants.USER_ID));
+                userService.getUserEmailModel(((UserData) session.getAttribute(UserData.NAME)).getId());
         modelAndView.addObject(userEmailModel);
 
         modelAndView.setViewName("user/edit-email.html");
@@ -109,7 +109,7 @@ public class UserController {
 
         try {
             userService.editUserEmail(bindingModel,
-                    (Long) session.getAttribute(SessionConstants.USER_ID));
+                    ((UserData) session.getAttribute(UserData.NAME)).getId());
 
             modelAndView.setViewName("redirect:/user/profile");
         } catch (WrongPassword wp) {
@@ -128,7 +128,7 @@ public class UserController {
     }
 
     @GetMapping("/profile/edit-password")
-    public String getEditPasswordPage(HttpSession session) {
+    public String getEditPasswordPage() {
         return "user/edit-password.html";
     }
 
@@ -145,7 +145,7 @@ public class UserController {
 
         try {
             userService.editPassword(bindingModel,
-                    (Long) session.getAttribute(SessionConstants.USER_ID));
+                    ((UserData) session.getAttribute(UserData.NAME)).getId());
 
             modelAndView.setViewName("redirect:/user/profile");
 
@@ -175,7 +175,7 @@ public class UserController {
     @GetMapping("order-history")
     public ModelAndView getOrderHistoryPage(ModelAndView modelAndView,
                                             HttpSession session) {
-        Long userId = (Long)session.getAttribute(SessionConstants.USER_ID);
+        Long userId = ((UserData) session.getAttribute(UserData.NAME)).getId();
         List<OrderHistoryViewModel> orderHistoryViewModels =
                 orderService.getOrderHistoryViewModelsByUserIdOrderedByDateNewest(userId);
 

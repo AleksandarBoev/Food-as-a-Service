@@ -16,7 +16,7 @@
         <th>Weight in grams</th>
         <th>Image URL</th>
         <th>Description</th>
-        <th th:if="${#session.getAttribute('roles').contains('ROLE_MANAGER')}">
+        <th th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_MANAGER')}">
             <a th:href="@{/products/{r_id}/create(r_id=${restaurantViewModel.getId()})}">
                 <button>Add Product</button>
             </a>

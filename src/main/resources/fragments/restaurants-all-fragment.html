@@ -11,13 +11,13 @@
 
         <a th:href="@{/restaurants/view/{id}(id=${restaurantAllViewModel.getId()})}" class="btn btn-info btn-lg">View</a>
 
-        <th:block th:if="${restaurantAllViewModel.getOwnerId()} == ${#session.getAttribute('userId')}">
+        <th:block th:if="${restaurantAllViewModel.getOwnerId()} == ${#session.getAttribute('userData').getId()}">
             <a th:href="@{/restaurants/edit/{id}(id=${restaurantAllViewModel.getId()})}"
                class="btn btn-primary btn-lg">Edit</a>
             <a th:href="@{/restaurants/delete/{id}(id=${restaurantAllViewModel.getId()})}"
                class="btn btn-danger btn-lg">Delete</a>
             <a th:href="@{/restaurants/sales/{id}(id=${restaurantAllViewModel.getId()})}"
-               class="btn btn-danger btn-lg">Sales</a>
+               class="btn btn-secondary btn-lg">Sales</a>
         </th:block>
     </div>
 </div>
