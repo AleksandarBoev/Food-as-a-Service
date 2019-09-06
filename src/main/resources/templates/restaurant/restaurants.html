@@ -25,7 +25,6 @@
 
     <th:block th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_MANAGER')}">
     <a th:href="@{/restaurants/create}"><button>Add Restaurant</button></a>
-    <p th:if="${restaurantAllViewModels.isEmpty()}">No restaurants yet. <a th:href="@{/restaurants/create}">Create one</a></p>
     </th:block>
     <th:block th:replace="../fragments/restaurants-all-fragment"></th:block>
 

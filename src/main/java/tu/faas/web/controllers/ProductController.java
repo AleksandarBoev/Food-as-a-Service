@@ -109,7 +109,7 @@ public class ProductController {
         ProductViewModel productViewModel = productService.getProductViewModel(productId);
         modelAndView.addObject("productViewModel", productViewModel);
 
-        modelAndView.setViewName("/product/view-product.html");
+        modelAndView.setViewName("product/view-product.html");
         return modelAndView;
     }
 

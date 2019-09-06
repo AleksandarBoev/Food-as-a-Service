@@ -77,7 +77,7 @@ public class OrderController {
                 orderService.getShoppingCartViewModel(shoppingCart);
 
         modelAndView.addObject("shoppingCart", shoppingCartViewModel);
-        modelAndView.setViewName("/order/shopping-cart.html");
+        modelAndView.setViewName("order/shopping-cart.html");
         return modelAndView;
     }
 
@@ -89,7 +89,7 @@ public class OrderController {
                 orderService.getShoppingCartViewModel(shoppingCart);
 
         modelAndView.addObject("shoppingCart", shoppingCartViewModel);
-        modelAndView.setViewName("/order/billing.html");
+        modelAndView.setViewName("order/billing.html");
         return modelAndView;
     }
 
@@ -124,7 +124,7 @@ public class OrderController {
 
         modelAndView.addObject("shoppingCart", shoppingCartViewModel);
         modelAndView.addObject("billingInformation", billingInformationBindingModel);
-        modelAndView.setViewName("/order/checkout.html");
+        modelAndView.setViewName("order/checkout.html");
         return modelAndView;
     }
 
@@ -146,7 +146,7 @@ public class OrderController {
         orderService.makeOrder(orderBindingModel);
         shoppingCart.clear();
 
-        return "/order/success-order.html";
+        return "order/success-order.html";
     }
 
     @ModelAttribute("billingInformation")
