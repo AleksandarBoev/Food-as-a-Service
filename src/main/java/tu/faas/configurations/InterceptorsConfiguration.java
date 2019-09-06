@@ -13,6 +13,7 @@ public class InterceptorsConfiguration implements WebMvcConfigurer {
     private UserPagesInterceptor userPagesInterceptor;
     private RestaurantPagesInterceptor restaurantPagesInterceptor;
     private ProductPagesInterceptor productPagesInterceptor;
+    private OrderPagesInterceptor orderPagesInterceptor;
     private AdminPagesInterceptor adminPagesInterceptor;
 
     @Autowired
@@ -21,12 +22,14 @@ public class InterceptorsConfiguration implements WebMvcConfigurer {
                                      UserPagesInterceptor userPagesInterceptor,
                                      RestaurantPagesInterceptor restaurantPagesInterceptor,
                                      ProductPagesInterceptor productPagesInterceptor,
+                                     OrderPagesInterceptor orderPagesInterceptor,
                                      AdminPagesInterceptor adminPagesInterceptor) {
         this.globalInterceptor = globalInterceptor;
         this.guestPagesInterceptor = guestPagesInterceptor;
         this.userPagesInterceptor = userPagesInterceptor;
         this.restaurantPagesInterceptor = restaurantPagesInterceptor;
         this.productPagesInterceptor = productPagesInterceptor;
+        this.orderPagesInterceptor = orderPagesInterceptor;
         this.adminPagesInterceptor = adminPagesInterceptor;
     }
 
@@ -47,6 +50,7 @@ public class InterceptorsConfiguration implements WebMvcConfigurer {
                 "/restaurants/delete/**",
                 "/restaurants/sales/**");
         registry.addInterceptor(productPagesInterceptor).addPathPatterns("/products/**");
+        registry.addInterceptor(orderPagesInterceptor).addPathPatterns("/order/billing", "/order/checkout");
         registry.addInterceptor(adminPagesInterceptor).addPathPatterns("/admin/**");
     }
 }

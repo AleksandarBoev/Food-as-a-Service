@@ -9,6 +9,7 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
+    <div class="container-fluid text-center">
     <form th:action="@{/admin/users}" th:method="get">
         <input name="search" placeholder="Search user..."/>
         <select name="option">
@@ -16,8 +17,9 @@
             <option value="name">Name</option>
             <option value="email">Email</option>
         </select>
-        <button>Search</button>
+        <button class="btn btn-secondary">Search</button>
     </form>
+    </div>
 
     <table class="table table-striped">
         <thead>

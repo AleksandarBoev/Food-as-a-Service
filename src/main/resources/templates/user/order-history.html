@@ -9,8 +9,10 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
+    <div class="container-fluid text-center">
     <h1>Order History</h1>
     <p>If calculations do not add up, some products might have been removed!</p>
+    </div>
     <hr/>
 
     <th:block th:each="orderHistoryViewModel: ${orderHistoryViewModels}">

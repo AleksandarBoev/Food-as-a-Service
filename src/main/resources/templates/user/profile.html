@@ -9,13 +9,17 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-    <h1>Name: </h1>
-    <p th:text="${userProfileViewModel.getName()}"></p><a th:href="@{/user/profile/edit-name}"><button>Change</button></a>
+    <div class="container-fluid text-center">
+
+    <p class="info">Name</p>
+    <p class="smallerInfo" th:text="${userProfileViewModel.getName()}"></p><a th:href="@{/user/profile/edit-name}"><button class="btn btn-primary">Change</button></a>
     <hr/>
-    <h1>Email: </h1>
-    <p th:text="${userProfileViewModel.getEmail()}"></p><a th:href="@{/user/profile/edit-email}"><button>Change</button></a>
+    <p class="info">Email</p>
+    <p class="smallerInfo" th:text="${userProfileViewModel.getEmail()}"></p><a th:href="@{/user/profile/edit-email}"><button class="btn btn-secondary">Change</button></a>
     <hr/>
-    <a th:href="@{/user/profile/edit-password}"><button>Change Password</button></a>
+    <a th:href="@{/user/profile/edit-password}"><button class="btn btn-warning">Change Password</button></a>
+
+    </div>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>

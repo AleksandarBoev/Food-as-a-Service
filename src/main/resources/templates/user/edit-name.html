@@ -9,6 +9,8 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
+    <div class="container-fluid text-center">
+
     <h1>Name</h1>
 
     <form th:action="@{/user/profile/edit-name}" th:method="put" th:object="${userNameModel}">
@@ -25,9 +27,11 @@
         <th:block th:each="passwordErrorMessage: ${#fields.errors('password')}">
             <p class="text-danger" th:text="${passwordErrorMessage}"></p>
         </th:block>
-
-        <input type="submit" value="Confirm change"/>
+        <br/>
+        <button type="submit" class="btn btn-primary">Edit Name</button>
     </form>
+
+    </div>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>
