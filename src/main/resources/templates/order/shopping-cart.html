@@ -15,9 +15,9 @@
     <table  class="table table-dark table-hover">
         <thead>
         <tr>
+            <th>Image</th>
             <th>Name</th>
             <th>Weight in grams</th>
-            <th>Image URL</th>
             <th>Description</th>
             <th>Quantity</th>
             <th>Single Price</th>
@@ -28,9 +28,9 @@
         <tbody>
         <th:block th:each="shoppingCartProduct: ${shoppingCart.products}">
             <tr th:productId="${shoppingCartProduct.getId()}">
+                <td><img height="50" th:src="${shoppingCartProduct.getImageUrl()}"></td>
                 <td th:text="${shoppingCartProduct.getName()}"></td>
                 <td th:text="${shoppingCartProduct.getWeightInGrams()}"></td>
-                <td th:text="${shoppingCartProduct.getImageUrl()}"></td>
                 <td th:text="${shoppingCartProduct.getDescription()}"></td>
                 <td class="td-quantity">
                     <div class="def-number-input number-input safari_only">
@@ -59,7 +59,9 @@
         </tfoot>
     </table>
 
-    <a th:href="@{/order/billing}"><button>Next</button></a>
+        <div class="container-fluid text-center">
+        <a th:href="@{/order/billing}"><button class="btn btn-success">Next</button></a>
+        </div>
     </th:block>
 
 </main>

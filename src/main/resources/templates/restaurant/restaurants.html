@@ -10,7 +10,8 @@
 
 <main>
 
-    <h1>Restaurants Page</h1>
+    <div class="container-fluid text-center">
+    <h1>Restaurants</h1>
     <form th:action="@{/restaurants}" th:method="get">
         <input name="search" placeholder="Search restaurant..."/>
         <select name="option">
@@ -24,8 +25,9 @@
     </form>
 
     <th:block th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_MANAGER')}">
-    <a th:href="@{/restaurants/create}"><button>Add Restaurant</button></a>
+    <a th:href="@{/restaurants/create}"><button class="btn btn-success">Add Restaurant</button></a>
     </th:block>
+    </div>
     <th:block th:replace="../fragments/restaurants-all-fragment"></th:block>
 
 </main>

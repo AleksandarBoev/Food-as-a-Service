@@ -1,6 +1,6 @@
 package tu.faas.domain.exceptions;
 
-public class PasswordsNotSame extends RuntimeException {
+public class PasswordsNotSame extends FaasException {
     public static String PASSWORDS_DONT_MATCH =
             "Password and re-password do not match!";
 

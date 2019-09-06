@@ -1,6 +1,6 @@
 package tu.faas.domain.exceptions;
 
-public class NoSuchProduct extends RuntimeException {
+public class NoSuchProduct extends FaasException {
     public static final String PRODUCT_NOT_FOUND_MESSAGE =
             "Product does not exist";
 

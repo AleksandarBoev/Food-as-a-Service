@@ -8,7 +8,9 @@
 <body>
 <th:block th:replace="../fragments/header"></th:block>
 <main>
-    <h1>Delete Restaurant!</h1>
+    <div class="container-fluid text-center">
+
+    <h1>Delete Restaurant</h1>
     <form th:action="@{/restaurants/delete/{id}(id=${restaurantModel.getId()})}" th:method="delete">
         <div class="form-group">
             <label for="name">
@@ -31,8 +33,9 @@
             </label>
         </div>
 
-        <input type="submit" value="Confirm Delete"/>
+        <button class="btn btn-danger" type="submit">Confirm Delete</button>
     </form>
+    </div>
 </main>
 <th:block th:replace="../fragments/footer"></th:block>
 </body>

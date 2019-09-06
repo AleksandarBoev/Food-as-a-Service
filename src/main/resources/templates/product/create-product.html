@@ -10,7 +10,8 @@
 
 <main>
 
-    <h1>Create Product!</h1>
+    <div class="container-fluid text-center">
+    <h1>Create Product</h1>
     <form th:action="@{/products/{r_id}/create(r_id=${restaurant_id})}" th:method="post" th:object="${productCreateBindingModel}">
         <div class="form-group">
             <label for="name">
@@ -65,9 +66,9 @@
             </th:block>
         </div>
 
-        <input type="submit" value="Create Product"/>
+        <button class="btn btn-primary" type="submit">Create Product</button>
     </form>
-
+    </div>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>

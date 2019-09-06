@@ -7,20 +7,22 @@
 </head>
 <th:block th:replace="../fragments/header"></th:block>
 <main>
-    <h1>Products Page</h1>
-    <form th:action="@{/products}" th:method="get">
-        <input name="search" placeholder="Search product..."/>
-        <select name="option">
-            <option selected disabled>Sort By</option>
-            <option value="nameAsc">Name Ascending</option>
-            <option value="nameDesc">Name Descending</option>
-            <option value="priceAsc">Price Ascending</option>
-            <option value="priceDesc">Price Descending</option>
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-        </select>
-        <button>Search</button>
-    </form>
+    <div class="container-fluid text-center">
+        <h1>Products</h1>
+        <form th:action="@{/products}" th:method="get">
+            <input name="search" placeholder="Search product..."/>
+            <select name="option">
+                <option selected disabled>Sort By</option>
+                <option value="nameAsc">Name Ascending</option>
+                <option value="nameDesc">Name Descending</option>
+                <option value="priceAsc">Price Ascending</option>
+                <option value="priceDesc">Price Descending</option>
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+            </select>
+            <button class="btn btn-secondary">Search</button>
+        </form>
+    </div>
 
     <th:block th:replace="../fragments/products-all-fragment"></th:block>
 

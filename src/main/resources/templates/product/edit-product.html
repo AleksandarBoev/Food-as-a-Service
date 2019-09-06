@@ -7,6 +7,7 @@
 </head>
 <body>
 <th:block th:replace="../fragments/header"></th:block>
+<div class="container-fluid text-center">
 <h1>Editing "<span th:text="${productModel.getName()}"></span>"</h1>
 <form th:href="@{/products/edit/{id}(id=${productModel.getId()})}" th:method="put" th:object="${productModel}">
     <div class="form-group">
@@ -62,8 +63,9 @@
         </th:block>
     </div>
 
-    <input type="submit" value="Edit Product"/>
+    <button class="btn btn-secondary" type="submit">Confirm Edit</button>
 </form>
+</div>
 
 <th:block th:replace="../fragments/footer"></th:block>
 </body>

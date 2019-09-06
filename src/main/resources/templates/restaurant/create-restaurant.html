@@ -9,7 +9,8 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-    <h1>Welcome to the "Create Restaurant" page!</h1>
+    <div class="container-fluid text-center">
+    <h1>Create Restaurant</h1>
 
     <form th:action="@{/restaurants/create}" th:method="post" th:object="${restaurantCreateBindingModel}">
         <div class="form-group">
@@ -39,8 +40,9 @@
             </th:block>
         </div>
 
-        <input type="submit" value="Create Restaurant"/>
+        <button class="btn btn-primary" type="submit">Create</button>
     </form>
+    </div>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>

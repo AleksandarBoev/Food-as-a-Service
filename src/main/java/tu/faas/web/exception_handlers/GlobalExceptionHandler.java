@@ -3,6 +3,8 @@ package tu.faas.web.exception_handlers;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+import tu.faas.domain.exceptions.FaasException;
+import tu.faas.domain.exceptions.NoSuchProduct;
 import tu.faas.domain.exceptions.NoSuchRestaurant;
 import tu.faas.domain.exceptions.Unauthorized;
 
@@ -18,18 +20,10 @@ public class GlobalExceptionHandler {
         return modelAndView;
     }
 
-    @ExceptionHandler(NoSuchRestaurant.class)
-    public ModelAndView handleDatabaseErrors(NoSuchRestaurant nsr) {
+    @ExceptionHandler(FaasException.class)
+    public ModelAndView handleDatabaseErrors(FaasException fe) {
         ModelAndView modelAndView = new ModelAndView("error.html");
-        modelAndView.addObject("errorMessage", nsr.getMessage());
-
-        return modelAndView;
-    }
-
-    @ExceptionHandler(Unauthorized.class)
-    public ModelAndView handleAuthorizationErrors(Unauthorized u) {
-        ModelAndView modelAndView = new ModelAndView("error.html");
-        modelAndView.addObject("errorMessage", u.getMessage());
+        modelAndView.addObject("errorMessage", fe.getMessage());
 
         return modelAndView;
     }

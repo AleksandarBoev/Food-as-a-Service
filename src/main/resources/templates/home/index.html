@@ -57,16 +57,20 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-    <p>Welcome to Food-as-a-Service! Take a look at the newest food and restaurants!</p>
-
+    <div class="container-fluid text-center">
+    <h1>Welcome to "Food-as-a-Service"! Take a look at the newest products and restaurants!</h1>
+    </div>
+    <hr style="border: 2px solid"/>
     <section>
-        <h1>Latest tasty food</h1>
+        <div class="container-fluid text-center">
+        <p class="info">Latest added products</p>
+        </div>
         <div id="carouselIndicators1" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#carouselIndicators1" th:each="productHomeViewModel: ${productHomeViewModels}">
                 </li>
             </ol>
-            <div class="carousel-inner">
+            <div class="carousel-inner" style="height:500px !important;">
                 <div class="carousel-item" th:each="productHomeViewModel: ${productHomeViewModels}">
                     <a th:href="@{/products/view/{id}(id=${productHomeViewModel.getId()})}">
                         <div class="centered">"<span th:text="${productHomeViewModel.getName()}"></span>" from <span
@@ -87,15 +91,17 @@
             </a>
         </div>
     </section>
-<hr/>
+<hr style="border: 2px solid"/>
     <section>
-        <h1>Latest Opened Restaurants</h1>
+        <div class="container-fluid text-center">
+        <p class="info">Latest Opened Restaurants</p>
+        </div>
         <div id="carouselIndicators2" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
                 <li data-target="#carouselIndicators2" th:each="restaurantHomeViewModel: ${restaurantHomeViewModels}">
                 </li>
             </ol>
-            <div class="carousel-inner">
+            <div class="carousel-inner" style="height:500px !important;">
                 <div class="carousel-item" th:each="restaurantHomeViewModel: ${restaurantHomeViewModels}">
                     <a th:href="@{/restaurants/view/{id}(id=${restaurantHomeViewModel.getId()})}">
                         <div class="centered">

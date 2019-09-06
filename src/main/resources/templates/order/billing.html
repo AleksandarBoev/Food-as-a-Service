@@ -9,53 +9,60 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-    <h1>Billing information (this is a student project. Please do not enter real information)</h1>
+    <div class="container-fluid text-center">
 
-    <form th:action="@{/order/billing}" th:method="post" th:object="${billingInformation}">
-        <div class="form-group">
-            <label for="name">
-                Address: <input name="address" th:field="*{address}" type="text" id="name" class="form-control"/>
-            </label>
-            <th:block th:each="addressErrorMessage: ${#fields.errors('address')}">
-                <p class="text-danger" th:text="${addressErrorMessage}"></p>
-            </th:block>
-        </div>
+        <h1>Billing information</h1>
+        <p>This is a student project. Please do not enter actual real information</p>
 
-        <div class="form-check-inline">
-            <label class="form-check-label">
-                <input id="cash-radio-button" checked value="cash" type="radio" class="form-check-input" name="billingType">Cash
-            </label>
-        </div>
-        <div class="form-check-inline">
-            <label class="form-check-label">
-                <input id="credit-radio-button" value="credit" type="radio" class="form-check-input" name="billingType">Credit
-            </label>
-        </div>
+        <form th:action="@{/order/billing}" th:method="post" th:object="${billingInformation}">
+            <div class="form-group">
+                <label for="name">
+                    Address: <input name="address" th:field="*{address}" type="text" id="name" class="form-control"/>
+                </label>
+                <th:block th:each="addressErrorMessage: ${#fields.errors('address')}">
+                    <p class="text-danger" th:text="${addressErrorMessage}"></p>
+                </th:block>
+            </div>
 
-        <div id="credit-card-number-id" style="display: none" class="form-group">
-            <label for="creditCardNumber">
-                Credit card number: <input id="creditCardNumber" name="creditCardNumber" th:field="*{creditCardNumber}"
-                                           type="text" class="form-control"/>
-            </label>
-            <th:block th:each="creditCardNumberErrorMessage: ${#fields.errors('creditCardNumber')}">
-                <p class="text-danger" th:text="${creditCardNumberErrorMessage}"></p>
-            </th:block>
-        </div>
-        <div id="security-code-id" style="display: none"  class="form-group">
-            <label for="securityCode">
-                Security code: <input type="number" id="securityCode" name="securityCode" th:field="*{securityCode}"
-                                      class="form-control"/>
-            </label>
-            <th:block th:each="securityCodeErrorMessage: ${#fields.errors('securityCode')}">
-                <p class="text-danger" th:text="${securityCodeErrorMessage}"></p>
-            </th:block>
-        </div>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input id="cash-radio-button" checked value="cash" type="radio" class="form-check-input"
+                           name="billingType">Cash
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <label class="form-check-label">
+                    <input id="credit-radio-button" value="credit" type="radio" class="form-check-input"
+                           name="billingType">Credit
+                </label>
+            </div>
 
-        <input type="submit" value="Next"/>
-    </form>
-    <a th:href="@{/order/shopping-cart}">
-        <button>Back to shopping cart</button>
-    </a>
+            <div id="credit-card-number-id" style="display: none" class="form-group">
+                <label for="creditCardNumber">
+                    Credit card number: <input id="creditCardNumber" name="creditCardNumber"
+                                               th:field="*{creditCardNumber}"
+                                               type="text" class="form-control"/>
+                </label>
+                <th:block th:each="creditCardNumberErrorMessage: ${#fields.errors('creditCardNumber')}">
+                    <p class="text-danger" th:text="${creditCardNumberErrorMessage}"></p>
+                </th:block>
+            </div>
+            <div id="security-code-id" style="display: none" class="form-group">
+                <label for="securityCode">
+                    Security code: <input type="number" id="securityCode" name="securityCode" th:field="*{securityCode}"
+                                          class="form-control"/>
+                </label>
+                <th:block th:each="securityCodeErrorMessage: ${#fields.errors('securityCode')}">
+                    <p class="text-danger" th:text="${securityCodeErrorMessage}"></p>
+                </th:block>
+            </div>
+            <hr/>
+            <input class="btn btn-success" type="submit" value="Next"/>
+        </form>
+        <a th:href="@{/order/shopping-cart}">
+            <button class="btn btn-secondary">Back to shopping cart</button>
+        </a>
+    </div>
 </main>
 
 <th:block th:replace="../fragments/footer"></th:block>
@@ -71,7 +78,7 @@
         divSecurityCode.style.display = 'block';
     });
 
-    radioCash.addEventListener('click', () =>{
+    radioCash.addEventListener('click', () => {
         divCreditCardNumber.style.display = 'none';
         divSecurityCode.style.display = 'none';
     })

@@ -9,26 +9,23 @@
 <th:block th:replace="../fragments/header"></th:block>
 
 <main>
-    <h1>Name</h1>
-    <h2 th:text="${productViewModel.getName()}"></h2>
+    <div class="container-fluid text-center">
+    <h1 th:text="${productViewModel.getName()}"></h1>
     <hr/>
 
-    <img th:src="${productViewModel.getImageUrl()}">
+    <img height="450" th:src="${productViewModel.getImageUrl()}">
 
-    <h1>Price</h1>
-    <h2 th:text="${productViewModel.getPrice()}"></h2>
+    <p class="info">Price: <small th:text="${productViewModel.getPrice()}"></small></p>
     <hr/>
 
-    <h1>Weight in grams</h1>
-    <h2 th:text="${productViewModel.getWeightInGrams()}"></h2>
+    <p class="info">Weight in grams: <small th:text="${productViewModel.getWeightInGrams()}"></small></p>
     <hr/>
 
-    <h1>Description</h1>
-    <h2 th:text="${productViewModel.getDescription()}"></h2>
+    <p class="info">Description</p>
+    <p class="smallerInfo" th:text="${productViewModel.getDescription()}"></p>
     <hr/>
 
-    <h1>Restaurant</h1>
-    <h2 th:text="${productViewModel.getRestaurantName()}"></h2>
+    <p class="info">From "<span th:text="${productViewModel.getRestaurantName()}"></span>"</p>
     <hr/>
 
     <button th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_USER')}" type="button"
@@ -51,6 +48,7 @@
             <button type="button" class="btn btn-danger">Delete</button>
         </a>
     </th:block>
+    </div>
 
     <div class="modal fade" id="myModal">
         <div class="modal-dialog modal-sm">

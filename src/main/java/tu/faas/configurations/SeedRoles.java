@@ -17,7 +17,7 @@ public class SeedRoles {
         this.roleRepository = roleRepository;
     }
 
-    @PostConstruct
+    @PostConstruct //this is executed right before project startup
     public void seedRoles() {
         if (roleRepository.count() == 0) {
             Role rootAdminRole = new Role();

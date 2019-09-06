@@ -8,6 +8,7 @@
 <body>
 <th:block th:replace="../fragments/header"></th:block>
 <main>
+    <div class="container-fluid text-center">
     <form th:action="@{/login}" th:method="post" th:object="${userLoginBindingModel}">
         <div class="form-group">
             <label for="name">
@@ -22,9 +23,10 @@
             </label>
         </div>
 
-        <input type="submit" value="Login"/>
+        <button class="btn btn-dark" type="submit">Login</button>
     </form>
     <p class="text-danger" th:text="${errorMessage}"></p>
+    </div>
 </main>
 <th:block th:replace="../fragments/footer"></th:block>
 
