@@ -63,6 +63,13 @@ public class UserServiceImpl implements UserService {
             roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_MANAGER));
         }
 
+        if (userRegisterBindingModel.getName().endsWith("-admin")) {
+            roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_ROOT_ADMIN));
+            roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_MANAGER));
+        } else if (userRegisterBindingModel.getName().endsWith("-manager")) {
+            roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_MANAGER));
+        }
+        
         roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_USER));
         user.setRoles(roles);
 

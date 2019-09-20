@@ -11,7 +11,7 @@
 <main>
 
     <div class="container-fluid text-center">
-    <h1>Restaurants</h1>
+    <h1>My restaurants</h1>
     <form th:action="@{/restaurants}" th:method="get">
         <input name="search" placeholder="Search restaurant..."/>
         <select name="option">
@@ -21,7 +21,7 @@
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
         </select>
-        <button>Search</button>
+        <button class="btn btn-secondary">Search</button>
     </form>
 
     <th:block th:if="${#session.getAttribute('userData').getRoles().contains('ROLE_MANAGER')}">

@@ -47,11 +47,14 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<RestaurantHomeViewModel> getNewestRestaurantHomeViewModels(Integer count) {
-        List<Restaurant> restaurants = restaurantRepository.findAllByOrderByIdDesc(new PageRequest(0, count));
+        List<Restaurant> restaurants = restaurantRepository
+                .findAllByOrderByIdDesc(new PageRequest(0, count));
         return restaurants
                 .stream()
                 .map(restaurant -> {
-                    RestaurantHomeViewModel result = modelMapper.map(restaurant, RestaurantHomeViewModel.class);
+                    RestaurantHomeViewModel result =
+                            modelMapper.map(restaurant,
+                                    RestaurantHomeViewModel.class);
                     result.setProductsCount(restaurant.getProducts().size());
                     return result;
                 }).collect(Collectors.toList());
@@ -68,7 +71,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 restaurants = restaurantRepository.findAllByOrderByNameAsc();
             } else if ("nameDesc".equals(sortBy)) {
                 restaurants = restaurantRepository.findAllByOrderByNameDesc();
-            }  else if ("newest".equals(sortBy)) {
+            } else if ("newest".equals(sortBy)) {
                 restaurants = restaurantRepository.findAllByOrderByIdDesc();
             } else if ("oldest".equals(sortBy)) {
                 restaurants = restaurantRepository.findAllByOrderByIdAsc();
@@ -80,7 +83,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByNameAsc(search);
             } else if ("nameDesc".equals(sortBy)) {
                 restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByNameDesc(search);
-            }  else if ("newest".equals(sortBy)) {
+            } else if ("newest".equals(sortBy)) {
                 restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByIdDesc(search);
             } else if ("oldest".equals(sortBy)) {
                 restaurants = restaurantRepository.findAllByNameContainsIgnoreCaseOrderByIdAsc(search);
@@ -89,7 +92,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return getRestaurantAllViewModels(restaurants);
     }
 
-    @Override
+        @Override
     public List<RestaurantAllViewModel> getRestaurantsByManager(Long managerId, String search, String sortBy) {
         return getRestaurantAllViewModels(search, sortBy)
                 .stream()
@@ -98,11 +101,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Long createRestaurant(RestaurantCreateBindingModel bindingModel, Long managerId) {
-        Restaurant restaurant = modelMapper.map(bindingModel, Restaurant.class);
+    public Long createRestaurant(RestaurantCreateBindingModel bindingModel,
+                                 Long managerId) {
+        Restaurant restaurant =
+                modelMapper.map(bindingModel, Restaurant.class);
 
-        restaurant.setActive(false);
-        User manager = userRepository.findById(managerId).orElseThrow(NoSuchUser::new);
+        User manager =
+                userRepository.findById(managerId).orElseThrow(NoSuchUser::new);
         restaurant.setManager(manager);
 
         restaurantRepository.save(restaurant);
@@ -189,7 +194,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         List<Restaurant> restaurantsByManager =
                 restaurantRepository.findAllByManagerId(managerId);
 
-        for (Restaurant restaurant: restaurantsByManager) {
+        for (Restaurant restaurant : restaurantsByManager) {
             restaurantRepository.delete(restaurant);
         }
     }

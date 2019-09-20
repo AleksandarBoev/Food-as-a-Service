@@ -55,7 +55,7 @@ public class RestaurantController {
                 restaurantService.getRestaurantsByManager(managerId, search, option);
 
         modelAndView.addObject("restaurantAllViewModels", restaurantAllViewModels);
-        modelAndView.setViewName("restaurant/restaurants.html");
+        modelAndView.setViewName("restaurant/manager-restaurants.html");
         return modelAndView;
     }
 

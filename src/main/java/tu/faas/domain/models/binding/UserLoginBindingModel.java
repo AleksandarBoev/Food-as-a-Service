@@ -19,12 +19,4 @@ public class UserLoginBindingModel {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    @Override
-    public String toString() {
-        return "UserLoginBindingModel{" +
-                "name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                '}';
-    }
 }

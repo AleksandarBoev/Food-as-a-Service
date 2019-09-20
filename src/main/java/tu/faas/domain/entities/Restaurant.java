@@ -10,7 +10,6 @@ public class Restaurant extends BaseEntity {
     private User manager;
     private String imageUrl;
     private String description;
-    private Boolean isActive;
     private List<Product> products;
 
     @Column(nullable = false, unique = true, columnDefinition = "VARCHAR(50)")
@@ -48,15 +47,6 @@ public class Restaurant extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Column(name = "is_active", nullable = false)
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
     }
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

@@ -131,7 +131,7 @@
         const liIndicators = carousel.getElementsByClassName('carousel-indicators')[0].children;
         liIndicators[0].classList.add('active'); //set first indicator as active
         for (let i = 0; i < liIndicators.length; i += 1) {
-            liIndicators[i].setAttribute('data-slide-to', i + 1);
+            liIndicators[i].setAttribute('data-slide-to', i);
         }
 
         carousel.getElementsByClassName('carousel-item')[0].classList.add('active');

@@ -3,7 +3,7 @@ package tu.faas.domain.entities;
 import javax.persistence.*;
 
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
     private Long id;
 
     @Id

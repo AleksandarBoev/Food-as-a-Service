@@ -26,13 +26,6 @@ public class RestaurantCreateBindingModel {
             min = RESTAURANT_NAME_MIN_LETTERS,
             max = RESTAURANT_NAME_MAX_LETTERS,
             message = RESTAURANT_NAME_LENGTH_ERROR_MESSAGE)
-    /*
-    Pokriva sluchaite za:
-    Bulgarska Kuhnq
-    Bulgarska
-    Bulgarska kuhnq
-    Bulgarskata kuhnq na Jivko
-     */
     public String getName() {
         return name;
     }

@@ -1,5 +1,10 @@
 package tu.faas.domain.models.binding;
 
+import tu.faas.domain.constants.UserValidationConstants;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class UserEditPasswordModel {
     private String oldPassword;
     private String newPassword;
@@ -13,6 +18,9 @@ public class UserEditPasswordModel {
         this.oldPassword = oldPassword;
     }
 
+    @NotNull(message = "Password can\'t be null!")
+    @Size(min = UserValidationConstants.PASSWORD_MIN_LENGTH,
+            message = UserValidationConstants.PASSWORD_LENGTH_MESSAGE)
     public String getNewPassword() {
         return newPassword;
     }

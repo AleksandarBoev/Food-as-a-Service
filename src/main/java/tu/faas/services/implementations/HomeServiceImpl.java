@@ -21,14 +21,12 @@ public class HomeServiceImpl implements HomeService {
     private ProductService productService;
     private RestaurantService restaurantService;
     private UserService userService;
-    private ModelMapper modelMapper;
 
     @Autowired
-    public HomeServiceImpl(ProductService productService, RestaurantService restaurantService, UserService userService, ModelMapper modelMapper) {
+    public HomeServiceImpl(ProductService productService, RestaurantService restaurantService, UserService userService) {
         this.productService = productService;
         this.restaurantService = restaurantService;
         this.userService = userService;
-        this.modelMapper = modelMapper;
     }
 
     @Override

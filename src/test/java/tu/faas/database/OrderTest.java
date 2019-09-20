@@ -68,7 +68,6 @@ public class OrderTest {
         //Creating restaurant and adding a manager to it (manager creates a restaurant)
         Restaurant restaurant = new Restaurant();
         restaurant.setName("Restaurant");
-        restaurant.setActive(true);
         restaurant.setManager(user);
         restaurantRepository.save(restaurant);
 

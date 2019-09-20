@@ -52,6 +52,7 @@ public class Order extends BaseEntity {
         this.totalPrice = totalPrice;
     }
 
+    @Column(name = "billing_type")
     public String getBillingType() {
         return billingType;
     }
@@ -60,6 +61,7 @@ public class Order extends BaseEntity {
         this.billingType = billingType;
     }
 
+    @Column
     public String getAddress() {
         return address;
     }

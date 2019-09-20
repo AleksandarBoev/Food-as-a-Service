@@ -32,8 +32,11 @@ public class ProductCreateBindingModel {
     private String imageUrl;
     private String description;
 
-    @Pattern(regexp = "^[A-Z][ A-z0-9]+$", message = PRODUCT_NAME_INVALID_FORMAT_MESSAGE)
-    @Size(min = PRODUCT_NAME_MIN_LENGTH, max = PRODUCT_NAME_MAX_LENGTH, message = PRODUCT_NAME_INVALID_LENGTH_MESSAGE)
+    @Pattern(regexp = "^[A-Z][ A-z0-9]+$",
+            message = PRODUCT_NAME_INVALID_FORMAT_MESSAGE)
+    @Size(min = PRODUCT_NAME_MIN_LENGTH,
+            max = PRODUCT_NAME_MAX_LENGTH,
+            message = PRODUCT_NAME_INVALID_LENGTH_MESSAGE)
     public String getName() {
         return name;
     }
