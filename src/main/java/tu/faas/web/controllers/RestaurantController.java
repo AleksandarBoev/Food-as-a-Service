@@ -99,7 +99,7 @@ public class RestaurantController {
 
     @GetMapping("/edit/{restaurantId}")
     public ModelAndView getRestaurantEditPage(ModelAndView modelAndView,
-                                              @PathVariable(name = "restaurantId", required = true) Long restaurantId) {
+                                              @PathVariable(name = "restaurantId") Long restaurantId) {
         RestaurantModel restaurantModel = restaurantService.getRestaurantModelById(restaurantId);
         modelAndView.addObject("restaurantModel", restaurantModel);
         modelAndView.setViewName("restaurant/edit-restaurant.html");
@@ -108,7 +108,7 @@ public class RestaurantController {
 
     @PutMapping("/edit/{id}")
     public String putRestaurantEditPage(
-            @PathVariable(name = "id", required = true) Long restaurantId,
+            @PathVariable(name = "id") Long restaurantId,
             @Valid @ModelAttribute("restaurantModel") RestaurantModel bindingModel,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -122,8 +122,7 @@ public class RestaurantController {
     @GetMapping("/delete/{id}")
     public ModelAndView getRestaurantDeletePage(
             ModelAndView modelAndView,
-            @PathVariable(name = "id", required = true) Long restaurantId
-    ) {
+            @PathVariable(name = "id") Long restaurantId) {
         RestaurantModel restaurantModel = restaurantService.getRestaurantModelById(restaurantId);
         modelAndView.addObject("restaurantModel", restaurantModel);
         modelAndView.setViewName("restaurant/delete-restaurant.html");
@@ -131,7 +130,7 @@ public class RestaurantController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteRestaurant(@PathVariable(name = "id", required = true) Long restaurantId) {
+    public String deleteRestaurant(@PathVariable(name = "id") Long restaurantId) {
         restaurantService.deleteRestaurant(restaurantId);
         return "redirect:/restaurants/my-restaurants";
     }

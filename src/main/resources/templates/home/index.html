@@ -5,42 +5,6 @@
     <title>Home</title>
     <th:block th:replace="../fragments/bootstrap4"></th:block>
     <style>
-        /* Container holding the image and the text */
-        .container {
-            position: relative;
-            text-align: center;
-            color: black;
-            font-size: 30px;
-        }
-
-        /* Bottom left text */
-        .bottom-left {
-            position: absolute;
-            bottom: 8px;
-            left: 16px;
-        }
-
-        /* Top left text */
-        .top-left {
-            position: absolute;
-            top: 8px;
-            left: 16px;
-        }
-
-        /* Top right text */
-        .top-right {
-            position: absolute;
-            top: 8px;
-            right: 16px;
-        }
-
-        /* Bottom right text */
-        .bottom-right {
-            position: absolute;
-            bottom: 8px;
-            right: 16px;
-        }
-
         /* Centered text */
         .centered {
             position: absolute;
@@ -127,6 +91,7 @@
 
 <th:block th:replace="../fragments/footer"></th:block>
 <script>
+    //carousel taken from here: https://getbootstrap.com/docs/4.0/components/carousel/
     const prepareCarousel = carousel => {
         const liIndicators = carousel.getElementsByClassName('carousel-indicators')[0].children;
         liIndicators[0].classList.add('active'); //set first indicator as active
