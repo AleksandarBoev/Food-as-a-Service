@@ -15,6 +15,7 @@ import tu.faas.domain.models.multipurpose.UserEmailModel;
 import tu.faas.domain.models.multipurpose.UserNameModel;
 import tu.faas.domain.models.view.UserProfileViewModel;
 import tu.faas.domain.models.view.UserUsersViewModel;
+import tu.faas.domain.utils.PasswordHashing;
 import tu.faas.repositories.RoleRepository;
 import tu.faas.repositories.UserRepository;
 import tu.faas.services.contracts.RestaurantService;
@@ -23,6 +24,7 @@ import tu.faas.web.session.UserData;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,7 +45,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerUser(UserRegisterBindingModel userRegisterBindingModel) {
-        if (!userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getRepassword())) {
+        if (!passwordAndRepasswordMatch(userRegisterBindingModel)) {
             throw new PasswordsNotSame();
         }
 
@@ -56,6 +58,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = modelMapper.map(userRegisterBindingModel, User.class);
+        user.setPassword(PasswordHashing.hashPassword(userRegisterBindingModel.getPassword()));
 
         Set<Role> roles = new HashSet<>();
         if (userRepository.count() == 0) { //first registered user becomes root admin
@@ -69,7 +72,7 @@ public class UserServiceImpl implements UserService {
         } else if (userRegisterBindingModel.getName().endsWith("-manager")) {
             roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_MANAGER));
         }
-        
+
         roles.add(roleRepository.findRoleByName(RoleConstants.ROLE_USER));
         user.setRoles(roles);
 
@@ -78,12 +81,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserData loginUser(UserLoginBindingModel userLoginBindingModel) {
-        if (!userRepository.existsByNameAndPassword(
-                userLoginBindingModel.getName(), userLoginBindingModel.getPassword())) {
+        User user = userRepository.findUserByName(userLoginBindingModel.getName());
+
+        if (user == null ||
+                !PasswordHashing.checkPassword(
+                        userLoginBindingModel.getPassword(),
+                        user.getPassword())) {
             throw new NoSuchUser();
         }
 
-        User user = userRepository.findUserByName(userLoginBindingModel.getName());
         UserData userData = new UserData();
         userData.setId(user.getId());
 
@@ -116,7 +122,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editUserName(UserNameModel userNameModel, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
-        if (!user.getPassword().equals(userNameModel.getPassword())) {
+        if (!PasswordHashing.checkPassword(userNameModel.getPassword(), user.getPassword())) {
             throw new WrongPassword();
         }
 
@@ -142,7 +148,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void editUserEmail(UserEmailModel userEmailModel, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
-        if (!user.getPassword().equals(userEmailModel.getPassword())) {
+        if (!PasswordHashing.checkPassword(userEmailModel.getPassword(), user.getPassword())) {
             throw new WrongPassword();
         }
 
@@ -166,15 +172,19 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findById(userId).orElseThrow(NoSuchUser::new);
 
-        if (user.getPassword().equals(userEditPasswordModel.getNewPassword())) {
+        if (PasswordHashing.checkPassword(
+                userEditPasswordModel.getNewPassword(),
+                user.getPassword())) {
             throw new SamePassword();
         }
 
-        if (!user.getPassword().equals(userEditPasswordModel.getOldPassword())) {
+        if (!PasswordHashing.checkPassword(
+                userEditPasswordModel.getOldPassword(),
+                user.getPassword())) {
             throw new WrongPassword();
         }
 
-        user.setPassword(userEditPasswordModel.getNewPassword());
+        user.setPassword(PasswordHashing.hashPassword(userEditPasswordModel.getNewPassword()));
         userRepository.save(user);
     }
 
@@ -196,13 +206,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean validCredentials(Long userId, String userPassword) {
-        return userRepository.existsByIdAndPassword(userId, userPassword);
+        try {
+            User user = userRepository.findById(userId).get();
+            return PasswordHashing.checkPassword(
+                    userPassword,
+                    user.getPassword());
+        } catch (NoSuchElementException nsee) {
+            return false;
+        }
     }
 
     @Override
     public void updateUser(AdminAction adminAction, Long adminId) {
         User adminUser = userRepository.findById(adminId).orElseThrow(NoSuchUser::new);
-        if (!adminUser.getPassword().equals(adminAction.getPassword())) {
+        if (!PasswordHashing.checkPassword(
+                adminAction.getPassword(),
+                adminUser.getPassword())) {
             throw new WrongPassword();
         }
 
@@ -240,5 +259,9 @@ public class UserServiceImpl implements UserService {
                 .filter(user -> !user.getRoles().contains(adminRole))
                 .map(user -> mapToUserUsersViewModel(user, modelMapper))
                 .collect(Collectors.toList());
+    }
+
+    private boolean passwordAndRepasswordMatch(UserRegisterBindingModel userRegisterBindingModel) {
+        return userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getRepassword());
     }
 }

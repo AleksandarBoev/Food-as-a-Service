@@ -25,7 +25,7 @@ public class User extends BaseEntity {
         this.name = name;
     }
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(20)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
     public String getPassword() {
         return password;
     }
