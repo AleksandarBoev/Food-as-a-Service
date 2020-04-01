@@ -26,6 +26,7 @@
         <button class="btn btn-dark" type="submit">Login</button>
     </form>
     <p class="text-danger" th:text="${errorMessage}"></p>
+    <p>Don't have a profile? <a th:href="@{/register}">Register</a></p>
     </div>
 </main>
 <th:block th:replace="../fragments/footer"></th:block>
